@@ -1,14 +1,24 @@
 import 'dart:io';
 
 class GalleryState {
-  final File? imageFile;
+  final File? originalFile;
+  final File? editedFile;
   final bool isSaving;
 
-  const GalleryState({this.imageFile, this.isSaving = false});
+  const GalleryState({
+    this.originalFile,
+    this.editedFile,
+    this.isSaving = false,
+  });
 
-  GalleryState copyWith({File? imageFile, bool? isSaving}) {
+  GalleryState copyWith({
+    File? originalFile,
+    File? editedFile,
+    bool? isSaving,
+  }) {
     return GalleryState(
-      imageFile: imageFile ?? this.imageFile,
+      originalFile: originalFile ?? this.originalFile,
+      editedFile: editedFile ?? this.editedFile,
       isSaving: isSaving ?? this.isSaving,
     );
   }

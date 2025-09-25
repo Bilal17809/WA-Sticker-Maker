@@ -51,6 +51,7 @@ dependencies:
   flutter_emoji: ^2.5.1
   image_picker: ^1.2.0
   image_gallery_saver_plus: ^4.0.1
+  image_painter: ^0.7.1
 
 dev_dependencies:
   flutter_test:
