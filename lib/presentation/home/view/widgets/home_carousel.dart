@@ -38,7 +38,7 @@ class HomeCarousel extends ConsumerWidget {
           onTap: () async {
             if (index == 0) {
               await ref.read(galleryProvider.notifier).pickImage();
-              if (ref.read(galleryProvider).imageFile != null) {
+              if (ref.read(galleryProvider).originalFile != null) {
                 if (!context.mounted) return;
                 Navigator.push(
                   context,

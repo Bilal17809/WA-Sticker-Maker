@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,33 +17,60 @@ class GalleryProvider extends Notifier<GalleryState> {
   Future<void> pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      state = state.copyWith(imageFile: File(pickedFile.path));
+      final file = File(pickedFile.path);
+      state = state.copyWith(originalFile: file, editedFile: file);
+    }
+  }
+
+  Future<void> rotate() async {
+    final input = state.editedFile ?? state.originalFile;
+    if (input == null) return;
+    final tempDir = await getTemporaryDirectory();
+    final tempPath =
+        '${tempDir.path}/rotate_${DateTime.now().millisecondsSinceEpoch}.png';
+    await FFmpegKit.execute(
+      '-i "${input.path}" -vf "transpose=1,format=rgba" -y "$tempPath"',
+    );
+    state = state.copyWith(editedFile: File(tempPath));
+  }
+
+  Future<void> applyMask(File maskFile) async {
+    final input = state.editedFile ?? state.originalFile;
+    if (input == null) return;
+    final tempDir = await getTemporaryDirectory();
+    final outputPath =
+        '${tempDir.path}/masked_${DateTime.now().millisecondsSinceEpoch}.png';
+    final command =
+        '-i "${input.path}" -i "${maskFile.path}" -filter_complex "[0][1]alphamerge" -y "$outputPath"';
+    final session = await FFmpegKit.execute(command);
+    final returnCode = await session.getReturnCode();
+
+    if (ReturnCode.isSuccess(returnCode)) {
+      state = state.copyWith(editedFile: File(outputPath));
+      debugPrint('!!!!!!!!Mask applied successfully: $outputPath');
+    } else {
+      final logs = await session.getAllLogsAsString();
+      debugPrint('!!!!!!!!!!!Failed to apply mask. Logs: $logs');
     }
   }
 
   Future<void> saveAsWebP(String fileName) async {
-    if (state.imageFile == null) return;
+    if (state.editedFile == null) return;
     state = state.copyWith(isSaving: true);
-
     try {
       final tempDir = await getTemporaryDirectory();
       final tempPath = '${tempDir.path}/$fileName.webp';
       await FFmpegKit.execute(
-        '-i "${state.imageFile!.path}" -vcodec libwebp -lossless 1 "$tempPath"',
+        '-i "${state.editedFile!.path}" -vcodec libwebp -lossless 1 -y "$tempPath"',
       );
       final result = await platform.invokeMethod('saveWebPToDCIM', {
         'filePath': tempPath,
         'fileName': '$fileName.webp',
       });
-      debugPrint('!!!!!!!!!!!!!!! Sticker saved: $result');
-      state = state.copyWith(isSaving: false);
+      debugPrint('!!!!!!!!!!! Final saved: $result');
     } catch (e) {
-      state = state.copyWith(isSaving: false);
-      debugPrint('!!!!!!!!!!!!!!!!!!! Error saving WebP: $e');
+      debugPrint('!!!!!!!!!! Error saving final: $e');
     }
-  }
-
-  void clearImage() {
-    state = const GalleryState();
+    state = state.copyWith(isSaving: false, editedFile: null);
   }
 }

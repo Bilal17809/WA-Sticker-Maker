@@ -12,7 +12,7 @@ const double kBorderRadius = 35.0;
 /// ========== Icon Sizes ==========
 double primaryIcon(BuildContext context) => context.screenWidth * 0.25;
 double secondaryIcon(BuildContext context) => context.screenWidth * 0.07;
-double smallIcon(BuildContext context) => context.screenWidth * 0.05;
+double smallIcon(BuildContext context) => context.screenWidth * 0.06;
 
 /// ========== MediaQuery Helpers ==========
 extension MediaQueryValues on BuildContext {

@@ -8,10 +8,11 @@ import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
 import '/core/utils/utils.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeState = ref.watch(themeProvider);
     return Drawer(
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: Container(
@@ -99,35 +100,27 @@ class AppDrawer extends StatelessWidget {
                 size: 24,
                 color: AppColors.primaryText(context),
               ),
-              title: Consumer(
-                builder: (context, ref, _) {
-                  final themeMode = ref.watch(themeProvider).themeMode;
-                  return Text(
-                    themeMode == ThemeMode.dark ? 'Dark Mode' : 'Light Mode',
-                    style: titleSmallStyle,
-                  );
-                },
+              title: Text(
+                themeState.themeMode == ThemeMode.dark
+                    ? 'Dark Mode'
+                    : 'Light Mode',
+                style: titleSmallStyle,
               ),
-              trailing: Consumer(
-                builder: (context, ref, _) {
-                  final themeMode = ref.watch(themeProvider).themeMode;
-                  return Switch(
-                    value: themeMode == ThemeMode.dark,
-                    onChanged: (value) =>
-                        ref.read(themeProvider.notifier).toggleTheme(value),
-                    thumbColor: WidgetStatePropertyAll(
-                      AppColors.kGrey.withValues(alpha: 0.7),
-                    ),
-                    trackColor: WidgetStatePropertyAll(
-                      AppColors.kGrey.withValues(alpha: 0.2),
-                    ),
-                    trackOutlineColor: WidgetStatePropertyAll(
-                      AppColors.kGrey.withValues(alpha: 0.5),
-                    ),
-                    trackOutlineWidth: WidgetStatePropertyAll(1),
-                    activeThumbImage: const AssetImage(Assets.appIcon),
-                  );
-                },
+              trailing: Switch(
+                value: themeState.themeMode == ThemeMode.dark,
+                onChanged: (value) =>
+                    ref.read(themeProvider.notifier).toggleTheme(value),
+                thumbColor: WidgetStatePropertyAll(
+                  AppColors.kGrey.withValues(alpha: 0.7),
+                ),
+                trackColor: WidgetStatePropertyAll(
+                  AppColors.kGrey.withValues(alpha: 0.2),
+                ),
+                trackOutlineColor: WidgetStatePropertyAll(
+                  AppColors.kGrey.withValues(alpha: 0.5),
+                ),
+                trackOutlineWidth: WidgetStatePropertyAll(1),
+                activeThumbImage: const AssetImage(Assets.appIcon),
               ),
             ),
             Divider(color: AppColors.primaryColorLight.withValues(alpha: 0.1)),
