@@ -29,16 +29,15 @@ class GlassButton extends StatelessWidget {
           color: Colors.white.withValues(alpha: 0.6),
         ),
         child: Center(
-          child:
-              icon != null
-                  ? Icon(icon, size: 18)
-                  : Text(
-                    text ?? "",
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
+          child: icon != null
+              ? Icon(icon, size: 18)
+              : Text(
+                  text ?? "",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
         ),
       ),
     );
@@ -177,8 +176,7 @@ class IconActionButton extends StatelessWidget {
           decoration: BoxDecoration(
             color: backgroundColor,
             shape: isCircular ? BoxShape.circle : BoxShape.rectangle,
-            borderRadius:
-                isCircular ? null : BorderRadius.circular(kBorderRadius),
+            borderRadius: isCircular ? null : BorderRadius.circular(8),
           ),
           child: Icon(
             icon,
@@ -237,8 +235,9 @@ class ImageActionButton extends StatelessWidget {
               backgroundColor ??
               AppColors.secondary(context).withValues(alpha: 0.1),
           shape: isCircular ? BoxShape.circle : BoxShape.rectangle,
-          borderRadius:
-              isCircular ? null : borderRadius ?? BorderRadius.circular(8),
+          borderRadius: isCircular
+              ? null
+              : borderRadius ?? BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
               color: AppColors.kBlack.withValues(alpha: 0.1),

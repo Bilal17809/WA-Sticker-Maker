@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wa_sticker_maker/presentation/packs/provider/packs_provider.dart';
+import 'package:wa_sticker_maker/presentation/packs/provider/packs_state.dart';
 import '/presentation/gallery/provider/gallery_provider.dart';
 import '/presentation/gallery/provider/gallery_state.dart';
 import '/presentation/library/provider/library_provider.dart';
@@ -23,4 +25,7 @@ final libraryProvider = NotifierProvider<LibraryProvider, LibraryState>(
 );
 final galleryProvider = NotifierProvider<GalleryProvider, GalleryState>(
   GalleryProvider.new,
+);
+final packsProvider = NotifierProvider<PacksNotifier, List<PacksState>>(
+  PacksNotifier.new,
 );
