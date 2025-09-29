@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wa_sticker_maker/presentation/packs/view/packs_view.dart';
 import '/core/providers/providers.dart';
 import 'package:wa_sticker_maker/presentation/library/view/library_view.dart';
 import '/presentation/gallery/view/gallery_view.dart';
@@ -13,7 +14,7 @@ class HomeCarousel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final yogaItems = [
+    final items = [
       {'title': 'Gallery', 'icon': Icons.image, 'assetPath': Assets.appIcon},
       {
         'title': 'Library',
@@ -28,7 +29,7 @@ class HomeCarousel extends ConsumerWidget {
         viewportFraction: 0.6,
         enlargeCenterPage: true,
       ),
-      items: yogaItems.asMap().entries.map((entry) {
+      items: items.asMap().entries.map((entry) {
         final index = entry.key;
         final item = entry.value;
         return _CategoryCard(
@@ -42,7 +43,7 @@ class HomeCarousel extends ConsumerWidget {
                 if (!context.mounted) return;
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const GalleryView()),
+                  MaterialPageRoute(builder: (context) => const PacksView()),
                 );
               }
             } else if (index == 1) {
