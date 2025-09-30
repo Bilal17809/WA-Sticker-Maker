@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_emoji/flutter_emoji.dart';
 import 'library_state.dart';
 
-class LibraryProvider extends Notifier<LibraryState> {
+class LibraryNotifier extends Notifier<LibraryState> {
   @override
   LibraryState build() {
     return const LibraryState();

@@ -1,3 +1,6 @@
+import 'package:flutter/foundation.dart';
+
+@immutable
 class HomeState {
   final bool isDrawerOpen;
   final int selectedIndex;

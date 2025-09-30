@@ -1,3 +1,6 @@
+import 'package:flutter/foundation.dart';
+
+@immutable
 class LibraryState {
   final List<String> emojis;
   final bool isLoading;
