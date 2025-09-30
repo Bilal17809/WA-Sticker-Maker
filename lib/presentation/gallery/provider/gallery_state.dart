@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 
+@immutable
 class GalleryState {
   final File? originalFile;
   final File? editedFile;

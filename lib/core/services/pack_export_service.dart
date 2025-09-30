@@ -1,0 +1,81 @@
+import 'dart:io';
+import 'package:whatsapp_stickers_handler/model/sticker_pack.dart';
+import 'package:whatsapp_stickers_handler/model/sticker_pack_exception.dart';
+import 'package:whatsapp_stickers_handler/service/sticker_pack_util.dart';
+import '/core/services/whatsapp_service.dart';
+import '/presentation/packs/provider/packs_state.dart';
+
+class PackExportService {
+  String? _validate(PacksState pack) {
+    if (pack.stickerPaths.length < 3) {
+      return 'Need at least 3 stickers to export to WhatsApp.';
+    }
+    if (pack.stickerPaths.length > 30) {
+      return 'WhatsApp sticker packs can contain maximum 30 stickers.';
+    }
+    return null;
+  }
+
+  Future<String?> _createTrayIcon(PacksState pack) async {
+    try {
+      if (pack.trayImagePath != null &&
+          File(pack.trayImagePath!).existsSync()) {
+        return await StickerPackUtil().saveWebpAsTrayImage(pack.trayImagePath!);
+      }
+      if (pack.stickerPaths.isNotEmpty) {
+        return await StickerPackUtil().saveWebpAsTrayImage(
+          pack.stickerPaths.first,
+        );
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<String> _addOrDeletePack(StickerPack pack, String packName) async {
+    final isPackInstalled = await WhatsAppService.isStickerPackInstalled(
+      pack.identifier,
+    );
+    if (isPackInstalled) {
+      await WhatsAppService.updateStickerPack(pack);
+      return 'Pack "$packName" updated in WhatsApp!';
+    } else {
+      await WhatsAppService.addStickerPack(pack);
+      return 'Pack "$packName" added to WhatsApp!';
+    }
+  }
+
+  Future<String?> exportPack(PacksState pack) async {
+    try {
+      final validationError = _validate(pack);
+      if (validationError != null) return validationError;
+      final isInstalled = await WhatsAppService.isWhatsAppInstalled;
+      if (!isInstalled) {
+        return 'WhatsApp is not installed on this device.';
+      }
+      final identifier = pack.name.toLowerCase().replaceAll(
+        RegExp(r'[^a-z0-9]'),
+        '_',
+      );
+      final trayImagePath = await _createTrayIcon(pack);
+      if (trayImagePath == null) {
+        return 'Failed to create tray image.';
+      }
+      final stickerPack = StickerPack(
+        identifier: identifier,
+        name: pack.name,
+        publisher: 'WA Sticker Maker',
+        trayImage: trayImagePath,
+        publisherWebsite: '',
+        privacyPolicyWebsite: '',
+        licenseAgreementWebsite: '',
+      )..stickers = pack.stickerPaths;
+      return await _addOrDeletePack(stickerPack, pack.name);
+    } on StickerPackException catch (e) {
+      return 'Validation error: ${e.message}';
+    } catch (e) {
+      return 'Export failed: $e';
+    }
+  }
+}

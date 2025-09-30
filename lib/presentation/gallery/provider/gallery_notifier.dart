@@ -6,7 +6,7 @@ import '/core/providers/providers.dart';
 import '/presentation/packs/provider/packs_state.dart';
 import 'gallery_state.dart';
 
-class GalleryProvider extends Notifier<GalleryState> {
+class GalleryNotifier extends Notifier<GalleryState> {
   @override
   GalleryState build() => const GalleryState();
 

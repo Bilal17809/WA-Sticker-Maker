@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
+
+@immutable
 class PackGalleryState {
   final bool isExporting;
   final String? lastMessage;
-
   const PackGalleryState({this.isExporting = false, this.lastMessage});
 
   PackGalleryState copyWith({

@@ -5,19 +5,13 @@ import '/core/theme/theme.dart';
 import '/core/providers/providers.dart';
 
 class ThemeProvider extends Notifier<ThemeState> {
+  ThemeProvider([this._initial]);
+
+  final ThemeState? _initial;
+
   @override
   ThemeState build() {
-    _loadTheme();
-    return const ThemeState();
-  }
-
-  Future<void> _loadTheme() async {
-    final isDark = await _localStorage.getBool('isDarkMode');
-    if (isDark != null) {
-      state = state.copyWith(
-        themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
-      );
-    }
+    return _initial ?? const ThemeState(themeMode: ThemeMode.system);
   }
 
   Future<void> toggleTheme(bool isDark) async {

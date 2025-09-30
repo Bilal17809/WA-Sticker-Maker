@@ -89,10 +89,13 @@ class PackGalleryView extends ConsumerWidget {
                   itemCount: currentPack.stickerPaths.length,
                   itemBuilder: (context, index) {
                     final path = currentPack.stickerPaths[index];
-                    return Container(
-                      decoration: AppDecorations.simpleRounded(context),
-                      padding: const EdgeInsets.all(kBodyHp),
-                      child: Image.file(File(path), fit: BoxFit.cover),
+                    return GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        decoration: AppDecorations.simpleRounded(context),
+                        padding: const EdgeInsets.all(kBodyHp),
+                        child: Image.file(File(path), fit: BoxFit.cover),
+                      ),
                     );
                   },
                 ),
@@ -122,19 +125,9 @@ class PackGalleryView extends ConsumerWidget {
             backgroundColor: currentPack.stickerPaths.length >= 3
                 ? AppColors.secondaryIcon(context)
                 : AppColors.kGrey.withValues(alpha: 0.4),
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              child: galleryState.isExporting
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    )
-                  : const Icon(Icons.upload),
-            ),
+            child: galleryState.isExporting
+                ? const Icon(Icons.delete_forever)
+                : const Icon(Icons.upload),
           ),
         ],
       ),

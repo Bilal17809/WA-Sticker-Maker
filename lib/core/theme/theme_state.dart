@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+@immutable
 class ThemeState {
   final ThemeMode themeMode;
 

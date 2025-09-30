@@ -1,10 +1,13 @@
+import 'package:flutter/foundation.dart';
+
+@immutable
 class PacksState {
   final String name;
   final String directoryPath;
   final List<String> stickerPaths;
   final String? trayImagePath;
 
-  PacksState({
+  const PacksState({
     required this.name,
     required this.directoryPath,
     required this.stickerPaths,

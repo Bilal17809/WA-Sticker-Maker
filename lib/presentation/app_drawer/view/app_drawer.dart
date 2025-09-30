@@ -39,10 +39,7 @@ class AppDrawer extends ConsumerWidget {
                   const Gap(kGap),
                   FittedBox(
                     fit: BoxFit.scaleDown,
-                    child: Text(
-                      'Learn Japanese\nSpeaking',
-                      style: titleLargeStyle,
-                    ),
+                    child: Text('WA Sticker Maker', style: titleLargeStyle),
                   ),
                 ],
               ),
