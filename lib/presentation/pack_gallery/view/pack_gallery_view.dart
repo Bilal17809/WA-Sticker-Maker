@@ -126,7 +126,10 @@ class PackGalleryView extends ConsumerWidget {
                 ? AppColors.secondaryIcon(context)
                 : AppColors.kGrey.withValues(alpha: 0.4),
             child: galleryState.isExporting
-                ? const Icon(Icons.delete_forever)
+                ? const CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: AppColors.kWhite,
+                  )
                 : const Icon(Icons.upload),
           ),
         ],

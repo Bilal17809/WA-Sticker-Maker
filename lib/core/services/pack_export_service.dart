@@ -33,7 +33,7 @@ class PackExportService {
     }
   }
 
-  Future<String> _addOrDeletePack(StickerPack pack, String packName) async {
+  Future<String> _addOrUpdatePack(StickerPack pack, String packName) async {
     final isPackInstalled = await WhatsAppService.isStickerPackInstalled(
       pack.identifier,
     );
@@ -71,7 +71,7 @@ class PackExportService {
         privacyPolicyWebsite: '',
         licenseAgreementWebsite: '',
       )..stickers = pack.stickerPaths;
-      return await _addOrDeletePack(stickerPack, pack.name);
+      return await _addOrUpdatePack(stickerPack, pack.name);
     } on StickerPackException catch (e) {
       return 'Validation error: ${e.message}';
     } catch (e) {
