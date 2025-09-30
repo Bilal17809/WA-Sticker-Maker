@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:toastification/toastification.dart';
-import '/core/global_keys/global_key.dart';
 import '/presentation/home/view/home_view.dart';
 import '/core/local_storage/local_storage.dart';
 import 'core/providers/providers.dart';

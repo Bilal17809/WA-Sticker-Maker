@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wa_sticker_maker/presentation/packs/view/packs_view.dart';
-import '/core/providers/providers.dart';
 import 'package:wa_sticker_maker/presentation/library/view/library_view.dart';
-import '/presentation/gallery/view/gallery_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
@@ -38,14 +36,12 @@ class HomeCarousel extends ConsumerWidget {
           assetPath: item['assetPath'] as String,
           onTap: () async {
             if (index == 0) {
-              await ref.read(galleryProvider.notifier).pickImage();
-              if (ref.read(galleryProvider).originalFile != null) {
-                if (!context.mounted) return;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const PacksView()),
-                );
-              }
+              // navigate to PacksView (user will create/open packs, then add images)
+              if (!context.mounted) return;
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PacksView()),
+              );
             } else if (index == 1) {
               Navigator.push(
                 context,
@@ -78,7 +74,7 @@ class _CategoryCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(kBodyHp),
-        decoration: AppDecorations.simpleDecor(context),
+        decoration: AppDecorations.gradientDecor(context),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

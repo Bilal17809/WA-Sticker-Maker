@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import '/core/common_widgets/common_widgets.dart';
 import '/core/theme/theme.dart';
 
-class ExitDialog {
+class DeletePackDialog {
   static Future<bool?> show(BuildContext context) async {
     return AppAlertDialog.show<bool>(
       context: context,
       barrierDismissible: false,
-      title: "Exit App",
-      content: const Text("Are you sure you want to exit the app?"),
+      title: "Delete Pack",
+      content: const Text("Are you sure you want to delete this pack?"),
       actions: [
         AppDialogButton(
           text: "Cancel",
           onPressed: () => Navigator.of(context).pop(false),
         ),
         AppDialogButton(
-          text: "Exit",
+          text: "Delete",
           textColor: AppColors.kRed,
           onPressed: () => Navigator.of(context).pop(true),
         ),

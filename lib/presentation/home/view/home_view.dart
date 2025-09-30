@@ -55,9 +55,17 @@ class HomeView extends ConsumerWidget {
                 left: 0,
                 right: 0,
                 child: Container(
-                  decoration: AppDecorations.topRounded(context),
+                  decoration: AppDecorations.simpleRounded(context).copyWith(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(kBorderRadius),
+                      topRight: Radius.circular(kBorderRadius),
+                    ),
+                  ),
                   child: Padding(
-                    padding: const EdgeInsets.only(top: kBodyHp * 2),
+                    padding: const EdgeInsets.only(
+                      top: kBodyHp * 2,
+                      bottom: kBodyHp,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       spacing: kGap,
@@ -67,7 +75,7 @@ class HomeView extends ConsumerWidget {
                             horizontal: kBodyHp,
                           ),
                           child: Container(
-                            decoration: AppDecorations.simpleDecor(context),
+                            decoration: AppDecorations.gradientDecor(context),
                             padding: const EdgeInsets.all(kBodyHp),
                             child: Row(
                               children: [

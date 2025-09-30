@@ -1,6 +1,5 @@
-import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/providers/providers.dart';
+import '/core/providers/providers.dart';
 import '/core/helper/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -21,7 +20,7 @@ class AppDrawer extends ConsumerWidget {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: AppDecorations.simpleDecor(
+              decoration: AppDecorations.gradientDecor(
                 context,
               ).copyWith(borderRadius: BorderRadius.zero),
               child: Column(
