@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:wa_sticker_maker/presentation/packs/view/packs_view.dart';
-import 'package:wa_sticker_maker/presentation/library/view/library_view.dart';
+import '/presentation/library_pack/view/library_pack_view.dart';
+import '/presentation/packs/view/packs_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wa_sticker_maker/presentation/temp.dart';
 import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
 import '/core/utils/utils.dart';
@@ -45,8 +44,9 @@ class HomeCarousel extends ConsumerWidget {
             } else if (index == 1) {
               Navigator.push(
                 context,
-                // MaterialPageRoute(builder: (context) => const LibraryView()),
-                MaterialPageRoute(builder: (context) => const StickerPage()),
+                MaterialPageRoute(
+                  builder: (context) => const LibraryPacksView(),
+                ),
               );
             }
           },

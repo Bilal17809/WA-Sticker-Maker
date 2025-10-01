@@ -1,16 +1,33 @@
 import 'package:flutter/foundation.dart';
+import '/data/models/sticker_response_model.dart';
 
 @immutable
 class LibraryState {
-  final List<String> emojis;
   final bool isLoading;
+  final bool isLoadingMore;
+  final StickerResponseModel? stickerResponse;
+  final String? errorMessage;
 
-  const LibraryState({this.emojis = const [], this.isLoading = false});
+  const LibraryState({
+    this.isLoading = false,
+    this.isLoadingMore = false,
+    this.stickerResponse,
+    this.errorMessage,
+  });
 
-  LibraryState copyWith({List<String>? emojis, bool? isLoading}) {
+  bool get hasMore => stickerResponse?.hasNext ?? false;
+
+  LibraryState copyWith({
+    bool? isLoading,
+    bool? isLoadingMore,
+    StickerResponseModel? stickerResponse,
+    String? errorMessage,
+  }) {
     return LibraryState(
-      emojis: emojis ?? this.emojis,
       isLoading: isLoading ?? this.isLoading,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      stickerResponse: stickerResponse ?? this.stickerResponse,
+      errorMessage: errorMessage,
     );
   }
 }
