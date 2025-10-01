@@ -52,7 +52,7 @@ class PacksNotifier extends Notifier<List<PacksState>> {
     try {
       final externalDir = Directory('/storage/emulated/0');
       final packDir = Directory(
-        '${externalDir.path}/DCIM/WA Sticker Maker/$packName',
+        '${externalDir.path}/DCIM/WA Sticker Maker/Gallery Packs/$packName',
       );
       if (!await packDir.exists()) {
         await packDir.create(recursive: true);
@@ -89,6 +89,30 @@ class PacksNotifier extends Notifier<List<PacksState>> {
       }
       state = state.where((p) => p != pack).toList();
       await _savePacks();
+    } catch (e) {
+      debugPrint('${AppExceptions().errorDeletingPack}: $e');
+    }
+  }
+
+  Future<void> removeStickerFromPack(
+    PacksState pack,
+    String stickerPath,
+  ) async {
+    try {
+      final index = state.indexWhere(
+        (p) => p.directoryPath == pack.directoryPath,
+      );
+      if (index == -1) return;
+      final updatedStickerPaths = List<String>.from(state[index].stickerPaths)
+        ..remove(stickerPath);
+      final updatedPack = state[index].copyWith(
+        stickerPaths: updatedStickerPaths,
+      );
+      updatePack(index, updatedPack);
+      final file = File(stickerPath);
+      if (await file.exists()) {
+        await file.delete();
+      }
     } catch (e) {
       debugPrint('${AppExceptions().errorDeletingPack}: $e');
     }

@@ -94,6 +94,30 @@ class LibraryPacksNotifier extends Notifier<List<LibraryPacksState>> {
     }
   }
 
+  Future<void> removeStickerFromPack(
+    LibraryPacksState pack,
+    String stickerPath,
+  ) async {
+    try {
+      final index = state.indexWhere(
+        (p) => p.directoryPath == pack.directoryPath,
+      );
+      if (index == -1) return;
+      final updatedStickerPaths = List<String>.from(state[index].stickerPaths)
+        ..remove(stickerPath);
+      final updatedPack = state[index].copyWith(
+        stickerPaths: updatedStickerPaths,
+      );
+      updatePack(index, updatedPack);
+      final file = File(stickerPath);
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (e) {
+      debugPrint('${AppExceptions().errorDeletingPack}: $e');
+    }
+  }
+
   void updatePack(int index, LibraryPacksState updatedPack) {
     final list = [...state];
     list[index] = updatedPack;

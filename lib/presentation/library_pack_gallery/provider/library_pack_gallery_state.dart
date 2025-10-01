@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 class LibraryPackGalleryState {
   final bool isExporting;
   final String? lastMessage;
+
   const LibraryPackGalleryState({this.isExporting = false, this.lastMessage});
 
   LibraryPackGalleryState copyWith({

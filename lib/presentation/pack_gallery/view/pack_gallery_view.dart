@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wa_sticker_maker/core/utils/utils.dart';
 import '../provider/pack_gallery_state.dart';
 import '/core/providers/providers.dart';
 import '/core/constants/constants.dart';
@@ -90,7 +91,16 @@ class PackGalleryView extends ConsumerWidget {
                   itemBuilder: (context, index) {
                     final path = currentPack.stickerPaths[index];
                     return GestureDetector(
-                      onTap: () {},
+                      onTap: () async {
+                        final shouldDelete = await DeleteStickerDialog.show(
+                          context,
+                        );
+                        if (shouldDelete == true) {
+                          await ref
+                              .read(packsProvider.notifier)
+                              .removeStickerFromPack(currentPack, path);
+                        }
+                      },
                       child: Container(
                         decoration: AppDecorations.simpleRounded(context),
                         padding: const EdgeInsets.all(kBodyHp),
