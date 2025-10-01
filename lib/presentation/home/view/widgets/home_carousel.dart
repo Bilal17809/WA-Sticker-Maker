@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wa_sticker_maker/presentation/packs/view/packs_view.dart';
-import 'package:wa_sticker_maker/presentation/library/view/library_view.dart';
+import '/presentation/library_pack/view/library_pack_view.dart';
+import '/presentation/packs/view/packs_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
@@ -36,7 +36,6 @@ class HomeCarousel extends ConsumerWidget {
           assetPath: item['assetPath'] as String,
           onTap: () async {
             if (index == 0) {
-              // navigate to PacksView (user will create/open packs, then add images)
               if (!context.mounted) return;
               Navigator.push(
                 context,
@@ -45,7 +44,9 @@ class HomeCarousel extends ConsumerWidget {
             } else if (index == 1) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const LibraryView()),
+                MaterialPageRoute(
+                  builder: (context) => const LibraryPacksView(),
+                ),
               );
             }
           },

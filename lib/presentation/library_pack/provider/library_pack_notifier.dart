@@ -2,16 +2,16 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '/presentation/library_pack/provider/library_pack_state.dart';
 import '/core/common/app_exceptions.dart';
 import '/core/utils/utils.dart';
 import '/core/providers/providers.dart';
-import '/presentation/packs/provider/packs_state.dart';
 
-class PacksNotifier extends Notifier<List<PacksState>> {
-  static const String _packsKey = 'saved_packs';
+class LibraryPacksNotifier extends Notifier<List<LibraryPacksState>> {
+  static const String _packsKey = 'saved_lib_packs';
 
   @override
-  List<PacksState> build() {
+  List<LibraryPacksState> build() {
     _loadPacks();
     return [];
   }
@@ -23,7 +23,7 @@ class PacksNotifier extends Notifier<List<PacksState>> {
 
       if (packsJson != null && packsJson.isNotEmpty) {
         final packs = packsJson
-            .map((jsonStr) => PacksState.fromJson(json.decode(jsonStr)))
+            .map((jsonStr) => LibraryPacksState.fromJson(json.decode(jsonStr)))
             .where((pack) {
               final dir = Directory(pack.directoryPath);
               return dir.existsSync();
@@ -52,7 +52,7 @@ class PacksNotifier extends Notifier<List<PacksState>> {
     try {
       final externalDir = Directory('/storage/emulated/0');
       final packDir = Directory(
-        '${externalDir.path}/DCIM/WA Sticker Maker/Gallery Packs/$packName',
+        '${externalDir.path}/DCIM/WA Sticker Maker/Library Packs/$packName',
       );
       if (!await packDir.exists()) {
         await packDir.create(recursive: true);
@@ -69,7 +69,7 @@ class PacksNotifier extends Notifier<List<PacksState>> {
     if (packName == null || packName.isEmpty) return;
     final dirPath = await _createPackDirectory(packName);
     if (dirPath != null) {
-      final pack = PacksState(
+      final pack = LibraryPacksState(
         name: packName,
         directoryPath: dirPath,
         stickerPaths: [],
@@ -79,7 +79,7 @@ class PacksNotifier extends Notifier<List<PacksState>> {
     }
   }
 
-  Future<void> deletePack(BuildContext context, PacksState pack) async {
+  Future<void> deletePack(BuildContext context, LibraryPacksState pack) async {
     final shouldDelete = await DeletePackDialog.show(context);
     if (shouldDelete != true) return;
     try {
@@ -95,7 +95,7 @@ class PacksNotifier extends Notifier<List<PacksState>> {
   }
 
   Future<void> removeStickerFromPack(
-    PacksState pack,
+    LibraryPacksState pack,
     String stickerPath,
   ) async {
     try {
@@ -118,7 +118,7 @@ class PacksNotifier extends Notifier<List<PacksState>> {
     }
   }
 
-  void updatePack(int index, PacksState updatedPack) {
+  void updatePack(int index, LibraryPacksState updatedPack) {
     final list = [...state];
     list[index] = updatedPack;
     state = list;

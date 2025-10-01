@@ -43,7 +43,7 @@ class HomeView extends ConsumerWidget {
                       Row(
                         children: [
                           Text('Hello', style: headlineMediumStyle),
-                          LottieWidget(assetPath: Assets.hi),
+                          LottieWidget(assetPath: Assets.hiLottie),
                         ],
                       ),
                     ],

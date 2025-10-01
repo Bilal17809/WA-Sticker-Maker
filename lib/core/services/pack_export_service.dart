@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:whatsapp_stickers_handler/model/sticker_pack.dart';
 import 'package:whatsapp_stickers_handler/model/sticker_pack_exception.dart';
 import 'package:whatsapp_stickers_handler/service/sticker_pack_util.dart';
+import '/core/common/app_exceptions.dart';
 import '/core/services/whatsapp_service.dart';
 import '/presentation/packs/provider/packs_state.dart';
 
@@ -38,10 +39,10 @@ class PackExportService {
       pack.identifier,
     );
     if (isPackInstalled) {
-      await WhatsAppService.updateStickerPack(pack);
+      WhatsAppService.updateStickerPack(pack);
       return 'Pack "$packName" updated in WhatsApp!';
     } else {
-      await WhatsAppService.addStickerPack(pack);
+      WhatsAppService.addStickerPack(pack);
       return 'Pack "$packName" added to WhatsApp!';
     }
   }
@@ -73,9 +74,9 @@ class PackExportService {
       )..stickers = pack.stickerPaths;
       return await _addOrUpdatePack(stickerPack, pack.name);
     } on StickerPackException catch (e) {
-      return 'Validation error: ${e.message}';
+      return '${AppExceptions().validationError}: ${e.message}';
     } catch (e) {
-      return 'Export failed: $e';
+      return '${AppExceptions().exportError}: $e';
     }
   }
 }

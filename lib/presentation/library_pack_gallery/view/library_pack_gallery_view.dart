@@ -1,45 +1,37 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wa_sticker_maker/core/utils/utils.dart';
-import '../provider/pack_gallery_state.dart';
-import '/core/providers/providers.dart';
+import '/core/utils/utils.dart';
+import '/presentation/library_pack/provider/library_pack_state.dart';
+import '/presentation/library_pack_gallery/provider/library_pack_gallery_state.dart';
+import '/presentation/library/view/library_view.dart';
 import '/core/constants/constants.dart';
-import '/core/theme/theme.dart';
 import '/core/common_widgets/common_widgets.dart';
-import '/presentation/gallery/view/gallery_view.dart';
-import '/presentation/packs/provider/packs_state.dart';
+import '/core/providers/providers.dart';
+import '/core/theme/theme.dart';
 
-class PackGalleryView extends ConsumerWidget {
-  final PacksState pack;
-  const PackGalleryView({super.key, required this.pack});
-  Future<void> _addNewImage(BuildContext context, WidgetRef ref) async {
-    final file = await ref
-        .read(packGalleryProvider.notifier)
-        .pickImageForPack();
-    if (file == null) return;
-    if (!context.mounted) return;
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => GalleryView(pack: pack)),
-    );
-  }
+class LibraryPackGalleryView extends ConsumerWidget {
+  final LibraryPacksState pack;
+  const LibraryPackGalleryView({super.key, required this.pack});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final packs = ref.watch(packsProvider);
-    final galleryState = ref.watch(packGalleryProvider);
+    final packs = ref.watch(libraryPacksProvider);
+    final galleryState = ref.watch(libraryPackGalleryProvider);
     final currentPack = packs.firstWhere(
       (p) => p.directoryPath == pack.directoryPath,
       orElse: () => pack,
     );
-    ref.listen<PackGalleryState>(packGalleryProvider, (previous, next) {
+    ref.listen<LibraryPackGalleryState>(libraryPackGalleryProvider, (
+      previous,
+      next,
+    ) {
       if (next.lastMessage != null && context.mounted) {
         SimpleToast.showCustomToast(
           context: context,
           message: next.lastMessage!,
         );
-        ref.read(packGalleryProvider.notifier).clearMessage();
+        ref.read(libraryPackGalleryProvider.notifier).clearMessage();
       }
     });
     return Scaffold(
@@ -73,7 +65,7 @@ class PackGalleryView extends ConsumerWidget {
         child: currentPack.stickerPaths.isEmpty
             ? Center(
                 child: Text(
-                  'No stickers yet.\nTap + to add one.',
+                  'No stickers yet.\nTap + to add from library.',
                   style: bodyLargeStyle,
                   textAlign: TextAlign.center,
                 ),
@@ -97,7 +89,7 @@ class PackGalleryView extends ConsumerWidget {
                         );
                         if (shouldDelete == true) {
                           await ref
-                              .read(packsProvider.notifier)
+                              .read(libraryPacksProvider.notifier)
                               .removeStickerFromPack(currentPack, path);
                         }
                       },
@@ -117,19 +109,22 @@ class PackGalleryView extends ConsumerWidget {
         children: [
           FloatingActionButton(
             elevation: 1,
-            onPressed: () => _addNewImage(context, ref),
-            heroTag: 'add_image',
+            onPressed: () => Navigator.push<Set<String>>(
+              context,
+              MaterialPageRoute(builder: (_) => LibraryView(pack: pack)),
+            ),
+            heroTag: 'add_from_library',
             child: const Icon(Icons.add),
           ),
           FloatingActionButton(
             elevation: 1,
             onPressed: currentPack.stickerPaths.length >= 3
                 ? () => ref
-                      .read(packGalleryProvider.notifier)
+                      .read(libraryPackGalleryProvider.notifier)
                       .exportPackToWhatsApp(pack)
                 : () => SimpleToast.showCustomToast(
                     context: context,
-                    message: 'Please add at least 3 images to pack',
+                    message: 'Please add at least 3 stickers to pack',
                   ),
             heroTag: 'export_whatsapp',
             backgroundColor: currentPack.stickerPaths.length >= 3
