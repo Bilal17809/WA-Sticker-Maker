@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '/core/common/app_exceptions.dart';
 import '/core/utils/utils.dart';
 import '/core/providers/providers.dart';
 import '/presentation/packs/provider/packs_state.dart';
@@ -31,7 +32,7 @@ class PacksNotifier extends Notifier<List<PacksState>> {
         state = packs;
       }
     } catch (e) {
-      debugPrint('Error loading packs: $e');
+      debugPrint('${AppExceptions().errorLoadingPacks} $e');
     }
   }
 
@@ -43,7 +44,7 @@ class PacksNotifier extends Notifier<List<PacksState>> {
           .toList();
       await localStorage.setStringList(_packsKey, packsJson);
     } catch (e) {
-      debugPrint('Error saving packs: $e');
+      debugPrint('${AppExceptions().errorSavingPack}: $e');
     }
   }
 
@@ -58,7 +59,7 @@ class PacksNotifier extends Notifier<List<PacksState>> {
       }
       return packDir.path;
     } catch (e) {
-      debugPrint('Error creating pack directory: $e');
+      debugPrint('${AppExceptions().errorCreatingDirectory}: $e');
       return null;
     }
   }
@@ -89,7 +90,7 @@ class PacksNotifier extends Notifier<List<PacksState>> {
       state = state.where((p) => p != pack).toList();
       await _savePacks();
     } catch (e) {
-      debugPrint('Error deleting pack: $e');
+      debugPrint('${AppExceptions().errorDeletingPack}: $e');
     }
   }
 

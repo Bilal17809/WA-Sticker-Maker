@@ -9,10 +9,6 @@ class WhatsAppService {
     return await whatsappStickersHandler.isWhatsAppInstalled;
   }
 
-  static void launchWhatsApp() {
-    whatsappStickersHandler.launchWhatsApp();
-  }
-
   static Future<bool> isStickerPackInstalled(String identifier) async {
     return await whatsappStickersHandler.isStickerPackInstalled(identifier);
   }
@@ -23,9 +19,5 @@ class WhatsAppService {
 
   static Future<void> updateStickerPack(StickerPack stickerPack) async {
     await whatsappStickersHandler.updateStickerPack(stickerPack);
-  }
-
-  static Future<void> deleteStickerPack(String identifier) async {
-    await whatsappStickersHandler.deleteStickerPack(identifier);
   }
 }

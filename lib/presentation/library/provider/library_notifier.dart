@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_emoji/flutter_emoji.dart';
+import '/core/common/app_exceptions.dart';
 import 'library_state.dart';
 
 class LibraryNotifier extends Notifier<LibraryState> {
@@ -44,7 +45,7 @@ class LibraryNotifier extends Notifier<LibraryState> {
       uniqueEmojis.sort();
       state = state.copyWith(emojis: uniqueEmojis, isLoading: false);
     } catch (e) {
-      debugPrint('!!!!!!!!!!!!!!!Error loading emojis from server: $e');
+      debugPrint('${AppExceptions().errorFetchingEmojis}: $e');
       state = state.copyWith(emojis: [], isLoading: false);
     }
   }

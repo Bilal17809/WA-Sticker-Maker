@@ -55,6 +55,11 @@ dependencies:
   pro_image_editor: ^11.6.0
   permission_handler: ^12.0.1
   whatsapp_stickers_handler: ^0.5.0
+  cached_network_image: ^3.4.1
+
+dependency_overrides:
+  whatsapp_stickers_handler:
+    path: C:/flutter/packages/whatsapp_stickers_handler-main
 
 dev_dependencies:
   flutter_test:
