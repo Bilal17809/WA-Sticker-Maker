@@ -53,6 +53,7 @@ dependencies:
   permission_handler: ^12.0.1
   whatsapp_stickers_handler: ^0.5.0
   connectivity_plus: ^6.1.5
+  path: ^1.9.1
 
 dependency_overrides:
   whatsapp_stickers_handler:

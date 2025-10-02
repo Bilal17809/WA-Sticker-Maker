@@ -1,10 +1,15 @@
 import 'package:flutter/foundation.dart';
+import '/core/interface/pack_info_interface.dart';
 
 @immutable
-class PacksState {
+class PacksState implements PackInfoInterface {
+  @override
   final String name;
+  @override
   final String directoryPath;
+  @override
   final List<String> stickerPaths;
+  @override
   final String? trayImagePath;
 
   const PacksState({

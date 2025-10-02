@@ -1,15 +1,22 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '/data/models/models.dart';
+import 'package:wa_sticker_maker/presentation/library_pack/provider/library_pack_state.dart';
+import '/core/common/app_exceptions.dart';
+import '/core/providers/providers.dart';
+import '/core/services/services.dart';
 import '/core/config/client.dart';
 import '/data/data_source/klipy_data_source.dart';
 import '/data/repo_impl/klipy_repo_impl.dart';
+import '/data/models/models.dart';
 import '/domain/use_cases/get_klipy_stickers.dart';
 import 'library_state.dart';
 
+typedef Fetcher = Future<StickerResponseModel> Function();
+
 class LibraryNotifier extends Notifier<LibraryState> {
-  late final GetKlipyStickers _getStickers;
+  late final StickerService _stickerService;
+  late final FetchService _fetchService;
+  late final StickerDownloadService _downloadService;
   Timer? _debounce;
   String? _currentQuery;
 
@@ -17,120 +24,118 @@ class LibraryNotifier extends Notifier<LibraryState> {
   LibraryState build() {
     final dataSource = KlipyDataSource(klipyApiKey);
     final repo = KlipyRepoImpl(dataSource);
-    _getStickers = GetKlipyStickers(repo);
+    final useCase = GetKlipyStickers(repo);
+    _stickerService = StickerService(useCase);
+    _fetchService = FetchService();
+    _downloadService = StickerDownloadService();
     ref.onDispose(() {
       _debounce?.cancel();
+      _downloadService.dispose();
     });
     return const LibraryState();
   }
 
-  Future<void> loadTrending() {
-    debugPrint('[LibraryNotifier] Loading trending stickers page 1');
-    return _fetch(
-      () => _getStickers.trending(page: 1, perPage: 20),
+  Future<void> loadTrending() async {
+    state = await _fetchService.fetch(
+      currentState: state,
+      fetcher: () => _stickerService.getTrending(page: 1, perPage: 20),
       append: false,
-    )..then((_) {
-      _currentQuery = null;
-    });
+    );
+    _currentQuery = null;
   }
 
   void search(String query) {
     _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 200), () {
+    _debounce = Timer(const Duration(milliseconds: 200), () async {
       final trimmed = query.trim();
       _currentQuery = trimmed.isEmpty ? null : trimmed;
-      if (trimmed.isEmpty) {
-        debugPrint('[LibraryNotifier] Search cleared → loadTrending()');
-        loadTrending();
-      } else {
-        debugPrint('[LibraryNotifier] Searching "$trimmed" page 1');
-        _fetch(
-          () => _getStickers.search(trimmed, page: 1, perPage: 20),
-          append: false,
-        );
-      }
+
+      state = await _fetchService.fetch(
+        currentState: state,
+        fetcher: trimmed.isEmpty
+            ? () => _stickerService.getTrending(page: 1, perPage: 20)
+            : () => _stickerService.search(trimmed, page: 1, perPage: 20),
+        append: false,
+      );
     });
   }
 
   Future<void> loadMore() async {
-    if (state.isLoading || state.isLoadingMore) {
-      debugPrint('[LibraryNotifier] Skipping loadMore (already loading)');
-      return;
-    }
-    if (!(state.stickerResponse?.stickers.isNotEmpty ?? false)) {
-      return;
-    }
-    if (!state.hasMore) {
-      return;
-    }
+    if (state.isLoading || state.isLoadingMore || !state.hasMore) return;
+    if (!(state.stickerResponse?.stickers.isNotEmpty ?? false)) return;
     final nextPage = state.stickerResponse!.currentPage + 1;
-    if (_currentQuery != null && _currentQuery!.isNotEmpty) {
-      await _fetch(
-        () => _getStickers.search(_currentQuery!, page: nextPage, perPage: 20),
-        append: true,
+    final fetcher = (_currentQuery?.isNotEmpty ?? false)
+        ? () => _stickerService.search(
+            _currentQuery!,
+            page: nextPage,
+            perPage: 20,
+          )
+        : () => _stickerService.getTrending(page: nextPage, perPage: 20);
+
+    state = await _fetchService.fetch(
+      currentState: state,
+      fetcher: fetcher,
+      append: true,
+    );
+  }
+
+  void selectSticker(String stickerId) {
+    final selection = Set<String>.from(state.selectedStickerIds);
+    selection.contains(stickerId)
+        ? selection.remove(stickerId)
+        : selection.add(stickerId);
+    state = state.copyWith(selectedStickerIds: selection);
+  }
+
+  Future<bool> downloadAndAddToPack(LibraryPacksState pack) async {
+    if (state.selectedStickerIds.isEmpty) return false;
+    final stickers =
+        state.stickerResponse?.stickers
+            .where((s) => state.selectedStickerIds.contains(s.id))
+            .toList() ??
+        [];
+    if (stickers.isEmpty) return false;
+    state = state.copyWith(isDownloading: true);
+    try {
+      final paths = await _downloadStickers(stickers, pack.directoryPath);
+      if (paths.isNotEmpty) {
+        _updatePack(pack, paths);
+      }
+      state = state.copyWith(selectedStickerIds: {});
+      return paths.isNotEmpty;
+    } catch (e) {
+      state = state.copyWith(
+        errorMessage: '${AppExceptions().errorDownloadingPack}: $e',
       );
-    } else {
-      await _fetch(
-        () => _getStickers.trending(page: nextPage, perPage: 20),
-        append: true,
-      );
+      return false;
+    } finally {
+      state = state.copyWith(isDownloading: false);
     }
   }
 
-  Future<void> _fetch(
-    Future<StickerResponseModel> Function() fetcher, {
-    bool append = false,
-  }) async {
-    if (append) {
-      state = state.copyWith(isLoadingMore: true, errorMessage: null);
-    } else {
-      state = state.copyWith(isLoading: true, errorMessage: null);
-    }
-    try {
-      final res = await fetcher();
-      if (append) {
-        final existing = state.stickerResponse?.stickers ?? <StickerModel>[];
-        final combined = [...existing, ...res.stickers];
+  Future<List<String>> _downloadStickers(
+    List<StickerModel> stickers,
+    String directory,
+  ) {
+    return _downloadService.downloadStickers(
+      stickers: stickers,
+      targetDirectory: directory,
+    );
+  }
 
-        final mergedResponse = StickerResponseModel(
-          stickers: combined,
-          currentPage: res.currentPage,
-          perPage: res.perPage,
-          hasNext: res.hasNext,
-        );
-
-        state = state.copyWith(
-          stickerResponse: mergedResponse,
-          errorMessage: null,
-        );
-      } else {
-        state = state.copyWith(stickerResponse: res, errorMessage: null);
-      }
-    } catch (e) {
-      if (append) {
-        state = state.copyWith(
-          isLoadingMore: false,
-          errorMessage: e.toString(),
-        );
-      } else {
-        state = state.copyWith(
-          isLoading: false,
-          errorMessage: e.toString(),
-          stickerResponse: StickerResponseModel(
-            stickers: [],
-            currentPage: 1,
-            perPage: 0,
-            hasNext: false,
-          ),
-        );
-      }
-      return;
-    } finally {
-      if (append) {
-        state = state.copyWith(isLoadingMore: false);
-      } else {
-        state = state.copyWith(isLoading: false);
-      }
-    }
+  void _updatePack(LibraryPacksState pack, List<String> paths) {
+    final packNotifier = ref.read(libraryPacksProvider.notifier);
+    final index = packNotifier.state.indexWhere(
+      (p) => p.directoryPath == pack.directoryPath,
+    );
+    if (index == -1) return;
+    final current = packNotifier.state[index];
+    final updated = current.copyWith(
+      stickerPaths: [...current.stickerPaths, ...paths],
+      trayImagePath: current.stickerPaths.isEmpty
+          ? paths.first
+          : current.trayImagePath,
+    );
+    packNotifier.updatePack(index, updated);
   }
 }

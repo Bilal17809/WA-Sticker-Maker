@@ -1,13 +1,13 @@
 import 'dart:io';
+import '/core/interface/pack_info_interface.dart';
 import 'package:whatsapp_stickers_handler/model/sticker_pack.dart';
 import 'package:whatsapp_stickers_handler/model/sticker_pack_exception.dart';
 import 'package:whatsapp_stickers_handler/service/sticker_pack_util.dart';
 import '/core/common/app_exceptions.dart';
 import '/core/services/whatsapp_service.dart';
-import '/presentation/packs/provider/packs_state.dart';
 
 class PackExportService {
-  String? _validate(PacksState pack) {
+  String? _validate(PackInfoInterface pack) {
     if (pack.stickerPaths.length < 3) {
       return 'Need at least 3 stickers to export to WhatsApp.';
     }
@@ -17,7 +17,7 @@ class PackExportService {
     return null;
   }
 
-  Future<String?> _createTrayIcon(PacksState pack) async {
+  Future<String?> _createTrayIcon(PackInfoInterface pack) async {
     try {
       if (pack.trayImagePath != null &&
           File(pack.trayImagePath!).existsSync()) {
@@ -47,7 +47,7 @@ class PackExportService {
     }
   }
 
-  Future<String?> exportPack(PacksState pack) async {
+  Future<String?> exportPack(PackInfoInterface pack) async {
     try {
       final validationError = _validate(pack);
       if (validationError != null) return validationError;
