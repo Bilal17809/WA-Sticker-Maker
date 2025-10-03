@@ -49,9 +49,12 @@ class LibraryPackGalleryView extends ConsumerWidget {
                   child: currentPack.trayImagePath != null
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(kGap),
-                          child: Image.file(
-                            File(currentPack.trayImagePath!),
-                            fit: BoxFit.cover,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Image.file(
+                              File(currentPack.trayImagePath!),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         )
                       : const Icon(Icons.emoji_emotions),
@@ -96,7 +99,10 @@ class LibraryPackGalleryView extends ConsumerWidget {
                       child: Container(
                         decoration: AppDecorations.simpleRounded(context),
                         padding: const EdgeInsets.all(kBodyHp),
-                        child: Image.file(File(path), fit: BoxFit.cover),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Image.file(File(path), fit: BoxFit.cover),
+                        ),
                       ),
                     );
                   },

@@ -29,7 +29,41 @@ class LibraryView extends ConsumerWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: TitleBar(title: 'Pack - ${pack.name}'),
+      appBar: TitleBar(
+        title: 'Pack - ${pack.name}',
+        actions: [
+          libraryState.selectedStickerIds.isNotEmpty
+              ? Row(
+                  spacing: kGap,
+                  children: [
+                    Text(
+                      '${libraryState.selectedStickerIds.length} selected',
+                      style: titleSmallStyle,
+                    ),
+                    IconActionButton(
+                      onTap: () async {
+                        final success = await ref
+                            .read(libraryProvider.notifier)
+                            .downloadAndAddToPack(pack);
+                        if (success && context.mounted) {
+                          return Navigator.pop(context);
+                        }
+                      },
+                      icon: libraryState.isDownloading
+                          ? Icons.hourglass_bottom
+                          : Icons.downloading,
+                    ),
+                  ],
+                )
+              : IconActionButton(
+                  onTap: () => SimpleToast.showCustomToast(
+                    context: context,
+                    message: 'Please select a sticker to add',
+                  ),
+                  icon: Icons.add,
+                ),
+        ],
+      ),
       body: Container(
         decoration: AppDecorations.bgContainer(context),
         child: SafeArea(
@@ -50,6 +84,9 @@ class LibraryView extends ConsumerWidget {
                       ref.read(libraryProvider.notifier).loadTrending(),
                   onLoadMore: () =>
                       ref.read(libraryProvider.notifier).loadMore(),
+                  onStickerTap: (stickerId) => ref
+                      .read(libraryProvider.notifier)
+                      .selectSticker(stickerId),
                 ),
               ),
             ],
@@ -64,17 +101,19 @@ class _LibraryBody extends StatelessWidget {
   final LibraryState libraryState;
   final VoidCallback onRetry;
   final VoidCallback onLoadMore;
+  final Function(String) onStickerTap;
   const _LibraryBody({
     required this.libraryState,
     required this.onRetry,
     required this.onLoadMore,
+    required this.onStickerTap,
   });
 
   @override
   Widget build(BuildContext context) {
     if (libraryState.isLoading &&
         (libraryState.stickerResponse?.stickers.isEmpty ?? true)) {
-      return const Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator(color: AppColors.kWhite));
     }
     final stickers = libraryState.stickerResponse?.stickers ?? [];
     final isLoadingMore = libraryState.isLoadingMore;
@@ -108,21 +147,34 @@ class _LibraryBody extends StatelessWidget {
             );
           }
           final s = stickers[i];
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(kGap),
-            child: Container(
-              decoration: AppDecorations.simpleRounded(context),
-              padding: const EdgeInsets.all(kBodyHp),
-              child: Image.network(
-                s.imageUrl,
-                fit: BoxFit.cover,
-                loadingBuilder: (_, child, progress) => progress == null
-                    ? child
-                    : const Center(
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                errorBuilder: (_, error, __) =>
-                    Center(child: Lottie.asset(Assets.imageLottie)),
+          final isSelected = libraryState.selectedStickerIds.contains(s.id);
+          return GestureDetector(
+            onTap: () => onStickerTap(s.id),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(kGap),
+              child: Container(
+                decoration: AppDecorations.simpleRounded(context).copyWith(
+                  border: Border.all(
+                    color: isSelected
+                        ? AppColors.primary(context)
+                        : AppColors.container(context),
+                  ),
+                ),
+                padding: const EdgeInsets.all(kBodyHp),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Image.network(
+                    s.imageUrl,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (_, child, progress) => progress == null
+                        ? child
+                        : const Center(
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                    errorBuilder: (_, error, __) =>
+                        Center(child: Lottie.asset(Assets.imageLottie)),
+                  ),
+                ),
               ),
             ),
           );
