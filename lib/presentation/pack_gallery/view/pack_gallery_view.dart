@@ -35,10 +35,7 @@ class PackGalleryView extends ConsumerWidget {
     );
     ref.listen<PackGalleryState>(packGalleryProvider, (previous, next) {
       if (next.lastMessage != null && context.mounted) {
-        SimpleToast.showCustomToast(
-          context: context,
-          message: next.lastMessage!,
-        );
+        SimpleToast.showToast(context: context, message: next.lastMessage!);
         ref.read(packGalleryProvider.notifier).clearMessage();
       }
     });
@@ -127,7 +124,7 @@ class PackGalleryView extends ConsumerWidget {
                 ? () => ref
                       .read(packGalleryProvider.notifier)
                       .exportPackToWhatsApp(pack)
-                : () => SimpleToast.showCustomToast(
+                : () => SimpleToast.showToast(
                     context: context,
                     message: 'Please add at least 3 images to pack',
                   ),

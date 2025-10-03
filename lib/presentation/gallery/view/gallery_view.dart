@@ -70,11 +70,6 @@ class GalleryView extends ConsumerWidget {
                                           pack,
                                           'sticker_${DateTime.now().millisecondsSinceEpoch}',
                                         );
-                                        if (!context.mounted) return;
-                                        SimpleToast.showCustomToast(
-                                          context: context,
-                                          message: 'Saved as WebP!',
-                                        );
                                       },
                                       icon: Icons.save_alt,
                                       backgroundColor: AppColors.primary(

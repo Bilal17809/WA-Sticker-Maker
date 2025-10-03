@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:toastification/toastification.dart';
 import '/presentation/splash/view/splash_view.dart';
 import '/core/local_storage/local_storage.dart';
 import 'core/providers/providers.dart';
+import 'core/services/connectivity_service.dart';
 import 'core/theme/theme.dart';
 
 Future<void> main() async {

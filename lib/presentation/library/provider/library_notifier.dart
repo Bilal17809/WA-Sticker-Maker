@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wa_sticker_maker/presentation/library_pack/provider/library_pack_state.dart';
+import '/presentation/library_pack/provider/library_pack_state.dart';
 import '/core/common/app_exceptions.dart';
 import '/core/providers/providers.dart';
 import '/core/services/services.dart';
@@ -120,6 +120,7 @@ class LibraryNotifier extends Notifier<LibraryState> {
     return _downloadService.downloadStickers(
       stickers: stickers,
       targetDirectory: directory,
+      convertToWebP: true,
     );
   }
 

@@ -26,43 +26,20 @@ class LibraryPackGalleryView extends ConsumerWidget {
       previous,
       next,
     ) {
-      if (next.lastMessage != null && context.mounted) {
-        SimpleToast.showCustomToast(
-          context: context,
-          message: next.lastMessage!,
-        );
+      if (context.mounted && next.lastMessage != null) {
+        if (!(next.lastMessage?.contains('added') ?? false)) {
+          SimpleToast.showToast(
+            context: context,
+            message: next.lastMessage!,
+            imagePath: Assets.whatsAppLogo,
+          );
+        }
         ref.read(libraryPackGalleryProvider.notifier).clearMessage();
       }
     });
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: TitleBar(
-        title: pack.name,
-        actions: [
-          if (currentPack.stickerPaths.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(right: kBodyHp),
-              child: Center(
-                child: SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: currentPack.trayImagePath != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(kGap),
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Image.file(
-                              File(currentPack.trayImagePath!),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        )
-                      : const Icon(Icons.emoji_emotions),
-                ),
-              ),
-            ),
-        ],
-      ),
+      appBar: TitleBar(title: pack.name),
       body: Container(
         decoration: AppDecorations.bgContainer(context),
         child: currentPack.stickerPaths.isEmpty
@@ -128,7 +105,7 @@ class LibraryPackGalleryView extends ConsumerWidget {
                 ? () => ref
                       .read(libraryPackGalleryProvider.notifier)
                       .exportPackToWhatsApp(pack)
-                : () => SimpleToast.showCustomToast(
+                : () => SimpleToast.showToast(
                     context: context,
                     message: 'Please add at least 3 stickers to pack',
                   ),

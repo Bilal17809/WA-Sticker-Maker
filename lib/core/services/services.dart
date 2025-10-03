@@ -4,3 +4,6 @@ export 'connectivity_service.dart';
 export 'fetch_service.dart';
 export 'sticker_service.dart';
 export 'sticker_download_service.dart';
+export 'sticker_conversion_service.dart';
+export 'download_service.dart';
+export 'base_pack_notifier_service.dart';

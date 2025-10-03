@@ -1,54 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:wa_sticker_maker/core/constants/constants.dart';
 import '/core/theme/app_colors.dart';
-import 'package:toastification/toastification.dart';
 
 class SimpleToast {
-  static void showCustomToast({
+  static void showToast({
     required BuildContext context,
     required String message,
-    ToastificationType type = ToastificationType.success,
-    Color primaryColor = Colors.green,
-    IconData icon = Icons.check,
+    IconData? icon,
+    String? imagePath,
+    Color? iconColor,
+    Duration duration = const Duration(seconds: 3),
   }) {
-    toastification.show(
-      context: context,
-      type: type,
-      style: ToastificationStyle.flat,
-      autoCloseDuration: const Duration(seconds: 4),
-      title: Center(child: Text(message)),
-      alignment: Alignment.bottomCenter,
-      direction: TextDirection.ltr,
-      animationDuration: const Duration(milliseconds: 100),
-      icon: Icon(icon, size: 24),
-      showIcon: true,
-      primaryColor: primaryColor,
-      backgroundColor: AppColors.secondary(context),
-      foregroundColor: AppColors.primaryText(context),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: const [
-        BoxShadow(
-          color: Color(0x07000000),
-          blurRadius: 16,
-          offset: Offset(0, 16),
-          spreadRadius: 0,
-        ),
-      ],
-      closeButton: ToastCloseButton(
-        showType: CloseButtonShowType.onHover,
-        buttonBuilder: (context, onClose) {
-          return OutlinedButton.icon(
-            onPressed: onClose,
-            icon: const Icon(Icons.close, size: 20),
-            label: const Text('Close'),
-          );
-        },
+    final snackBar = SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          (imagePath != null)
+              ? Image.asset(imagePath, height: 20, width: 20)
+              : const SizedBox.shrink(),
+          const SizedBox(width: 6),
+          Text(message, style: TextStyle(color: AppColors.kWhite)),
+        ],
       ),
-      closeOnClick: false,
-      pauseOnHover: true,
-      dragToClose: true,
-      applyBlurEffect: true,
+      backgroundColor: AppColors.kDarkGrey.withValues(alpha: 0.75),
+      elevation: 0,
+      duration: duration,
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: EdgeInsets.symmetric(
+        horizontal: context.screenWidth * 0.165,
+        vertical: 0,
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
     );
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
   }
 }

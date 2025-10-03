@@ -56,7 +56,7 @@ class LibraryView extends ConsumerWidget {
                   ],
                 )
               : IconActionButton(
-                  onTap: () => SimpleToast.showCustomToast(
+                  onTap: () => SimpleToast.showToast(
                     context: context,
                     message: 'Please select a sticker to add',
                   ),
@@ -153,27 +153,41 @@ class _LibraryBody extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(kGap),
               child: Container(
-                decoration: AppDecorations.simpleRounded(context).copyWith(
-                  border: Border.all(
-                    color: isSelected
-                        ? AppColors.primary(context)
-                        : AppColors.container(context),
-                  ),
-                ),
+                decoration: AppDecorations.simpleRounded(context),
                 padding: const EdgeInsets.all(kBodyHp),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Image.network(
-                    s.imageUrl,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (_, child, progress) => progress == null
-                        ? child
-                        : const Center(
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          ),
-                    errorBuilder: (_, error, __) =>
-                        Center(child: Lottie.asset(Assets.imageLottie)),
-                  ),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    // Align(
+                    //   alignment: Alignment.centerRight,
+                    //   child: isSelected
+                    //       ? Icon(Icons.check_circle)
+                    //       : const SizedBox.shrink(),
+                    // ),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Image.network(
+                        s.imageUrl,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (_, child, progress) => progress == null
+                            ? child
+                            : const Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                        errorBuilder: (_, error, __) =>
+                            Center(child: Lottie.asset(Assets.imageLottie)),
+                      ),
+                    ),
+                    isSelected
+                        ? Positioned(
+                            top: -8,
+                            right: -6,
+                            child: Icon(Icons.check_circle),
+                          )
+                        : const SizedBox.shrink(),
+                  ],
                 ),
               ),
             ),
