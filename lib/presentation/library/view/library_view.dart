@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
+import '/core/services/connectivity_service.dart';
 import '/presentation/library_pack/provider/library_pack_state.dart';
 import '/core/constants/constants.dart';
 import '/core/utils/utils.dart';
@@ -16,15 +17,22 @@ class LibraryView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final libraryState = ref.watch(libraryProvider);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final notifier = ref.read(libraryProvider.notifier);
-      final currentlyEmpty =
-          !(libraryState.stickerResponse?.stickers.isNotEmpty ?? false);
-      if (!libraryState.isLoading &&
-          currentlyEmpty &&
-          libraryState.errorMessage == null) {
-        notifier.loadTrending();
-      }
+    ref.listen<AsyncValue<bool>>(internetStatusStreamProvider, (
+      previous,
+      next,
+    ) {
+      next.whenData((isConnected) {
+        if (isConnected) {
+          ConnectivityDialog.closeIfOpen(context);
+        } else {
+          ConnectivityDialog.showNoInternetDialog(
+            context,
+            onRetry: () async {
+              await ref.read(libraryProvider.notifier).loadTrending();
+            },
+          );
+        }
+      });
     });
 
     return Scaffold(
@@ -38,7 +46,7 @@ class LibraryView extends ConsumerWidget {
                   children: [
                     Text(
                       '${libraryState.selectedStickerIds.length} selected',
-                      style: titleSmallStyle,
+                      style: titleSmallStyle.copyWith(color: AppColors.kWhite),
                     ),
                     IconActionButton(
                       onTap: () async {
@@ -56,7 +64,7 @@ class LibraryView extends ConsumerWidget {
                   ],
                 )
               : IconActionButton(
-                  onTap: () => SimpleToast.showCustomToast(
+                  onTap: () => SimpleToast.showToast(
                     context: context,
                     message: 'Please select a sticker to add',
                   ),
@@ -153,27 +161,35 @@ class _LibraryBody extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(kGap),
               child: Container(
-                decoration: AppDecorations.simpleRounded(context).copyWith(
-                  border: Border.all(
-                    color: isSelected
-                        ? AppColors.primary(context)
-                        : AppColors.container(context),
-                  ),
-                ),
+                decoration: AppDecorations.simpleRounded(context),
                 padding: const EdgeInsets.all(kBodyHp),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Image.network(
-                    s.imageUrl,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (_, child, progress) => progress == null
-                        ? child
-                        : const Center(
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          ),
-                    errorBuilder: (_, error, __) =>
-                        Center(child: Lottie.asset(Assets.imageLottie)),
-                  ),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Image.network(
+                        s.imageUrl,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (_, child, progress) => progress == null
+                            ? child
+                            : const Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                        errorBuilder: (_, error, __) =>
+                            Center(child: Lottie.asset(Assets.imageLottie)),
+                      ),
+                    ),
+                    isSelected
+                        ? Positioned(
+                            top: -8,
+                            right: -6,
+                            child: Icon(Icons.check_circle),
+                          )
+                        : const SizedBox.shrink(),
+                  ],
                 ),
               ),
             ),

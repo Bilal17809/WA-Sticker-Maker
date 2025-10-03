@@ -14,4 +14,5 @@ class AppExceptions {
   final String unsupportedPlatform = 'Platform not supported';
   final String remoteConfigError = 'Failed to fetch remote config';
   final String failedApiCall = 'Failed to call API';
+  final String failedOriginalDelete = 'Failed to delete original file.';
 }

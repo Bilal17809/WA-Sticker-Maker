@@ -3,6 +3,8 @@ import '/data/models/sticker_response_model.dart';
 
 @immutable
 class LibraryState {
+  final bool isConnected;
+  final bool initialLoadDone;
   final bool isLoading;
   final bool isLoadingMore;
   final bool isDownloading;
@@ -11,6 +13,8 @@ class LibraryState {
   final Set<String> selectedStickerIds;
 
   const LibraryState({
+    this.isConnected = true,
+    this.initialLoadDone = false,
     this.isLoading = false,
     this.isLoadingMore = false,
     this.isDownloading = false,
@@ -22,6 +26,8 @@ class LibraryState {
   bool get hasMore => stickerResponse?.hasNext ?? false;
 
   LibraryState copyWith({
+    bool? isConnected,
+    bool? initialLoadDone,
     bool? isLoading,
     bool? isLoadingMore,
     bool? isDownloading,
@@ -30,6 +36,8 @@ class LibraryState {
     Set<String>? selectedStickerIds,
   }) {
     return LibraryState(
+      isConnected: isConnected ?? this.isConnected,
+      initialLoadDone: initialLoadDone ?? this.initialLoadDone,
       isLoading: isLoading ?? this.isLoading,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       isDownloading: isDownloading ?? this.isDownloading,
