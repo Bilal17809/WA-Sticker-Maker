@@ -5,14 +5,18 @@ import '/data/models/sticker_response_model.dart';
 class LibraryState {
   final bool isLoading;
   final bool isLoadingMore;
+  final bool isDownloading;
   final StickerResponseModel? stickerResponse;
   final String? errorMessage;
+  final Set<String> selectedStickerIds;
 
   const LibraryState({
     this.isLoading = false,
     this.isLoadingMore = false,
+    this.isDownloading = false,
     this.stickerResponse,
     this.errorMessage,
+    this.selectedStickerIds = const {},
   });
 
   bool get hasMore => stickerResponse?.hasNext ?? false;
@@ -20,14 +24,18 @@ class LibraryState {
   LibraryState copyWith({
     bool? isLoading,
     bool? isLoadingMore,
+    bool? isDownloading,
     StickerResponseModel? stickerResponse,
     String? errorMessage,
+    Set<String>? selectedStickerIds,
   }) {
     return LibraryState(
       isLoading: isLoading ?? this.isLoading,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      isDownloading: isDownloading ?? this.isDownloading,
       stickerResponse: stickerResponse ?? this.stickerResponse,
       errorMessage: errorMessage,
+      selectedStickerIds: selectedStickerIds ?? this.selectedStickerIds,
     );
   }
 }

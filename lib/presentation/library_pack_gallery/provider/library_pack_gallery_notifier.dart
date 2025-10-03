@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '/presentation/packs/provider/packs_state.dart';
 import '/presentation/library_pack/provider/library_pack_state.dart';
 import '/presentation/library_pack_gallery/provider/library_pack_gallery_state.dart';
 import '/core/providers/providers.dart';
@@ -17,7 +16,7 @@ class LibraryPackGalleryNotifier extends Notifier<LibraryPackGalleryState> {
     );
     final message = await ref
         .read(packExportServiceProvider)
-        .exportPack(currentPack as PacksState);
+        .exportPack(currentPack);
     if (message != null) {
       state = state.copyWith(lastMessage: () => message);
     }
