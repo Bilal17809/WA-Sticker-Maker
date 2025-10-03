@@ -1,42 +1,62 @@
 import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
+import 'package:flutter/foundation.dart';
+import '/core/common/app_exceptions.dart';
+import 'services.dart';
 
 class StickerDownloadService {
-  final http.Client _client;
+  final DownloadService _downloader;
+  final StickerConversionService _converter;
 
-  StickerDownloadService({http.Client? client})
-    : _client = client ?? http.Client();
+  StickerDownloadService({
+    DownloadService? downloader,
+    StickerConversionService? converter,
+  }) : _downloader = downloader ?? DownloadService(),
+       _converter = converter ?? StickerConversionService();
 
   Future<List<String>> downloadStickers({
     required List<dynamic> stickers,
     required String targetDirectory,
+    bool convertToWebP = true,
   }) async {
+    final dir = Directory(targetDirectory);
+    if (!await dir.exists()) await dir.create(recursive: true);
     final paths = <String>[];
-
-    for (final sticker in stickers) {
+    for (final s in stickers) {
       try {
-        final response = await _client.get(
-          Uri.parse(sticker.imageUrl as String),
+        final ts = DateTime.now().millisecondsSinceEpoch;
+        final base = 'sticker_${ts}_${s.id}';
+        final file = await _downloader.downloadToFile(
+          s.imageUrl as String,
+          targetDirectory,
+          base,
         );
-        if (response.statusCode != 200) continue;
-        final timestamp = DateTime.now().millisecondsSinceEpoch;
-        final ext = _getExtension(sticker.imageUrl as String);
-        final fileName = 'sticker_${timestamp}_${sticker.id}$ext';
-        final filePath = '$targetDirectory/$fileName';
-        await File(filePath).writeAsBytes(response.bodyBytes);
-        paths.add(filePath);
-      } catch (_) {
-        continue;
-      }
+        if (file == null) continue;
+        if (convertToWebP) {
+          final out = '$targetDirectory/$base.webp';
+          final converted = await _converter.convertFileToWebP512(file, out);
+          if (converted != null) {
+            if (_converter.removeOriginal) {
+              try {
+                await file.delete();
+              } catch (_) {
+                debugPrint(
+                  '${AppExceptions().failedOriginalDelete}: ${file.path}',
+                );
+              }
+            }
+            paths.add(converted);
+          } else {
+            paths.add(file.path);
+          }
+        } else {
+          paths.add(file.path);
+        }
+      } catch (_) {}
     }
     return paths;
   }
 
-  String _getExtension(String url) {
-    final parts = url.split('.');
-    return parts.isEmpty ? '.png' : '.${parts.last.split('?').first}';
+  void dispose() {
+    _downloader.dispose();
   }
-
-  void dispose() => _client.close();
 }

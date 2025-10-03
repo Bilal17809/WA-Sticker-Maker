@@ -15,7 +15,7 @@ class StickerModel {
 
   factory StickerModel.fromJson(Map<String, dynamic> json) {
     final fileObj = json['file'] as Map<String, dynamic>?;
-    final url = StickerHelper.pickWebp(fileObj);
+    final url = StickerHelper.pickPng(fileObj);
 
     return StickerModel(
       id: json['id']?.toString() ?? '',
