@@ -28,6 +28,20 @@ class LibraryNotifier extends Notifier<LibraryState> {
     _stickerService = StickerService(useCase);
     _fetchService = FetchService();
     _downloadService = StickerDownloadService();
+
+    ref.listen<AsyncValue<bool>>(internetStatusStreamProvider, (
+      previous,
+      next,
+    ) {
+      next.whenData((isConnected) async {
+        state = state.copyWith(isConnected: isConnected);
+        if (isConnected &&
+            !state.isLoading &&
+            !(state.stickerResponse?.stickers.isNotEmpty ?? false)) {
+          await loadTrending();
+        }
+      });
+    });
     ref.onDispose(() {
       _debounce?.cancel();
       _downloadService.dispose();
