@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wa_sticker_maker/core/constants/constants.dart';
+import 'package:wa_sticker_maker/core/theme/app_styles.dart';
 import '/core/theme/app_colors.dart';
 
 class SimpleToast {
@@ -13,13 +14,19 @@ class SimpleToast {
   }) {
     final snackBar = SnackBar(
       content: Row(
+        spacing: 6,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           (imagePath != null)
-              ? Image.asset(imagePath, height: 20, width: 20)
+              ? Flexible(child: Image.asset(imagePath, height: 20, width: 20))
               : const SizedBox.shrink(),
-          const SizedBox(width: 6),
-          Text(message, style: TextStyle(color: AppColors.kWhite)),
+          Flexible(
+            child: Text(
+              message,
+              textAlign: TextAlign.center,
+              style: bodyMediumStyle.copyWith(color: AppColors.kWhite),
+            ),
+          ),
         ],
       ),
       backgroundColor: AppColors.kDarkGrey.withValues(alpha: 0.75),

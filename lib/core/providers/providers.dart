@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '/presentation/ai_image/provider/ai_image_notifier.dart';
+import '/presentation/ai_image/provider/ai_image_state.dart';
 import '/presentation/library_pack/provider/library_pack_notifier.dart';
 import '/presentation/library_pack/provider/library_pack_state.dart';
 import '/presentation/library_pack_gallery/provider/library_pack_gallery_notifier.dart';
@@ -14,17 +16,12 @@ import '/presentation/gallery/provider/gallery_notifier.dart';
 import '/presentation/gallery/provider/gallery_state.dart';
 import '/presentation/library/provider/library_notifier.dart';
 import '/presentation/library/provider/library_state.dart';
-import '/core/theme/theme.dart';
 import '/presentation/home/provider/home_notifier.dart';
 import '/presentation/home/provider/home_state.dart';
 import '/core/local_storage/local_storage.dart';
 
 /// Core
 final localStorageProvider = Provider<LocalStorage>((ref) => LocalStorage());
-
-final themeProvider = NotifierProvider<ThemeProvider, ThemeState>(
-  ThemeProvider.new,
-);
 
 final packExportServiceProvider = Provider<PackExportService>((ref) {
   return PackExportService();
@@ -65,3 +62,6 @@ final packGalleryProvider =
 final galleryProvider = NotifierProvider<GalleryNotifier, GalleryState>(
   GalleryNotifier.new,
 );
+
+final freepikImageNotifierProvider =
+    NotifierProvider<AIImageNotifier, AiImageState>(AIImageNotifier.new);

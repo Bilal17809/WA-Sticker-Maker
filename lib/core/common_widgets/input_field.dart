@@ -82,7 +82,7 @@ class InputField extends StatelessWidget {
       style:
           textStyle ??
           bodyLargeStyle.copyWith(
-            color: AppColors.primaryColorLight,
+            color: AppColors.kWhite,
             fontWeight: FontWeight.bold,
           ),
       onChanged: onChanged,

@@ -9,7 +9,7 @@ class KlipyDataSource {
   KlipyDataSource(this.apiKey);
 
   Uri _uri(String path, [Map<String, String>? query]) => Uri.parse(
-    '${EnvironmentConfig.baseUrl}/$apiKey$path',
+    '${EnvironmentConfig.klipyBaseUrl}/$apiKey$path',
   ).replace(queryParameters: query);
 
   Future<StickerResponseModel> trending({
