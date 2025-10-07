@@ -15,7 +15,6 @@ class HomeView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedIndex = ref.watch(homeProvider).selectedIndex;
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, value) async {
@@ -40,11 +39,19 @@ class HomeView extends ConsumerWidget {
                   padding: const EdgeInsets.all(kBodyHp),
                   child: Column(
                     children: [
-                      Row(
-                        children: [
-                          Text('Hello', style: headlineMediumStyle),
-                          LottieWidget(assetPath: Assets.hiLottie),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: kBodyHp),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Hello',
+                              style: headlineMediumStyle.copyWith(
+                                color: AppColors.kWhite,
+                              ),
+                            ),
+                            LottieWidget(assetPath: Assets.hiLottie),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -88,26 +95,35 @@ class HomeView extends ConsumerWidget {
                                     children: [
                                       Text(
                                         'Lorem Ipsum',
-                                        style: bodyLargeStyle,
+                                        style: bodyLargeStyle.copyWith(
+                                          color: AppColors.kWhite,
+                                        ),
                                       ),
                                       Text(
                                         'Lorem Ipsum Hello',
-                                        style: titleMediumStyle,
+                                        style: titleMediumStyle.copyWith(
+                                          color: AppColors.kWhite,
+                                        ),
                                       ),
                                       Text(
                                         'Lorem Ipsum Hello Lorem Ipsum Hello',
-                                        style: bodyLargeStyle,
+                                        style: bodyLargeStyle.copyWith(
+                                          color: AppColors.kWhite,
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
                                 Expanded(
-                                  child: Container(
-                                    height: primaryIcon(context),
-                                    decoration: const BoxDecoration(
-                                      image: DecorationImage(
-                                        image: AssetImage(Assets.appIcon),
-                                        fit: BoxFit.contain,
+                                  child: GestureDetector(
+                                    onTap: () {},
+                                    child: Container(
+                                      height: primaryIcon(context),
+                                      decoration: const BoxDecoration(
+                                        image: DecorationImage(
+                                          image: AssetImage(Assets.appIcon),
+                                          fit: BoxFit.contain,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -131,22 +147,7 @@ class HomeView extends ConsumerWidget {
             ],
           ),
         ),
-        bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-            splashFactory: NoSplash.splashFactory,
-            highlightColor: AppColors.transparent,
-          ),
-          child: BottomNavigationBar(
-            currentIndex: selectedIndex,
-            onTap: (index) =>
-                ref.read(homeProvider.notifier).setSelectedIndex(index),
-            elevation: 0,
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-              BottomNavigationBarItem(icon: Icon(Icons.smart_toy), label: 'AI'),
-            ],
-          ),
-        ),
+        bottomNavigationBar: const AppBottomNav(),
       ),
     );
   }

@@ -73,10 +73,10 @@ class PackExportService {
         licenseAgreementWebsite: '',
       )..stickers = pack.stickerPaths;
       return await _addOrUpdatePack(stickerPack, pack.name);
-    } on StickerPackException catch (e) {
-      return '${AppExceptions().validationError}: ${e.message}';
-    } catch (e) {
-      return '${AppExceptions().exportError}: $e';
+    } on StickerPackException catch (_) {
+      return AppExceptions().validationError;
+    } catch (_) {
+      return AppExceptions().exportError;
     }
   }
 }

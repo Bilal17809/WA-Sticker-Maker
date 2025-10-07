@@ -8,4 +8,6 @@ class Assets {
 
   /// Toast Icon
   static const String whatsAppLogo = 'images/whatsapp_logo.png';
+  static const String whatsAppCircularLogo =
+      'images/whatsapp_circular_logo.png';
 }

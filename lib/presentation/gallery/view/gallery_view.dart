@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import '/presentation/packs/provider/packs_state.dart';
-import '/core/configs/editor_config.dart';
+import '../../../core/config/editor_config.dart';
 import '/core/theme/theme.dart';
 import '/core/constants/constants.dart';
 import '/core/common_widgets/common_widgets.dart';
@@ -25,7 +25,10 @@ class GalleryView extends ConsumerWidget {
         decoration: AppDecorations.bgContainer(context),
         child: Center(
           child: galleryState.originalFile == null
-              ? Text('No Image Selected', style: bodyLargeStyle)
+              ? Text(
+                  'No Image Selected',
+                  style: bodyLargeStyle.copyWith(color: AppColors.kWhite),
+                )
               : SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: kBodyHp),

@@ -35,7 +35,10 @@ class PackGalleryView extends ConsumerWidget {
     );
     ref.listen<PackGalleryState>(packGalleryProvider, (previous, next) {
       if (next.lastMessage != null && context.mounted) {
-        SimpleToast.showToast(context: context, message: next.lastMessage!);
+        if (!(next.lastMessage?.contains('added') ?? false)) {
+          SimpleToast.showToast(context: context, message: next.lastMessage!);
+          SimpleToast.showToast(context: context, message: next.lastMessage!);
+        }
         ref.read(packGalleryProvider.notifier).clearMessage();
       }
     });
@@ -71,40 +74,62 @@ class PackGalleryView extends ConsumerWidget {
             ? Center(
                 child: Text(
                   'No stickers yet.\nTap + to add one.',
-                  style: bodyLargeStyle,
+                  style: titleSmallStyle.copyWith(color: AppColors.kWhite),
                   textAlign: TextAlign.center,
                 ),
               )
             : Padding(
                 padding: const EdgeInsets.all(kBodyHp),
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: kGap,
-                    mainAxisSpacing: kGap,
-                    childAspectRatio: 1,
-                  ),
-                  itemCount: currentPack.stickerPaths.length,
-                  itemBuilder: (context, index) {
-                    final path = currentPack.stickerPaths[index];
-                    return GestureDetector(
-                      onTap: () async {
-                        final shouldDelete = await DeleteStickerDialog.show(
-                          context,
-                        );
-                        if (shouldDelete == true) {
-                          await ref
-                              .read(packsProvider.notifier)
-                              .removeStickerFromPack(currentPack, path);
-                        }
-                      },
-                      child: Container(
-                        decoration: AppDecorations.simpleRounded(context),
-                        padding: const EdgeInsets.all(kBodyHp),
-                        child: Image.file(File(path), fit: BoxFit.cover),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: kGap,
+                              mainAxisSpacing: kGap,
+                              childAspectRatio: 1,
+                            ),
+                        itemCount: currentPack.stickerPaths.length,
+                        itemBuilder: (context, index) {
+                          final path = currentPack.stickerPaths[index];
+                          return GestureDetector(
+                            onTap: () async {
+                              final shouldDelete =
+                                  await DeleteStickerDialog.show(context);
+                              if (shouldDelete == true) {
+                                await ref
+                                    .read(packsProvider.notifier)
+                                    .removeStickerFromPack(currentPack, path);
+                              }
+                            },
+                            child: Container(
+                              decoration: AppDecorations.simpleRounded(context),
+                              padding: const EdgeInsets.all(kBodyHp),
+                              child: Image.file(File(path), fit: BoxFit.cover),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ),
+                    currentPack.stickerPaths.length < 3
+                        ? Padding(
+                            padding: EdgeInsets.only(
+                              bottom: context.screenWidth * 0.11,
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Please add at least 3 images\nto the pack',
+                                style: titleSmallStyle.copyWith(
+                                  color: AppColors.kWhite,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  ],
                 ),
               ),
       ),
@@ -126,7 +151,7 @@ class PackGalleryView extends ConsumerWidget {
                       .exportPackToWhatsApp(pack)
                 : () => SimpleToast.showToast(
                     context: context,
-                    message: 'Please add at least 3 images to pack',
+                    message: 'Please add at least 3 images to the pack',
                   ),
             heroTag: 'export_whatsapp',
             backgroundColor: currentPack.stickerPaths.length >= 3
@@ -137,7 +162,14 @@ class PackGalleryView extends ConsumerWidget {
                     strokeWidth: 2,
                     color: AppColors.kWhite,
                   )
-                : const Icon(Icons.upload),
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(
+                      Assets.whatsAppCircularLogo,
+                      color: AppColors.kWhite,
+                      width: secondaryIcon(context),
+                    ),
+                  ),
           ),
         ],
       ),

@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '/core/providers/providers.dart';
 import '/core/helper/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -11,7 +10,6 @@ class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeState = ref.watch(themeProvider);
     return Drawer(
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: Container(
@@ -90,36 +88,6 @@ class AppDrawer extends ConsumerWidget {
             //     color: AppColors.primaryColorLight.withValues(alpha: 0.1),
             //   ),
             // ],
-            ListTile(
-              leading: Icon(
-                Icons.dark_mode_rounded,
-                size: 24,
-                color: AppColors.primaryText(context),
-              ),
-              title: Text(
-                themeState.themeMode == ThemeMode.dark
-                    ? 'Dark Mode'
-                    : 'Light Mode',
-                style: titleSmallStyle,
-              ),
-              trailing: Switch(
-                value: themeState.themeMode == ThemeMode.dark,
-                onChanged: (value) =>
-                    ref.read(themeProvider.notifier).toggleTheme(value),
-                thumbColor: WidgetStatePropertyAll(
-                  AppColors.kGrey.withValues(alpha: 0.7),
-                ),
-                trackColor: WidgetStatePropertyAll(
-                  AppColors.kGrey.withValues(alpha: 0.2),
-                ),
-                trackOutlineColor: WidgetStatePropertyAll(
-                  AppColors.kGrey.withValues(alpha: 0.5),
-                ),
-                trackOutlineWidth: WidgetStatePropertyAll(1),
-                activeThumbImage: const AssetImage(Assets.appIcon),
-              ),
-            ),
-            Divider(color: AppColors.primaryColorLight.withValues(alpha: 0.1)),
           ],
         ),
       ),

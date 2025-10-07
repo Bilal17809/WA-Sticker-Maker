@@ -21,7 +21,7 @@ class PacksView extends ConsumerWidget {
             ? Center(
                 child: Text(
                   'No packs yet.\nTap + to create a new pack.',
-                  style: bodyLargeStyle,
+                  style: titleSmallStyle.copyWith(color: AppColors.kWhite),
                   textAlign: TextAlign.center,
                 ),
               )

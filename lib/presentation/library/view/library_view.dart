@@ -178,7 +178,7 @@ class _LibraryBody extends StatelessWidget {
                                   strokeWidth: 2,
                                 ),
                               ),
-                        errorBuilder: (_, error, __) =>
+                        errorBuilder: (_, error, _) =>
                             Center(child: Lottie.asset(Assets.imageLottie)),
                       ),
                     ),
