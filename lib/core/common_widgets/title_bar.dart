@@ -53,11 +53,13 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
                               );
                             },
                             icon: Icons.arrow_back_ios_new,
+                            color: AppColors.kWhite,
                             size: smallIcon(context),
                           )
                         : IconActionButton(
                             onTap: () => Scaffold.of(context).openDrawer(),
                             icon: Icons.menu,
+                            color: AppColors.kWhite,
                             size: secondaryIcon(context),
                           ),
 
@@ -72,7 +74,7 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Text(
                   title,
-                  style: titleLargeStyle,
+                  style: titleLargeStyle.copyWith(color: AppColors.kWhite),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                 ),

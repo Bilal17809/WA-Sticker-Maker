@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import '/presentation/library_pack/view/library_pack_view.dart';
 import '/presentation/packs/view/packs_view.dart';
@@ -5,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
 import '/core/utils/utils.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 class HomeCarousel extends ConsumerWidget {
   const HomeCarousel({super.key});
@@ -32,7 +32,7 @@ class HomeCarousel extends ConsumerWidget {
         final item = entry.value;
         return _CategoryCard(
           title: item['title'] as String,
-          icon: Icon(item['icon'] as IconData),
+          icon: Icon(item['icon'] as IconData, color: AppColors.kWhite),
           assetPath: item['assetPath'] as String,
           onTap: () async {
             if (index == 0) {
@@ -85,7 +85,10 @@ class _CategoryCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: kGap),
-            Text(title, style: titleSmallStyle),
+            Text(
+              title,
+              style: titleSmallStyle.copyWith(color: AppColors.kWhite),
+            ),
             const SizedBox(height: kGap / 2),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

@@ -2,7 +2,7 @@ class AppExceptions {
   final String failUrl = 'Failed to launch URL';
   final String noInternet = 'No internet connection';
   final String validationError = 'A validation error occurred';
-  final String exportError = 'An error occurred while exporting the pack';
+  final String exportError = 'WhatsApp is not installed in this device';
   final String errorFetchingEmojis = 'Error loading emojis from server';
   final String errorLoadingPacks = 'An error occurred while loading packs';
   final String errorDeletingPack = 'An error occurred while deleting the pack';

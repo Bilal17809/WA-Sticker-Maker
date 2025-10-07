@@ -76,71 +76,6 @@ class AppElevatedButton extends StatelessWidget {
   }
 }
 
-class SimpleButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  final String text;
-  final double? width;
-  final double? height;
-  final Color? textColor;
-  final Color? backgroundColor;
-  final Color? shadowColor;
-
-  const SimpleButton({
-    super.key,
-    required this.onPressed,
-    required this.text,
-    this.width,
-    this.height,
-    this.textColor,
-    this.backgroundColor,
-    this.shadowColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final double buttonWidth = width ?? double.infinity;
-    final double buttonHeight = height ?? 48;
-
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Positioned(
-          left: -8,
-          right: -8,
-          child: Container(
-            width: buttonWidth,
-            height: buttonHeight,
-            decoration: BoxDecoration(
-              color: shadowColor ?? AppColors.kBlack,
-              borderRadius: BorderRadius.circular(24),
-            ),
-          ),
-        ),
-        SizedBox(
-          width: buttonWidth,
-          height: buttonHeight,
-          child: TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: backgroundColor ?? AppColors.primaryColorLight,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),
-              ),
-              padding: EdgeInsets.zero,
-            ),
-            onPressed: onPressed,
-            child: Text(
-              text,
-              style: titleSmallStyle.copyWith(
-                color: textColor ?? AppColors.kWhite,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class IconActionButton extends StatelessWidget {
   final VoidCallback onTap;
   final IconData icon;
@@ -180,7 +115,7 @@ class IconActionButton extends StatelessWidget {
           ),
           child: Icon(
             icon,
-            color: color ?? AppColors.icon(context),
+            color: color ?? AppColors.kWhite,
             size: resolvedSize,
           ),
         ),

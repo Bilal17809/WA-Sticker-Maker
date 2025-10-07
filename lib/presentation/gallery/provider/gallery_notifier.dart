@@ -14,9 +14,9 @@ class GalleryNotifier extends Notifier<GalleryState> {
   GalleryState build() => const GalleryState();
 
   Future<void> pickImage() async {
-    final pf = await _picker.pickImage(source: ImageSource.gallery);
-    if (pf == null) return;
-    final f = File(pf.path);
+    final picker = await _picker.pickImage(source: ImageSource.gallery);
+    if (picker == null) return;
+    final f = File(picker.path);
     state = state.copyWith(originalFile: f, editedFile: f);
   }
 
