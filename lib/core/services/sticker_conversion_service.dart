@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:image/image.dart' as img;
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import '/core/utils/utils.dart';
 
 class StickerConversionService {
   final int maxWebPSize;
@@ -41,6 +42,11 @@ class StickerConversionService {
               await file.copy(outPath);
               await file.delete();
             }
+            if (removeOriginal) {
+              try {
+                await File(tempPngPath).delete();
+              } catch (_) {}
+            }
             return outPath;
           } else {
             try {
@@ -53,15 +59,46 @@ class StickerConversionService {
         await File(tempPngPath).delete();
       } catch (_) {}
       return null;
-    } catch (e) {
+    } catch (_) {
       try {
-        final outFile = File(outPath);
-        if (await outFile.exists()) await outFile.delete();
-        final tempFile = File('${outPath}_temp.png');
-        if (await tempFile.exists()) await tempFile.delete();
+        if (await File(outPath).exists()) await File(outPath).delete();
+      } catch (_) {}
+      try {
+        final tmp = File('${outPath}_temp.png');
+        if (await tmp.exists()) await tmp.delete();
       } catch (_) {}
       return null;
     }
+  }
+
+  Future<List<String>> convertBase64ToWebp(
+    List<String> base64Images,
+    String targetDirectory,
+  ) async {
+    final dir = Directory(targetDirectory);
+    if (!await dir.exists()) await dir.create(recursive: true);
+    final paths = <String>[];
+    for (var i = 0; i < base64Images.length; i++) {
+      try {
+        final bytes = Base64Utils.maybeDecode(base64Images[i]);
+        if (bytes == null) continue;
+        final ts = DateTime.now().millisecondsSinceEpoch;
+        final tempPath = '$targetDirectory/temp_$ts$i.png';
+        final tempFile = File(tempPath)..createSync(recursive: true);
+        await tempFile.writeAsBytes(bytes);
+        final outPath = '$targetDirectory/ai_sticker_$ts$i.webp';
+        final converted = await convertFileToWebP512(tempFile, outPath);
+        if (converted != null) {
+          try {
+            await tempFile.delete();
+          } catch (_) {}
+          paths.add(converted);
+        } else {
+          paths.add(tempPath);
+        }
+      } catch (_) {}
+    }
+    return paths;
   }
 
   img.Image _resizeAndPadTo512(img.Image original) {

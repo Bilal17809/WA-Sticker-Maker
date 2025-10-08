@@ -13,7 +13,10 @@ class SplashView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final splashState = ref.watch(splashProvider);
-
+    final splashAdState = ref.watch(splashInterstitialManagerProvider);
+    final splashAdManager = ref.read(
+      splashInterstitialManagerProvider.notifier,
+    );
     return Scaffold(
       backgroundColor: AppColors.lightBgColor,
       body: SafeArea(
@@ -47,6 +50,9 @@ class SplashView extends ConsumerWidget {
                             shadows: kShadow,
                           ),
                           onSubmit: () async {
+                            if (splashAdState.isAdReady) {
+                              splashAdManager.showSplashAd();
+                            }
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(

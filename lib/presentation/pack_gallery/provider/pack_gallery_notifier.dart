@@ -15,7 +15,7 @@ class PackGalleryNotifier extends Notifier<PackGalleryState> {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile == null) return null;
     final file = File(pickedFile.path);
-    ref.read(galleryProvider.notifier).updateEditedFile(file);
+    ref.read(galleryProvider.notifier).setNewImage(file);
     return file;
   }
 

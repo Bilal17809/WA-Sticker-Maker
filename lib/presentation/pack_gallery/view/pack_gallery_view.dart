@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wa_sticker_maker/core/utils/utils.dart';
+import '/core/utils/utils.dart';
 import '../provider/pack_gallery_state.dart';
 import '/core/providers/providers.dart';
 import '/core/constants/constants.dart';

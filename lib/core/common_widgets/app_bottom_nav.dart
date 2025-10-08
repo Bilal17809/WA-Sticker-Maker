@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wa_sticker_maker/presentation/home/view/home_view.dart';
+import '/presentation/ai_pack/view/ai_packs_view.dart';
+import '/presentation/home/view/home_view.dart';
 import '/core/providers/providers.dart';
-import '/presentation/ai_image/view/ai_image_view.dart';
 
 class AppBottomNav extends ConsumerWidget {
   const AppBottomNav({super.key});
@@ -29,7 +29,7 @@ class AppBottomNav extends ConsumerWidget {
             ref.read(homeProvider.notifier).setSelectedIndex(index);
             Widget page = const HomeView();
             if (index == 1) {
-              page = const AiImageView();
+              page = const AiPacksView();
             }
             Navigator.of(context).pushReplacement(
               PageRouteBuilder(

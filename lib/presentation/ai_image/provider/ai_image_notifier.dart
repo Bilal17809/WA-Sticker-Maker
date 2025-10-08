@@ -1,19 +1,28 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '/core/helper/helper.dart';
 import '/core/config/client.dart';
+import '/core/services/services.dart';
 import '/data/data_source/freepik_data_source.dart';
 import '/data/repo_impl/freepik_repo_impl.dart';
 import '/domain/use_cases/get_freepik_image.dart';
+import '/presentation/ai_pack/provider/ai_packs_state.dart';
+import '/core/providers/providers.dart';
 import 'ai_image_state.dart';
 
 class AIImageNotifier extends Notifier<AiImageState> {
-  late final GetFreepikImage _getFreepikImage;
+  late final AiImageService _aiImageService;
+  late final StickerConversionService _converter;
 
   @override
   AiImageState build() {
-    final dataSource = FreepikDataSource(freepikApiKey);
-    final repo = FreepikRepoImpl(dataSource);
-    _getFreepikImage = GetFreepikImage(repo);
+    final ds = FreepikDataSource(freepikApiKey);
+    final repo = FreepikRepoImpl(ds);
+    _aiImageService = AiImageService(GetFreepikImage(repo));
+    _converter = StickerConversionService();
+    ref.listen<AsyncValue<bool>>(internetStatusStreamProvider, (p, n) {
+      n.whenData((v) => state = state.copyWith(isConnected: v));
+    });
     return const AiImageState();
   }
 
@@ -21,65 +30,64 @@ class AIImageNotifier extends Notifier<AiImageState> {
     String prompt, {
     String? aspectRatio,
     String modelPath = '/ai/text-to-image',
-    int maxPollAttempts = 20,
-    Duration pollInterval = const Duration(seconds: 2),
   }) async {
     state = state.copyWith(isLoading: true, error: null, prompt: prompt);
     try {
-      final resp = await _getFreepikImage.generate(
-        prompt: prompt,
+      final gen = await _aiImageService.generate(
+        prompt,
         aspectRatio: aspectRatio,
         modelPath: modelPath,
       );
-      if (resp.generated.isNotEmpty) {
-        state = state.copyWith(
-          isLoading: false,
-          images: [...state.images, ...resp.generated],
-        );
-        return;
-      }
-      final taskId = resp.taskId;
-      if (taskId == null) {
-        state = state.copyWith(isLoading: false, error: 'No images returned');
-        return;
-      }
-      state = state.copyWith(taskId: taskId);
-      for (var attempt = 0; attempt < maxPollAttempts; attempt++) {
-        await Future.delayed(pollInterval);
-        final taskResp = await _getFreepikImage.taskStatus(
-          taskId: taskId,
-          taskPath: modelPath,
-        );
-        if (taskResp.generated.isNotEmpty) {
-          state = state.copyWith(
-            isLoading: false,
-            images: [...state.images, ...taskResp.generated],
-            taskId: null,
-          );
-          return;
-        }
-        final status = (taskResp.status ?? '').toLowerCase();
-        if (status == 'error' || status == 'failed') {
-          state = state.copyWith(
-            isLoading: false,
-            error: 'Generation failed',
-            taskId: null,
-          );
-          return;
-        }
-      }
-
       state = state.copyWith(
         isLoading: false,
-        error: 'Generation timed out',
-        taskId: null,
+        images: [...state.images, ...gen],
       );
+    } on AiImageException catch (e) {
+      state = state.copyWith(isLoading: false, error: e.message);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
-  void clear() {
-    state = const AiImageState();
+  void selectImage(int index) {
+    final s = Set<int>.from(state.selectedImageIndices);
+    s.contains(index) ? s.remove(index) : s.add(index);
+    state = state.copyWith(selectedImageIndices: s);
   }
+
+  Future<bool> downloadAndAddToPack(AiPacksState pack) async {
+    if (state.selectedImageIndices.isEmpty) return false;
+    final selectedImages = state.selectedImageIndices
+        .map((index) => state.images[index])
+        .toList();
+    if (selectedImages.isEmpty) return false;
+    state = state.copyWith(isDownloading: true);
+    try {
+      final paths = await _converter.convertBase64ToWebp(
+        selectedImages,
+        pack.directoryPath,
+      );
+      if (paths.isNotEmpty) _updatePack(pack, paths);
+      state = state.copyWith(selectedImageIndices: {});
+      return paths.isNotEmpty;
+    } catch (e) {
+      state = state.copyWith(error: 'Error downloading images: $e');
+      return false;
+    } finally {
+      state = state.copyWith(isDownloading: false);
+    }
+  }
+
+  void _updatePack(AiPacksState pack, List<String> paths) {
+    final packNotifier = ref.read(aiPacksProvider.notifier);
+    ApiPackHelper.updatePackGeneric<AiPacksState>(
+      ref: ref,
+      state: packNotifier.state,
+      onUpdate: packNotifier.updatePack,
+      pack: pack,
+      paths: paths,
+    );
+  }
+
+  void clear() => state = const AiImageState();
 }

@@ -79,11 +79,16 @@ class LibraryPackGalleryView extends ConsumerWidget {
                             child: Container(
                               decoration: AppDecorations.simpleRounded(context),
                               padding: const EdgeInsets.all(kBodyHp),
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Image.file(
-                                  File(path),
-                                  fit: BoxFit.cover,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                  kElementGap,
+                                ),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Image.file(
+                                    File(path),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),

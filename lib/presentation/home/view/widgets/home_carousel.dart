@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '/presentation/library_pack/view/library_pack_view.dart';
 import '/presentation/packs/view/packs_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,31 +13,21 @@ class HomeCarousel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final items = [
-      {'title': 'Gallery', 'icon': Icons.image, 'assetPath': Assets.appIcon},
-      {
-        'title': 'Library',
-        'icon': Icons.emoji_emotions,
-        'assetPath': Assets.appIcon,
-      },
-    ];
-
     return CarouselSlider(
       options: CarouselOptions(
         height: MediaQuery.of(context).size.height * 0.3,
         viewportFraction: 0.6,
         enlargeCenterPage: true,
       ),
-      items: items.asMap().entries.map((entry) {
+      items: CarouselUtil.items.asMap().entries.map((entry) {
         final index = entry.key;
         final item = entry.value;
         return _CategoryCard(
           title: item['title'] as String,
-          icon: Icon(item['icon'] as IconData, color: AppColors.kWhite),
-          assetPath: item['assetPath'] as String,
+          lottiePath: item['lottiePath'] as String,
           onTap: () async {
+            if (!context.mounted) return;
             if (index == 0) {
-              if (!context.mounted) return;
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const PacksView()),
@@ -58,14 +49,12 @@ class HomeCarousel extends ConsumerWidget {
 
 class _CategoryCard extends StatelessWidget {
   final String title;
-  final Icon icon;
-  final String assetPath;
+  final String lottiePath;
   final VoidCallback onTap;
 
   const _CategoryCard({
     required this.title,
-    required this.icon,
-    required this.assetPath,
+    required this.lottiePath,
     required this.onTap,
   });
 
@@ -79,24 +68,11 @@ class _CategoryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Center(
-                child: Image.asset(assetPath, width: primaryIcon(context)),
-              ),
-            ),
+            Expanded(child: Lottie.asset(lottiePath)),
             const SizedBox(height: kGap),
             Text(
               title,
               style: titleSmallStyle.copyWith(color: AppColors.kWhite),
-            ),
-            const SizedBox(height: kGap / 2),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.kWhite.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(kBorderRadius),
-              ),
-              child: icon,
             ),
           ],
         ),

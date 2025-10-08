@@ -48,28 +48,4 @@ class FreepikDataSource {
       throw Exception('Error generating image');
     }
   }
-
-  Future<FreepikModel> getTaskStatus({
-    required String taskId,
-    String taskPath = '/ai/text-to-image',
-  }) async {
-    try {
-      final path = '$taskPath/$taskId';
-      final uri = _uri(path);
-      final response = await http.get(
-        uri,
-        headers: {'Accept': 'application/json', 'x-freepik-api-key': apiKey},
-      );
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body) as Map<String, dynamic>;
-        return FreepikModel.fromJson(jsonData);
-      } else {
-        throw Exception(
-          '${AppExceptions().failedApiCall}: ${response.statusCode} ${response.body}',
-        );
-      }
-    } catch (e) {
-      throw Exception('Error fetching task status: $e');
-    }
-  }
 }

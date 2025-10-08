@@ -21,69 +21,44 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 4,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    useBackButton
-                        ? IconActionButton(
-                            onTap: () {
-                              FocusScope.of(context).unfocus();
-                              final navigator = Navigator.of(context);
-                              Future.delayed(
-                                const Duration(milliseconds: 180),
-                                () {
-                                  if (onBackTap != null) {
-                                    onBackTap!();
-                                  } else {
-                                    navigator.pop();
-                                  }
-                                },
-                              );
-                            },
-                            icon: Icons.arrow_back_ios_new,
-                            color: AppColors.kWhite,
-                            size: smallIcon(context),
-                          )
-                        : IconActionButton(
-                            onTap: () => Scaffold.of(context).openDrawer(),
-                            icon: Icons.menu,
-                            color: AppColors.kWhite,
-                            size: secondaryIcon(context),
-                          ),
-
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: actions ?? [],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Text(
-                  title,
-                  style: titleLargeStyle.copyWith(color: AppColors.kWhite),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          if (bottom != null) ...[const SizedBox(height: kElementGap), bottom!],
-        ],
+    return AppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      centerTitle: true,
+      title: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          title,
+          style: titleLargeStyle.copyWith(color: AppColors.kWhite),
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
+      leading: useBackButton
+          ? IconActionButton(
+              onTap: () {
+                FocusScope.of(context).unfocus();
+                final navigator = Navigator.of(context);
+                Future.delayed(const Duration(milliseconds: 180), () {
+                  if (onBackTap != null) {
+                    onBackTap!();
+                  } else {
+                    navigator.pop();
+                  }
+                });
+              },
+              icon: Icons.arrow_back_ios_new,
+              color: AppColors.kWhite,
+              size: smallIcon(context),
+            )
+          : IconActionButton(
+              onTap: () => Scaffold.of(context).openDrawer(),
+              icon: Icons.menu,
+              color: AppColors.kWhite,
+              size: secondaryIcon(context),
+            ),
+      actions: actions,
+      bottom: bottom,
     );
   }
 

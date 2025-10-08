@@ -1,11 +1,13 @@
-import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wa_sticker_maker/core/constants/constants.dart';
-import 'package:wa_sticker_maker/core/theme/theme.dart';
+import 'package:lottie/lottie.dart';
+import '/presentation/ai_pack/provider/ai_packs_state.dart';
+import '/core/constants/constants.dart';
+import '/core/theme/theme.dart';
+import '/core/utils/utils.dart';
 import '/core/providers/providers.dart';
 import '/core/common_widgets/common_widgets.dart';
+import '/core/services/connectivity_service.dart';
 
 final _promptProvider = Provider.autoDispose<TextEditingController>((ref) {
   final controller = TextEditingController();
@@ -14,22 +16,8 @@ final _promptProvider = Provider.autoDispose<TextEditingController>((ref) {
 });
 
 class AiImageView extends ConsumerWidget {
-  const AiImageView({super.key});
-
-  Uint8List? _maybeDecode(String s) {
-    try {
-      if (s.startsWith('data:')) {
-        final parts = s.split(',');
-        if (parts.length > 1) {
-          return base64.decode(parts.last);
-        }
-      } else if (RegExp(r'^[A-Za-z0-9+/=]+$').hasMatch(s) ||
-          RegExp(r'^[A-Za-z0-9+/=\s]+$').hasMatch(s)) {
-        return base64.decode(s.replaceAll('\n', ''));
-      }
-    } catch (_) {}
-    return null;
-  }
+  final AiPacksState pack;
+  const AiImageView({super.key, required this.pack});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,10 +25,64 @@ class AiImageView extends ConsumerWidget {
     final notifier = ref.read(freepikImageNotifierProvider.notifier);
     final promptController = ref.watch(_promptProvider);
 
+    ref.listen<AsyncValue<bool>>(internetStatusStreamProvider, (
+      previous,
+      next,
+    ) {
+      next.whenData((isConnected) {
+        if (isConnected) {
+          ConnectivityDialog.closeIfOpen(context);
+        } else {
+          ConnectivityDialog.showNoInternetDialog(
+            context,
+            onRetry: () async {},
+          );
+        }
+      });
+    });
+
     return Scaffold(
       backgroundColor: AppColors.secondary(context),
       extendBodyBehindAppBar: true,
-      appBar: TitleBar(title: 'AI Sticker Generator'),
+      appBar: TitleBar(
+        title: 'AI Sticker Generator',
+        actions: [
+          state.selectedImageIndices.isNotEmpty
+              ? Row(
+                  spacing: kGap,
+                  children: [
+                    Text(
+                      '${state.selectedImageIndices.length} selected',
+                      style: titleSmallStyle.copyWith(color: AppColors.kWhite),
+                    ),
+                    IconActionButton(
+                      onTap: () async {
+                        final success = await notifier.downloadAndAddToPack(
+                          pack,
+                        );
+                        if (success && context.mounted) {
+                          SimpleToast.showToast(
+                            context: context,
+                            message: 'Images added to pack',
+                          );
+                          Navigator.pop(context);
+                        }
+                      },
+                      icon: state.isDownloading
+                          ? Icons.hourglass_bottom
+                          : Icons.downloading,
+                    ),
+                  ],
+                )
+              : IconActionButton(
+                  onTap: () => SimpleToast.showToast(
+                    context: context,
+                    message: 'Please select images to add',
+                  ),
+                  icon: Icons.add,
+                ),
+        ],
+      ),
       body: Container(
         decoration: AppDecorations.bgContainer(context),
         child: SafeArea(
@@ -74,44 +116,95 @@ class AiImageView extends ConsumerWidget {
                                   color: AppColors.kWhite,
                                 ),
                               )
-                            : const Text('Generate'),
+                            : Text(
+                                'Generate',
+                                style: titleSmallStyle.copyWith(
+                                  color: AppColors.kWhite,
+                                ),
+                              ),
                       ),
                     ),
                     ElevatedButton(
                       onPressed: state.isLoading ? null : notifier.clear,
-                      child: const Text('Clear'),
+                      child: Text(
+                        'Clear',
+                        style: titleSmallStyle.copyWith(
+                          color: AppColors.kWhite,
+                        ),
+                      ),
                     ),
                   ],
                 ),
                 if (state.error != null)
-                  Expanded(child: Text(state.error!, style: titleSmallStyle)),
+                  Expanded(
+                    child: Text(
+                      state.error!,
+                      style: titleSmallStyle.copyWith(color: AppColors.kWhite),
+                    ),
+                  ),
                 if (!state.isLoading &&
                     state.images.isEmpty &&
                     state.error == null)
-                  const Expanded(child: Center(child: Text('No images'))),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        'No images in the pack yet.\nGenerate an image',
+                        textAlign: TextAlign.center,
+                        style: titleSmallStyle.copyWith(
+                          color: AppColors.kWhite,
+                        ),
+                      ),
+                    ),
+                  ),
                 if (state.images.isNotEmpty)
                   Expanded(
                     child: GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 8,
+                            mainAxisSpacing: kGap,
+                            crossAxisSpacing: kGap,
                           ),
                       itemCount: state.images.length,
                       itemBuilder: (context, index) {
                         final item = state.images[index];
-                        final bytes = _maybeDecode(item);
-                        if (bytes != null) {
-                          return Image.memory(bytes, fit: BoxFit.scaleDown);
-                        }
-                        if (item.startsWith('http')) {
-                          return Image.network(item, fit: BoxFit.scaleDown);
-                        }
-                        return Container(
-                          color: Colors.grey[200],
-                          alignment: Alignment.center,
-                          child: Text(item, textAlign: TextAlign.center),
+                        final bytes = Base64Utils.maybeDecode(item);
+                        final isSelected = state.selectedImageIndices.contains(
+                          index,
+                        );
+
+                        return GestureDetector(
+                          onTap: () => notifier.selectImage(index),
+                          child: Container(
+                            decoration: AppDecorations.simpleRounded(context),
+                            padding: const EdgeInsets.all(kBodyHp),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                    kElementGap,
+                                  ),
+                                  child: (bytes != null)
+                                      ? Image.memory(
+                                          bytes,
+                                          fit: BoxFit.scaleDown,
+                                        )
+                                      : Center(
+                                          child: Lottie.asset(
+                                            Assets.imageLottie,
+                                          ),
+                                        ),
+                                ),
+                                if (isSelected)
+                                  Positioned(
+                                    top: -8,
+                                    right: -6,
+                                    child: Icon(Icons.check_circle),
+                                  ),
+                              ],
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -121,7 +214,6 @@ class AiImageView extends ConsumerWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const AppBottomNav(),
     );
   }
 }
