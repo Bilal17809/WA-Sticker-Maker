@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
-import 'package:wa_sticker_maker/presentation/ai_pack/view/ai_packs_view.dart';
+import '/presentation/ai_pack/view/ai_packs_view.dart';
 import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
 import '/presentation/app_drawer/view/app_drawer.dart';

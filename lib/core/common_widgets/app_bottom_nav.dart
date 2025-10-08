@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wa_sticker_maker/presentation/ai_pack/view/ai_packs_view.dart';
-import 'package:wa_sticker_maker/presentation/home/view/home_view.dart';
+import '/presentation/ai_pack/view/ai_packs_view.dart';
+import '/presentation/home/view/home_view.dart';
 import '/core/providers/providers.dart';
 
 class AppBottomNav extends ConsumerWidget {

@@ -73,7 +73,12 @@ abstract class BasePackNotifierService<T extends PackInfoInterface>
       final libraryPackDir = Directory(
         '${externalDir.path}/DCIM/WA Sticker Maker/Library Packs/$packName',
       );
-      if (await galleryPackDir.exists() || await libraryPackDir.exists()) {
+      final aiPackDir = Directory(
+        '${externalDir.path}/DCIM/WA Sticker Maker/AI Packs/$packName',
+      );
+      if (await galleryPackDir.exists() ||
+          await libraryPackDir.exists() ||
+          await aiPackDir.exists()) {
         return null;
       }
       final packDir = Directory(

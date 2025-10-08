@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wa_sticker_maker/core/constants/constants.dart';
-import 'package:wa_sticker_maker/core/theme/app_styles.dart';
+import '/core/constants/constants.dart';
+import '/core/theme/app_styles.dart';
 import '/core/theme/app_colors.dart';
 
 class SimpleToast {
