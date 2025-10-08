@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import '/presentation/packs/provider/packs_state.dart';
-import '../../../core/config/editor_config.dart';
+import '/core/config/editor_config.dart';
 import '/core/theme/theme.dart';
 import '/core/constants/constants.dart';
 import '/core/common_widgets/common_widgets.dart';
@@ -72,6 +72,12 @@ class GalleryView extends ConsumerWidget {
                                         await galleryNotifier.saveAsWebPToPack(
                                           pack,
                                           'sticker_${DateTime.now().millisecondsSinceEpoch}',
+                                        );
+                                        if (!context.mounted) return;
+                                        SimpleToast.showToast(
+                                          context: context,
+                                          message:
+                                              'Sticker has been saved\nto the Gallery',
                                         );
                                       },
                                       icon: Icons.save_alt,

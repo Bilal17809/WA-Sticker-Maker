@@ -53,7 +53,8 @@ class InputField extends StatelessWidget {
         filled: true,
         fillColor: backgroundColor ?? AppColors.kWhite.withValues(alpha: 0.2),
         hintText: hintText,
-        hintStyle: hintStyle ?? bodySmallStyle,
+        hintStyle:
+            hintStyle ?? titleSmallStyle.copyWith(color: AppColors.kWhite),
         contentPadding: contentPadding,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,

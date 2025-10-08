@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/connectivity_service.dart';
+import '/core/services/connectivity_service.dart';
 import '/core/common_widgets/common_widgets.dart';
 import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';

@@ -13,6 +13,7 @@ class AddPackDialog {
         controller: packNameController,
         hintText: 'Enter pack name',
         textStyle: titleSmallStyle,
+        hintStyle: titleSmallStyle,
       ),
       actions: [
         AppDialogButton(

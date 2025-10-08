@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "871795526921",
+    "project_id": "wa-sticker-maker-11040",
+    "storage_bucket": "wa-sticker-maker-11040.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871795526921:android:53b5f5fa567e20a01197d8",
+        "android_client_info": {
+          "package_name": "com.example.wa_sticker_maker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtQFoKvn2yG4bi_Ho4bD8n7zutt858tTw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
