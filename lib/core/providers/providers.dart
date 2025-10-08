@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '/presentation/ai_pack_gallery/provider/ai_pack_gallery_notifier.dart';
 import '/presentation/ai_pack_gallery/provider/ai_pack_gallery_state.dart';
 import '/presentation/ai_pack/provider/ai_packs_notifier.dart';
@@ -23,6 +24,7 @@ import '/presentation/library/provider/library_state.dart';
 import '/presentation/home/provider/home_notifier.dart';
 import '/presentation/home/provider/home_state.dart';
 import '/core/local_storage/local_storage.dart';
+import '/ad_manager/ad_manager.dart';
 
 /// Core
 final localStorageProvider = Provider<LocalStorage>((ref) => LocalStorage());
@@ -78,3 +80,21 @@ final galleryProvider = NotifierProvider<GalleryNotifier, GalleryState>(
 
 final freepikImageNotifierProvider =
     NotifierProvider<AIImageNotifier, AiImageState>(AIImageNotifier.new);
+
+final interstitialAdManagerProvider =
+    NotifierProvider<InterstitialAdManager, InterstitialAdState>(
+      InterstitialAdManager.new,
+    );
+
+final appOpenAdManagerProvider =
+    NotifierProvider<AppOpenAdManager, AppOpenAdState>(AppOpenAdManager.new);
+
+final splashInterstitialManagerProvider =
+    NotifierProvider<SplashInterstitialManager, SplashInterstitialState>(
+      SplashInterstitialManager.new,
+    );
+
+final nativeAdManagerProvider =
+    NotifierProvider.family<NativeAdManager, NativeAdState, TemplateType>(
+      NativeAdManager.new,
+    );

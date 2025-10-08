@@ -68,9 +68,12 @@ class AiPacksView extends ConsumerWidget {
                                         borderRadius: BorderRadius.circular(
                                           kElementGap,
                                         ),
-                                        child: Image.file(
-                                          File(pack.stickerPaths.first),
-                                          fit: BoxFit.cover,
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Image.file(
+                                            File(pack.stickerPaths.first),
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
                               ),

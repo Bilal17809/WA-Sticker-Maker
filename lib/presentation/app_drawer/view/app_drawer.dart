@@ -37,7 +37,7 @@ class AppDrawer extends ConsumerWidget {
                   const Gap(kGap),
                   FittedBox(
                     fit: BoxFit.scaleDown,
-                    child: Text('WA Sticker Maker', style: titleLargeStyle),
+                    child: Text('WA Sticker Maker', style: titleLargeStyle.copyWith(color: AppColors.kWhite)),
                   ),
                 ],
               ),

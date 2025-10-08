@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '/core/providers/providers.dart';
 import 'splash_state.dart';
 
 class SplashNotifier extends Notifier<SplashState> {
   @override
   SplashState build() {
+    ref.read(splashInterstitialManagerProvider.notifier).loadAd();
     _init();
     return const SplashState(isLoading: true, showButton: false);
   }
