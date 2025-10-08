@@ -7,6 +7,4 @@ abstract class FreepikRepo {
     String modelPath,
     Map<String, dynamic>? extraBody,
   });
-
-  Future<FreepikModel> getTaskStatus({required String taskId, String taskPath});
 }

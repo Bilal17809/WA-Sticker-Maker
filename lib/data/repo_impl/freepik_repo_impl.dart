@@ -20,12 +20,4 @@ class FreepikRepoImpl implements FreepikRepo {
       extraBody: extraBody,
     );
   }
-
-  @override
-  Future<FreepikModel> getTaskStatus({
-    required String taskId,
-    String taskPath = '/ai/text-to-image',
-  }) {
-    return dataSource.getTaskStatus(taskId: taskId, taskPath: taskPath);
-  }
 }

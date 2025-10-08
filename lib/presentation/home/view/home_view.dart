@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wa_sticker_maker/presentation/ai_pack/view/ai_packs_view.dart';
 import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
 import '/presentation/app_drawer/view/app_drawer.dart';
@@ -81,42 +82,47 @@ class HomeView extends ConsumerWidget {
                           padding: const EdgeInsets.symmetric(
                             horizontal: kBodyHp,
                           ),
-                          child: Container(
-                            decoration: AppDecorations.gradientDecor(context),
-                            padding: const EdgeInsets.all(kBodyHp),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Column(
-                                    spacing: kGap,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Lorem Ipsum',
-                                        style: bodyLargeStyle.copyWith(
-                                          color: AppColors.kWhite,
+                          child: GestureDetector(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const AiPacksView(),
+                              ),
+                            ),
+                            child: Container(
+                              decoration: AppDecorations.gradientDecor(context),
+                              padding: const EdgeInsets.all(kBodyHp),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Column(
+                                      spacing: kGap,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Get Started',
+                                          style: bodyLargeStyle.copyWith(
+                                            color: AppColors.kWhite,
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        'Lorem Ipsum Hello',
-                                        style: titleMediumStyle.copyWith(
-                                          color: AppColors.kWhite,
+                                        Text(
+                                          'AI Sticker Generator',
+                                          style: titleMediumStyle.copyWith(
+                                            color: AppColors.kWhite,
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        'Lorem Ipsum Hello Lorem Ipsum Hello',
-                                        style: bodyLargeStyle.copyWith(
-                                          color: AppColors.kWhite,
+                                        Text(
+                                          'Generate high quality stickers with AI',
+                                          style: bodyLargeStyle.copyWith(
+                                            color: AppColors.kWhite,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {},
+                                  Expanded(
                                     child: Container(
                                       height: primaryIcon(context),
                                       decoration: const BoxDecoration(
@@ -127,8 +133,8 @@ class HomeView extends ConsumerWidget {
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -136,7 +142,10 @@ class HomeView extends ConsumerWidget {
                           padding: const EdgeInsets.symmetric(
                             horizontal: kBodyHp,
                           ),
-                          child: Text('Lorem', style: headlineSmallStyle),
+                          child: Text(
+                            'Sticker World',
+                            style: headlineSmallStyle,
+                          ),
                         ),
                         const HomeCarousel(),
                       ],

@@ -73,6 +73,12 @@ class GalleryView extends ConsumerWidget {
                                           pack,
                                           'sticker_${DateTime.now().millisecondsSinceEpoch}',
                                         );
+                                        if (!context.mounted) return;
+                                        SimpleToast.showToast(
+                                          context: context,
+                                          message:
+                                              'Sticker has been saved\nto the Gallery',
+                                        );
                                       },
                                       icon: Icons.save_alt,
                                       backgroundColor: AppColors.primary(

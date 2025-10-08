@@ -1,23 +1,18 @@
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 import '/core/services/services.dart';
 import '/core/providers/providers.dart';
 import '/presentation/packs/provider/packs_state.dart';
 import 'gallery_state.dart';
 
 class GalleryNotifier extends Notifier<GalleryState> {
-  final _picker = ImagePicker();
   final _conversionService = StickerConversionService();
 
   @override
   GalleryState build() => const GalleryState();
 
-  Future<void> pickImage() async {
-    final picker = await _picker.pickImage(source: ImageSource.gallery);
-    if (picker == null) return;
-    final f = File(picker.path);
-    state = state.copyWith(originalFile: f, editedFile: f);
+  void setNewImage(File file) {
+    state = state.copyWith(originalFile: file, editedFile: file);
   }
 
   void updateEditedFile(File file) {

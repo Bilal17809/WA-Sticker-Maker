@@ -19,11 +19,4 @@ class GetFreepikImage {
       extraBody: extraBody,
     );
   }
-
-  Future<FreepikModel> taskStatus({
-    required String taskId,
-    String taskPath = '/ai/text-to-image',
-  }) {
-    return repo.getTaskStatus(taskId: taskId, taskPath: taskPath);
-  }
 }
