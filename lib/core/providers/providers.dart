@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '/presentation/ai_pack_gallery/provider/ai_pack_gallery_notifier.dart';
+import '/presentation/ai_pack_gallery/provider/ai_pack_gallery_state.dart';
 import '/presentation/ai_pack/provider/ai_packs_notifier.dart';
 import '/presentation/ai_pack/provider/ai_packs_state.dart';
 import '/presentation/ai_image/provider/ai_image_notifier.dart';
@@ -58,6 +60,11 @@ final libraryPacksProvider =
 final libraryPackGalleryProvider =
     NotifierProvider<LibraryPackGalleryNotifier, LibraryPackGalleryState>(
       LibraryPackGalleryNotifier.new,
+    );
+
+final aiPackGalleryProvider =
+    NotifierProvider<AiPackGalleryNotifier, AiPackGalleryState>(
+      AiPackGalleryNotifier.new,
     );
 
 final packGalleryProvider =

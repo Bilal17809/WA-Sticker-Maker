@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wa_sticker_maker/presentation/ai_image/view/ai_image_view.dart';
+import '/presentation/ai_pack_gallery/view/ai_pack_gallery_view.dart';
 import '/core/providers/providers.dart';
 import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
@@ -47,7 +47,7 @@ class AiPacksView extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => AiImageView(pack: pack),
+                              builder: (_) => AiPackGalleryView(pack: pack),
                             ),
                           );
                         },

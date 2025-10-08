@@ -1,31 +1,28 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '/presentation/ai_image/view/ai_image_view.dart';
+import '/presentation/ai_pack/provider/ai_packs_state.dart';
+import '/presentation/ai_pack_gallery/provider/ai_pack_gallery_state.dart';
 import '/core/utils/utils.dart';
-import '/presentation/library_pack/provider/library_pack_state.dart';
-import '/presentation/library_pack_gallery/provider/library_pack_gallery_state.dart';
-import '/presentation/library/view/library_view.dart';
 import '/core/constants/constants.dart';
 import '/core/common_widgets/common_widgets.dart';
 import '/core/providers/providers.dart';
 import '/core/theme/theme.dart';
 
-class LibraryPackGalleryView extends ConsumerWidget {
-  final LibraryPacksState pack;
-  const LibraryPackGalleryView({super.key, required this.pack});
+class AiPackGalleryView extends ConsumerWidget {
+  final AiPacksState pack;
+  const AiPackGalleryView({super.key, required this.pack});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final packs = ref.watch(libraryPacksProvider);
-    final galleryState = ref.watch(libraryPackGalleryProvider);
+    final packs = ref.watch(aiPacksProvider);
+    final galleryState = ref.watch(aiPackGalleryProvider);
     final currentPack = packs.firstWhere(
       (p) => p.directoryPath == pack.directoryPath,
       orElse: () => pack,
     );
-    ref.listen<LibraryPackGalleryState>(libraryPackGalleryProvider, (
-      previous,
-      next,
-    ) {
+    ref.listen<AiPackGalleryState>(aiPackGalleryProvider, (previous, next) {
       if (context.mounted && next.lastMessage != null) {
         if (!(next.lastMessage?.contains('added') ?? false)) {
           SimpleToast.showToast(
@@ -34,7 +31,7 @@ class LibraryPackGalleryView extends ConsumerWidget {
             imagePath: Assets.whatsAppLogo,
           );
         }
-        ref.read(libraryPackGalleryProvider.notifier).clearMessage();
+        ref.read(aiPackGalleryProvider.notifier).clearMessage();
       }
     });
     return Scaffold(
@@ -45,7 +42,7 @@ class LibraryPackGalleryView extends ConsumerWidget {
         child: currentPack.stickerPaths.isEmpty
             ? Center(
                 child: Text(
-                  'No stickers yet.\nTap + to add from library.',
+                  'No stickers yet.\nTap + to add from AI.',
                   style: titleSmallStyle.copyWith(color: AppColors.kWhite),
                   textAlign: TextAlign.center,
                 ),
@@ -72,7 +69,7 @@ class LibraryPackGalleryView extends ConsumerWidget {
                                   await DeleteStickerDialog.show(context);
                               if (shouldDelete == true) {
                                 await ref
-                                    .read(libraryPacksProvider.notifier)
+                                    .read(aiPacksProvider.notifier)
                                     .removeStickerFromPack(currentPack, path);
                               }
                             },
@@ -124,16 +121,16 @@ class LibraryPackGalleryView extends ConsumerWidget {
             elevation: 1,
             onPressed: () => Navigator.push<Set<String>>(
               context,
-              MaterialPageRoute(builder: (_) => LibraryView(pack: pack)),
+              MaterialPageRoute(builder: (_) => AiImageView(pack: pack)),
             ),
-            heroTag: 'add_from_library',
+            heroTag: 'add_from_Ai',
             child: const Icon(Icons.add),
           ),
           FloatingActionButton(
             elevation: 1,
             onPressed: currentPack.stickerPaths.length >= 3
                 ? () => ref
-                      .read(libraryPackGalleryProvider.notifier)
+                      .read(aiPackGalleryProvider.notifier)
                       .exportPackToWhatsApp(pack)
                 : () => SimpleToast.showToast(
                     context: context,

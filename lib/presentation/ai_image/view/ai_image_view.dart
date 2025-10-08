@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
-import 'package:wa_sticker_maker/presentation/ai_pack/provider/ai_packs_state.dart';
+import '/presentation/ai_pack/provider/ai_packs_state.dart';
 import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
 import '/core/utils/utils.dart';
 import '/core/providers/providers.dart';
 import '/core/common_widgets/common_widgets.dart';
+import '/core/services/connectivity_service.dart';
 
 final _promptProvider = Provider.autoDispose<TextEditingController>((ref) {
   final controller = TextEditingController();
@@ -24,10 +25,64 @@ class AiImageView extends ConsumerWidget {
     final notifier = ref.read(freepikImageNotifierProvider.notifier);
     final promptController = ref.watch(_promptProvider);
 
+    ref.listen<AsyncValue<bool>>(internetStatusStreamProvider, (
+      previous,
+      next,
+    ) {
+      next.whenData((isConnected) {
+        if (isConnected) {
+          ConnectivityDialog.closeIfOpen(context);
+        } else {
+          ConnectivityDialog.showNoInternetDialog(
+            context,
+            onRetry: () async {},
+          );
+        }
+      });
+    });
+
     return Scaffold(
       backgroundColor: AppColors.secondary(context),
       extendBodyBehindAppBar: true,
-      appBar: TitleBar(title: 'AI Sticker Generator'),
+      appBar: TitleBar(
+        title: 'AI Sticker Generator',
+        actions: [
+          state.selectedImageIndices.isNotEmpty
+              ? Row(
+                  spacing: kGap,
+                  children: [
+                    Text(
+                      '${state.selectedImageIndices.length} selected',
+                      style: titleSmallStyle.copyWith(color: AppColors.kWhite),
+                    ),
+                    IconActionButton(
+                      onTap: () async {
+                        final success = await notifier.downloadAndAddToPack(
+                          pack,
+                        );
+                        if (success && context.mounted) {
+                          SimpleToast.showToast(
+                            context: context,
+                            message: 'Images added to pack',
+                          );
+                          Navigator.pop(context);
+                        }
+                      },
+                      icon: state.isDownloading
+                          ? Icons.hourglass_bottom
+                          : Icons.downloading,
+                    ),
+                  ],
+                )
+              : IconActionButton(
+                  onTap: () => SimpleToast.showToast(
+                    context: context,
+                    message: 'Please select images to add',
+                  ),
+                  icon: Icons.add,
+                ),
+        ],
+      ),
       body: Container(
         decoration: AppDecorations.bgContainer(context),
         child: SafeArea(
@@ -114,16 +169,41 @@ class AiImageView extends ConsumerWidget {
                       itemBuilder: (context, index) {
                         final item = state.images[index];
                         final bytes = Base64Utils.maybeDecode(item);
-                        return Container(
-                          decoration: AppDecorations.simpleRounded(context),
-                          padding: const EdgeInsets.all(kBodyHp),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(kElementGap),
-                            child: (bytes != null)
-                                ? Image.memory(bytes, fit: BoxFit.scaleDown)
-                                : Center(
-                                    child: Lottie.asset(Assets.imageLottie),
+                        final isSelected = state.selectedImageIndices.contains(
+                          index,
+                        );
+
+                        return GestureDetector(
+                          onTap: () => notifier.selectImage(index),
+                          child: Container(
+                            decoration: AppDecorations.simpleRounded(context),
+                            padding: const EdgeInsets.all(kBodyHp),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                    kElementGap,
                                   ),
+                                  child: (bytes != null)
+                                      ? Image.memory(
+                                          bytes,
+                                          fit: BoxFit.scaleDown,
+                                        )
+                                      : Center(
+                                          child: Lottie.asset(
+                                            Assets.imageLottie,
+                                          ),
+                                        ),
+                                ),
+                                if (isSelected)
+                                  Positioned(
+                                    top: -8,
+                                    right: -6,
+                                    child: Icon(Icons.check_circle),
+                                  ),
+                              ],
+                            ),
                           ),
                         );
                       },
