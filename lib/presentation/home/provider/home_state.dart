@@ -3,13 +3,11 @@ import 'package:flutter/foundation.dart';
 @immutable
 class HomeState {
   final bool isDrawerOpen;
-  final int selectedIndex;
-  const HomeState({this.isDrawerOpen = false, this.selectedIndex = 0});
+  const HomeState({this.isDrawerOpen = false});
 
-  HomeState copyWith({bool? isDrawerOpen, int? selectedIndex}) {
+  HomeState copyWith({bool? isDrawerOpen}) {
     return HomeState(
       isDrawerOpen: isDrawerOpen ?? this.isDrawerOpen,
-      selectedIndex: selectedIndex ?? this.selectedIndex,
     );
   }
 }

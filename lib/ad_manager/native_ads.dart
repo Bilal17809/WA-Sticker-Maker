@@ -5,7 +5,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/core/common/app_exceptions.dart';
 import '/core/theme/theme.dart';
-import 'ad_manager.dart';
 import 'package:shimmer/shimmer.dart';
 import '/core/providers/providers.dart';
 

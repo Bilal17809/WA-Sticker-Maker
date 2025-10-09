@@ -35,7 +35,7 @@ final packExportServiceProvider = Provider<PackExportService>((ref) {
 
 /// Providers
 final splashProvider = NotifierProvider<SplashNotifier, SplashState>(
-  () => SplashNotifier(),
+  SplashNotifier.new,
 );
 
 final homeProvider = NotifierProvider<HomeNotifier, HomeState>(
@@ -80,6 +80,10 @@ final galleryProvider = NotifierProvider<GalleryNotifier, GalleryState>(
 
 final freepikImageNotifierProvider =
     NotifierProvider<AIImageNotifier, AiImageState>(AIImageNotifier.new);
+
+final removeAdsProvider = NotifierProvider<RemoveAdsNotifier, RemoveAdsState>(
+  RemoveAdsNotifier.new,
+);
 
 final interstitialAdManagerProvider =
     NotifierProvider<InterstitialAdManager, InterstitialAdState>(
