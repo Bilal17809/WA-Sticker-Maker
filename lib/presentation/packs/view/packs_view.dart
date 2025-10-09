@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '/ad_manager/ad_manager.dart';
 import '/core/providers/providers.dart';
 import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
@@ -12,6 +13,7 @@ class PacksView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final packs = ref.watch(packsProvider);
+    final interstitialState = ref.watch(interstitialAdManagerProvider);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: TitleBar(title: 'Your Packs'),
@@ -96,6 +98,9 @@ class PacksView extends ConsumerWidget {
         onPressed: () => ref.read(packsProvider.notifier).addNewPack(context),
         child: const Icon(Icons.add),
       ),
+      bottomNavigationBar: interstitialState.isShow
+          ? const SizedBox()
+          : const BannerAdWidget(),
     );
   }
 }

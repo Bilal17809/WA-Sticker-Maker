@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 import '/core/providers/providers.dart';
 import '/core/theme/theme.dart';
-import 'ad_manager.dart';
 
 class BannerAdWidget extends ConsumerStatefulWidget {
   const BannerAdWidget({super.key});
@@ -108,7 +107,10 @@ class _BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
               margin: const EdgeInsets.all(2.0),
               padding: const EdgeInsets.all(2.0),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300, width: 1.2),
+                border: Border.all(
+                  color: AppColors.textGreyColor.withValues(alpha: 0.6),
+                  width: 1.2,
+                ),
                 borderRadius: BorderRadius.circular(2.0),
               ),
               width: _bannerAd!.size.width.toDouble(),
@@ -124,15 +126,12 @@ class _BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
             child: Shimmer.fromColors(
               baseColor: AppColors.secondary(context),
               highlightColor: AppColors.container(context),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 50,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary(context).withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
+              child: Container(
+                height: 60,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: AppColors.kBlack.withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(5.0),
                 ),
               ),
             ),

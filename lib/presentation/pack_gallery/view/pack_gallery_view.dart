@@ -9,6 +9,7 @@ import '/core/theme/theme.dart';
 import '/core/common_widgets/common_widgets.dart';
 import '/presentation/gallery/view/gallery_view.dart';
 import '/presentation/packs/provider/packs_state.dart';
+import '/ad_manager/ad_manager.dart';
 
 class PackGalleryView extends ConsumerWidget {
   final PacksState pack;
@@ -27,6 +28,7 @@ class PackGalleryView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final interstitialState = ref.watch(interstitialAdManagerProvider);
     final packs = ref.watch(packsProvider);
     final galleryState = ref.watch(packGalleryProvider);
     final currentPack = packs.firstWhere(
@@ -173,6 +175,9 @@ class PackGalleryView extends ConsumerWidget {
           ),
         ],
       ),
+      bottomNavigationBar: interstitialState.isShow
+          ? const SizedBox()
+          : const BannerAdWidget(),
     );
   }
 }
