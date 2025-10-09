@@ -10,12 +10,14 @@ import '/core/theme/theme.dart';
 import '/core/constants/constants.dart';
 import '/core/common_widgets/common_widgets.dart';
 import '/core/providers/providers.dart';
+import '/ad_manager/ad_manager.dart';
 
 class GalleryView extends ConsumerWidget {
   final PacksState pack;
   const GalleryView({super.key, required this.pack});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final interstitialState = ref.watch(interstitialAdManagerProvider);
     final galleryState = ref.watch(galleryProvider);
     final galleryNotifier = ref.read(galleryProvider.notifier);
     return Scaffold(
@@ -95,6 +97,9 @@ class GalleryView extends ConsumerWidget {
                 ),
         ),
       ),
+      bottomNavigationBar: interstitialState.isShow
+          ? const SizedBox()
+          : const BannerAdWidget(),
     );
   }
 

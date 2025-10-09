@@ -55,7 +55,6 @@ class TitleBar extends StatelessWidget implements PreferredSizeWidget {
               onTap: () => Scaffold.of(context).openDrawer(),
               icon: Icons.menu,
               color: AppColors.kWhite,
-              size: secondaryIcon(context),
             ),
       actions: actions,
       bottom: bottom,

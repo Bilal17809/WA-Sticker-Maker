@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wa_sticker_maker/presentation/premium_screen/premium_screen.dart';
 import '/core/helper/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -37,11 +40,22 @@ class AppDrawer extends ConsumerWidget {
                   const Gap(kGap),
                   FittedBox(
                     fit: BoxFit.scaleDown,
-                    child: Text('WA Sticker Maker', style: titleLargeStyle.copyWith(color: AppColors.kWhite)),
+                    child: Text(
+                      'WA Sticker Maker',
+                      style: titleLargeStyle.copyWith(color: AppColors.kWhite),
+                    ),
                   ),
                 ],
               ),
             ),
+            _DrawerTile(
+              icon: Icons.star_rounded,
+              title: 'Rate Us',
+              onTap: () {
+                DrawerActions.rateUs();
+              },
+            ),
+            Divider(color: AppColors.primaryColorLight.withValues(alpha: 0.1)),
             _DrawerTile(
               icon: Icons.more,
               title: 'More Apps',
@@ -58,25 +72,18 @@ class AppDrawer extends ConsumerWidget {
               },
             ),
             Divider(color: AppColors.primaryColorLight.withValues(alpha: 0.1)),
+            // if (Platform.isIOS) ...[
             _DrawerTile(
               icon: Icons.star_rounded,
-              title: 'Rate Us',
+              title: 'Remove Ads',
               onTap: () {
-                DrawerActions.rateUs();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => PremiumScreen()),
+                );
               },
             ),
             Divider(color: AppColors.primaryColorLight.withValues(alpha: 0.1)),
-            // if (Platform.isIOS) ...[
-            //   _DrawerTile(
-            //     icon: Icons.star_rounded,
-            //     title: 'Remove Ads',
-            //     onTap: () {
-            //       Get.to(PremiumScreen());
-            //     },
-            //   ),
-            //   Divider(
-            //     color: AppColors.primaryColorLight.withValues(alpha: 0.1),
-            //   ),
             // ],
             // if (Platform.isAndroid) ...[
             //   _DrawerTile(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
+import 'package:wa_sticker_maker/ad_manager/ad_manager.dart';
 import '/presentation/ai_pack/view/ai_packs_view.dart';
 import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
@@ -34,10 +35,10 @@ class HomeView extends ConsumerWidget {
         appBar: TitleBar(title: 'WA Sticker Maker', useBackButton: false),
         body: Container(
           decoration: AppDecorations.bgContainer(context),
-          child: Stack(
-            children: [
-              SafeArea(
-                child: Padding(
+          child: SafeArea(
+            child: Stack(
+              children: [
+                Padding(
                   padding: const EdgeInsets.all(kBodyHp),
                   child: Column(
                     children: [
@@ -55,101 +56,103 @@ class HomeView extends ConsumerWidget {
                           ],
                         ),
                       ),
+                      NativeAdWidget(),
                     ],
                   ),
                 ),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  decoration: AppDecorations.simpleRounded(context).copyWith(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(kBorderRadius),
-                      topRight: Radius.circular(kBorderRadius),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    decoration: AppDecorations.simpleRounded(context).copyWith(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(kBorderRadius),
+                        topRight: Radius.circular(kBorderRadius),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: kBodyHp * 2,
-                      bottom: kBodyHp,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      spacing: kGap,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: kBodyHp,
-                          ),
-                          child: GestureDetector(
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const AiPacksView(),
-                              ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: kBodyHp * 2,
+                        bottom: kBodyHp,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        spacing: kGap,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kBodyHp,
                             ),
-                            child: Container(
-                              decoration: AppDecorations.gradientDecor(context),
-                              padding: const EdgeInsets.all(kBodyHp),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: Column(
-                                      spacing: kGap,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Get Started',
-                                          style: bodyLargeStyle.copyWith(
-                                            color: AppColors.kWhite,
+                            child: GestureDetector(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const AiPacksView(),
+                                ),
+                              ),
+                              child: Container(
+                                decoration: AppDecorations.gradientDecor(
+                                  context,
+                                ),
+                                padding: const EdgeInsets.all(kBodyHp),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Column(
+                                        spacing: kGap,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Get Started',
+                                            style: bodyLargeStyle.copyWith(
+                                              color: AppColors.kWhite,
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          'AI Sticker Generator',
-                                          style: titleMediumStyle.copyWith(
-                                            color: AppColors.kWhite,
+                                          Text(
+                                            'AI Sticker Generator',
+                                            style: titleMediumStyle.copyWith(
+                                              color: AppColors.kWhite,
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          'Generate high quality stickers with AI',
-                                          style: bodyLargeStyle.copyWith(
-                                            color: AppColors.kWhite,
+                                          Text(
+                                            'Generate high quality stickers with AI',
+                                            style: bodyLargeStyle.copyWith(
+                                              color: AppColors.kWhite,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: Lottie.asset(Assets.aiLottie),
-                                  ),
-                                ],
+                                    Expanded(
+                                      child: Lottie.asset(Assets.aiLottie),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: kBodyHp,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: kBodyHp,
+                            ),
+                            child: Text(
+                              'Sticker World',
+                              style: headlineSmallStyle,
+                            ),
                           ),
-                          child: Text(
-                            'Sticker World',
-                            style: headlineSmallStyle,
-                          ),
-                        ),
-                        const HomeCarousel(),
-                      ],
+                          const HomeCarousel(),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-        bottomNavigationBar: const AppBottomNav(),
       ),
     );
   }

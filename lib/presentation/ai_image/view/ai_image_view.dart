@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
+import '/ad_manager/ad_manager.dart';
 import '/presentation/ai_pack/provider/ai_packs_state.dart';
 import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
@@ -24,6 +25,7 @@ class AiImageView extends ConsumerWidget {
     final state = ref.watch(freepikImageNotifierProvider);
     final notifier = ref.read(freepikImageNotifierProvider.notifier);
     final promptController = ref.watch(_promptProvider);
+    final interstitialState = ref.watch(interstitialAdManagerProvider);
 
     ref.listen<AsyncValue<bool>>(internetStatusStreamProvider, (
       previous,
@@ -48,31 +50,20 @@ class AiImageView extends ConsumerWidget {
         title: 'AI Sticker Generator',
         actions: [
           state.selectedImageIndices.isNotEmpty
-              ? Row(
-                  spacing: kGap,
-                  children: [
-                    Text(
-                      '${state.selectedImageIndices.length} selected',
-                      style: titleSmallStyle.copyWith(color: AppColors.kWhite),
-                    ),
-                    IconActionButton(
-                      onTap: () async {
-                        final success = await notifier.downloadAndAddToPack(
-                          pack,
-                        );
-                        if (success && context.mounted) {
-                          SimpleToast.showToast(
-                            context: context,
-                            message: 'Images added to pack',
-                          );
-                          Navigator.pop(context);
-                        }
-                      },
-                      icon: state.isDownloading
-                          ? Icons.hourglass_bottom
-                          : Icons.downloading,
-                    ),
-                  ],
+              ? IconActionButton(
+                  onTap: () async {
+                    final success = await notifier.downloadAndAddToPack(pack);
+                    if (success && context.mounted) {
+                      SimpleToast.showToast(
+                        context: context,
+                        message: 'Images added to pack',
+                      );
+                      Navigator.pop(context);
+                    }
+                  },
+                  icon: state.isDownloading
+                      ? Icons.hourglass_bottom
+                      : Icons.downloading,
                 )
               : IconActionButton(
                   onTap: () => SimpleToast.showToast(
@@ -214,6 +205,9 @@ class AiImageView extends ConsumerWidget {
           ),
         ),
       ),
+      bottomNavigationBar: interstitialState.isShow
+          ? const SizedBox()
+          : const BannerAdWidget(),
     );
   }
 }

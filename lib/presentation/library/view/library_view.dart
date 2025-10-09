@@ -9,6 +9,7 @@ import '/core/common_widgets/common_widgets.dart';
 import '/core/providers/providers.dart';
 import '/core/theme/theme.dart';
 import '/presentation/library/provider/library_state.dart';
+import '/ad_manager/ad_manager.dart';
 
 class LibraryView extends ConsumerWidget {
   final LibraryPacksState pack;
@@ -16,6 +17,7 @@ class LibraryView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final interstitialState = ref.watch(interstitialAdManagerProvider);
     final libraryState = ref.watch(libraryProvider);
     ref.listen<AsyncValue<bool>>(internetStatusStreamProvider, (
       previous,
@@ -41,27 +43,18 @@ class LibraryView extends ConsumerWidget {
         title: 'Pack - ${pack.name}',
         actions: [
           libraryState.selectedStickerIds.isNotEmpty
-              ? Row(
-                  spacing: kGap,
-                  children: [
-                    Text(
-                      '${libraryState.selectedStickerIds.length} selected',
-                      style: titleSmallStyle.copyWith(color: AppColors.kWhite),
-                    ),
-                    IconActionButton(
-                      onTap: () async {
-                        final success = await ref
-                            .read(libraryProvider.notifier)
-                            .downloadAndAddToPack(pack);
-                        if (success && context.mounted) {
-                          return Navigator.pop(context);
-                        }
-                      },
-                      icon: libraryState.isDownloading
-                          ? Icons.hourglass_bottom
-                          : Icons.downloading,
-                    ),
-                  ],
+              ? IconActionButton(
+                  onTap: () async {
+                    final success = await ref
+                        .read(libraryProvider.notifier)
+                        .downloadAndAddToPack(pack);
+                    if (success && context.mounted) {
+                      return Navigator.pop(context);
+                    }
+                  },
+                  icon: libraryState.isDownloading
+                      ? Icons.hourglass_bottom
+                      : Icons.downloading,
                 )
               : IconActionButton(
                   onTap: () => SimpleToast.showToast(
@@ -101,6 +94,9 @@ class LibraryView extends ConsumerWidget {
           ),
         ),
       ),
+      bottomNavigationBar: interstitialState.isShow
+          ? const SizedBox()
+          : const BannerAdWidget(),
     );
   }
 }

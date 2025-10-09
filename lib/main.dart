@@ -6,13 +6,14 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:toastification/toastification.dart';
 import '/presentation/splash/view/splash_view.dart';
 import 'core/theme/theme.dart';
+import 'core/services/services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await MobileAds.instance.initialize();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
+  OnesignalService.init();
   runApp(ProviderScope(child: const WaStickerMaker()));
 }
 
@@ -23,7 +24,7 @@ class WaStickerMaker extends ConsumerWidget {
     return ToastificationWrapper(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Learn Japanese',
+        title: 'WA Sticker Maker',
         theme: AppTheme.lightTheme,
         home: const SplashView(),
       ),

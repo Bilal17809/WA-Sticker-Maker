@@ -6,12 +6,14 @@ import '/core/providers/providers.dart';
 import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
 import '/core/common_widgets/common_widgets.dart';
+import '/ad_manager/ad_manager.dart';
 
 class AiPacksView extends ConsumerWidget {
   const AiPacksView({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final packs = ref.watch(aiPacksProvider);
+    final interstitialState = ref.watch(interstitialAdManagerProvider);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: TitleBar(title: 'Your Packs'),
@@ -96,7 +98,9 @@ class AiPacksView extends ConsumerWidget {
         onPressed: () => ref.read(aiPacksProvider.notifier).addNewPack(context),
         child: const Icon(Icons.add),
       ),
-      bottomNavigationBar: const AppBottomNav(),
+      bottomNavigationBar: interstitialState.isShow
+          ? const SizedBox()
+          : const BannerAdWidget(),
     );
   }
 }

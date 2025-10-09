@@ -26,10 +26,6 @@ class RemoveAdsNotifier extends Notifier<RemoveAdsState> {
   }
 }
 
-final removeAdsProvider = NotifierProvider<RemoveAdsNotifier, RemoveAdsState>(
-  RemoveAdsNotifier.new,
-);
-
 extension RemoveAdsStateExtension on RemoveAdsState {
   bool get isSubscribed => this.isSubscribed;
 }
