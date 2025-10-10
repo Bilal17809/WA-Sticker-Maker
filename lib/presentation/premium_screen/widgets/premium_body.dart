@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/core/theme/theme.dart';
-import '../../terms/terms_view.dart';
+import '/presentation/terms/terms_view.dart';
 import '/core/common_widgets/common_widgets.dart';
 
 class PremiumBody extends ConsumerWidget {
@@ -40,9 +40,9 @@ class PremiumBody extends ConsumerWidget {
     final bool isSmallScreen = width < 600;
 
     final items = [
-      {'icon': 'images/ai.png', 'text': 'AI Explanation'},
-      {'icon': 'images/reading-book.png', 'text': 'Structured Lessons'},
-      {'icon': 'images/question.png', 'text': 'Quizzes'},
+      {'icon': 'images/ai.png', 'text': 'AI Generation'},
+      {'icon': 'images/customization.png', 'text': 'Customized Stickers'},
+      {'icon': 'images/lib_pack.png', 'text': 'Huge Library'},
     ];
 
     return Scaffold(
@@ -107,7 +107,6 @@ class PremiumBody extends ConsumerWidget {
                                             ? 55
                                             : height * 0.08,
                                         fit: BoxFit.contain,
-                                        color: AppColors.primaryColorLight,
                                       ),
                                       const SizedBox(height: 6),
                                       Flexible(
@@ -188,7 +187,7 @@ class PremiumBody extends ConsumerWidget {
             right: width * 0.08,
             top: height * 0.36,
             child: const Text(
-              "Master Japanese with Ease",
+              "Create Stickers with Ease",
               style: TextStyle(
                 color: AppColors.primaryColorLight,
                 fontSize: 25,
@@ -202,7 +201,7 @@ class PremiumBody extends ConsumerWidget {
             right: width * 0.08,
             top: height * 0.42,
             child: const Text(
-              "AI-powered lessons, structured paths, and quizzes to keep you on track.",
+              "AI-powered tools, ready-made templates, and smart editing to bring your stickers to life.",
               style: TextStyle(color: AppColors.textBlackColor, fontSize: 16),
               textAlign: TextAlign.center,
             ),
@@ -212,7 +211,7 @@ class PremiumBody extends ConsumerWidget {
             left: width * 0.20,
             right: width * 0.20,
             child: Image.asset(
-              'images/hero_image.png',
+              'images/icon.png',
               height: height * 0.34,
               fit: BoxFit.contain,
             ),

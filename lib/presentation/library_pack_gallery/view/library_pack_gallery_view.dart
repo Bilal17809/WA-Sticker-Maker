@@ -11,18 +11,32 @@ import '/core/providers/providers.dart';
 import '/core/theme/theme.dart';
 import '/ad_manager/ad_manager.dart';
 
-class LibraryPackGalleryView extends ConsumerWidget {
+class LibraryPackGalleryView extends ConsumerStatefulWidget {
   final LibraryPacksState pack;
   const LibraryPackGalleryView({super.key, required this.pack});
+  @override
+  ConsumerState<LibraryPackGalleryView> createState() =>
+      _LibraryPackGalleryViewState();
+}
+
+class _LibraryPackGalleryViewState
+    extends ConsumerState<LibraryPackGalleryView> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
+    });
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final interstitialState = ref.watch(interstitialAdManagerProvider);
     final packs = ref.watch(libraryPacksProvider);
     final galleryState = ref.watch(libraryPackGalleryProvider);
     final currentPack = packs.firstWhere(
-      (p) => p.directoryPath == pack.directoryPath,
-      orElse: () => pack,
+      (p) => p.directoryPath == widget.pack.directoryPath,
+      orElse: () => widget.pack,
     );
     ref.listen<LibraryPackGalleryState>(libraryPackGalleryProvider, (
       previous,
@@ -41,7 +55,7 @@ class LibraryPackGalleryView extends ConsumerWidget {
     });
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: TitleBar(title: pack.name),
+      appBar: TitleBar(title: widget.pack.name),
       body: Container(
         decoration: AppDecorations.bgContainer(context),
         child: currentPack.stickerPaths.isEmpty
@@ -126,7 +140,7 @@ class LibraryPackGalleryView extends ConsumerWidget {
             elevation: 1,
             onPressed: () => Navigator.push<Set<String>>(
               context,
-              MaterialPageRoute(builder: (_) => LibraryView(pack: pack)),
+              MaterialPageRoute(builder: (_) => LibraryView(pack: widget.pack)),
             ),
             heroTag: 'add_from_library',
             child: const Icon(Icons.add),
@@ -136,7 +150,7 @@ class LibraryPackGalleryView extends ConsumerWidget {
             onPressed: currentPack.stickerPaths.length >= 3
                 ? () => ref
                       .read(libraryPackGalleryProvider.notifier)
-                      .exportPackToWhatsApp(pack)
+                      .exportPackToWhatsApp(widget.pack)
                 : () => SimpleToast.showToast(
                     context: context,
                     message: 'Please add at least 3 stickers to the pack',

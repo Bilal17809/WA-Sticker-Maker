@@ -42,7 +42,7 @@ class NativeAdManager extends Notifier<NativeAdState> {
       final remoteConfig = FirebaseRemoteConfig.instance;
       await remoteConfig.setConfigSettings(
         RemoteConfigSettings(
-          fetchTimeout: const Duration(seconds: 3),
+          fetchTimeout: const Duration(seconds: 10),
           minimumFetchInterval: const Duration(seconds: 1),
         ),
       );
@@ -74,8 +74,9 @@ class NativeAdManager extends Notifier<NativeAdState> {
           state = state.copyWith(isAdReady: true);
         },
         onAdFailedToLoad: (ad, error) {
-          state = state.copyWith(isAdReady: false);
+          debugPrint('!!!!!!!!!!!!!!!!!!!!Ad failed: $error');
           ad.dispose();
+          state = state.copyWith(isAdReady: false);
         },
       ),
       nativeTemplateStyle: NativeTemplateStyle(
@@ -98,15 +99,15 @@ class NativeAdWidget extends ConsumerStatefulWidget {
 }
 
 class NativeAdWidgetState extends ConsumerState<NativeAdWidget> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(nativeAdManagerProvider(widget.templateType).notifier)
-          .loadNativeAd();
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     ref
+  //         .read(nativeAdManagerProvider(widget.templateType).notifier)
+  //         .loadNativeAd();
+  //   });
+  // }
 
   Widget shimmerSmallWidget(double width) {
     return Shimmer.fromColors(

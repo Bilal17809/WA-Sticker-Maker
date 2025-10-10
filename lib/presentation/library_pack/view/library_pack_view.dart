@@ -8,11 +8,23 @@ import '/core/theme/theme.dart';
 import '/core/common_widgets/common_widgets.dart';
 import '/ad_manager/ad_manager.dart';
 
-class LibraryPacksView extends ConsumerWidget {
+class LibraryPacksView extends ConsumerStatefulWidget {
   const LibraryPacksView({super.key});
+  @override
+  ConsumerState<LibraryPacksView> createState() => _LibraryPacksViewState();
+}
+
+class _LibraryPacksViewState extends ConsumerState<LibraryPacksView> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
+    });
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final interstitialState = ref.watch(interstitialAdManagerProvider);
     final packs = ref.watch(libraryPacksProvider);
     return Scaffold(

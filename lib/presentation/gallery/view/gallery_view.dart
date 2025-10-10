@@ -12,17 +12,30 @@ import '/core/common_widgets/common_widgets.dart';
 import '/core/providers/providers.dart';
 import '/ad_manager/ad_manager.dart';
 
-class GalleryView extends ConsumerWidget {
+class GalleryView extends ConsumerStatefulWidget {
   final PacksState pack;
   const GalleryView({super.key, required this.pack});
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<GalleryView> createState() => _GalleryViewState();
+}
+
+class _GalleryViewState extends ConsumerState<GalleryView> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final interstitialState = ref.watch(interstitialAdManagerProvider);
     final galleryState = ref.watch(galleryProvider);
     final galleryNotifier = ref.read(galleryProvider.notifier);
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: TitleBar(title: 'Edit Image - ${pack.name}'),
+      appBar: TitleBar(title: 'Edit Image - ${widget.pack.name}'),
       body: Container(
         decoration: AppDecorations.bgContainer(context),
         child: Center(
@@ -72,7 +85,7 @@ class GalleryView extends ConsumerWidget {
                                   : IconActionButton(
                                       onTap: () async {
                                         await galleryNotifier.saveAsWebPToPack(
-                                          pack,
+                                          widget.pack,
                                           'sticker_${DateTime.now().millisecondsSinceEpoch}',
                                         );
                                         if (!context.mounted) return;

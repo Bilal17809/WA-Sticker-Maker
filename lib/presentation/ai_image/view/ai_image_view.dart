@@ -16,12 +16,25 @@ final _promptProvider = Provider.autoDispose<TextEditingController>((ref) {
   return controller;
 });
 
-class AiImageView extends ConsumerWidget {
+class AiImageView extends ConsumerStatefulWidget {
   final AiPacksState pack;
   const AiImageView({super.key, required this.pack});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AiImageView> createState() => _AiImageViewState();
+}
+
+class _AiImageViewState extends ConsumerState<AiImageView> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(freepikImageNotifierProvider);
     final notifier = ref.read(freepikImageNotifierProvider.notifier);
     final promptController = ref.watch(_promptProvider);
@@ -52,7 +65,9 @@ class AiImageView extends ConsumerWidget {
           state.selectedImageIndices.isNotEmpty
               ? IconActionButton(
                   onTap: () async {
-                    final success = await notifier.downloadAndAddToPack(pack);
+                    final success = await notifier.downloadAndAddToPack(
+                      widget.pack,
+                    );
                     if (success && context.mounted) {
                       SimpleToast.showToast(
                         context: context,

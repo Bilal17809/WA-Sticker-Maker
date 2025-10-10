@@ -9,14 +9,21 @@ class PackGalleryNotifier extends Notifier<PackGalleryState> {
   final _picker = ImagePicker();
 
   @override
-  PackGalleryState build() => const PackGalleryState();
+  PackGalleryState build() {
+    return const PackGalleryState();
+  }
 
-  Future<File?> pickImageForPack() async {
+  Future<File?> _pickImageForPack() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile == null) return null;
     final file = File(pickedFile.path);
     ref.read(galleryProvider.notifier).setNewImage(file);
     return file;
+  }
+
+  Future<void> addNewImage() async {
+    final file = await _pickImageForPack();
+    if (file == null) return;
   }
 
   Future<void> exportPackToWhatsApp(PacksState pack) async {

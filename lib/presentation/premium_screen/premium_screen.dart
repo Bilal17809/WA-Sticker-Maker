@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wa_sticker_maker/presentation/premium_screen/widgets/premium_body.dart';
-import 'package:wa_sticker_maker/presentation/premium_screen/widgets/product_list.dart';
-import '../../core/services/purchase_notifier_service.dart';
+import '/presentation/premium_screen/widgets/premium_body.dart';
+import '/presentation/premium_screen/widgets/product_list.dart';
+import '/core/services/services.dart';
 
 class PremiumScreen extends ConsumerWidget {
   const PremiumScreen({super.key});
