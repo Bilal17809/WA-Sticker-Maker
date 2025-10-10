@@ -11,12 +11,24 @@ import '/core/theme/theme.dart';
 import '/presentation/library/provider/library_state.dart';
 import '/ad_manager/ad_manager.dart';
 
-class LibraryView extends ConsumerWidget {
+class LibraryView extends ConsumerStatefulWidget {
   final LibraryPacksState pack;
   const LibraryView({super.key, required this.pack});
+  @override
+  ConsumerState<LibraryView> createState() => _LibraryViewState();
+}
+
+class _LibraryViewState extends ConsumerState<LibraryView> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
+    });
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final interstitialState = ref.watch(interstitialAdManagerProvider);
     final libraryState = ref.watch(libraryProvider);
     ref.listen<AsyncValue<bool>>(internetStatusStreamProvider, (
@@ -40,14 +52,14 @@ class LibraryView extends ConsumerWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: TitleBar(
-        title: 'Pack - ${pack.name}',
+        title: 'Pack - ${widget.pack.name}',
         actions: [
           libraryState.selectedStickerIds.isNotEmpty
               ? IconActionButton(
                   onTap: () async {
                     final success = await ref
                         .read(libraryProvider.notifier)
-                        .downloadAndAddToPack(pack);
+                        .downloadAndAddToPack(widget.pack);
                     if (success && context.mounted) {
                       return Navigator.pop(context);
                     }

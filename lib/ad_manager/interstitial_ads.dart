@@ -40,15 +40,13 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
 
   @override
   InterstitialAdState build() {
+    ref.keepAlive();
     ref.onDispose(() {
       _currentAd?.dispose();
     });
-
     final previous = stateOrNull ?? InterstitialAdState();
-
     _initRemoteConfig();
     _loadAd();
-
     return previous;
   }
 

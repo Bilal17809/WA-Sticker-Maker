@@ -11,30 +11,33 @@ import '/presentation/gallery/view/gallery_view.dart';
 import '/presentation/packs/provider/packs_state.dart';
 import '/ad_manager/ad_manager.dart';
 
-class PackGalleryView extends ConsumerWidget {
+class PackGalleryView extends ConsumerStatefulWidget {
   final PacksState pack;
   const PackGalleryView({super.key, required this.pack});
-  Future<void> _addNewImage(BuildContext context, WidgetRef ref) async {
-    final file = await ref
-        .read(packGalleryProvider.notifier)
-        .pickImageForPack();
-    if (file == null) return;
-    if (!context.mounted) return;
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => GalleryView(pack: pack)),
-    );
+  @override
+  ConsumerState<PackGalleryView> createState() => _PackGalleryViewState();
+}
+
+class _PackGalleryViewState extends ConsumerState<PackGalleryView> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
+    });
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final interstitialState = ref.watch(interstitialAdManagerProvider);
     final packs = ref.watch(packsProvider);
     final galleryState = ref.watch(packGalleryProvider);
+
     final currentPack = packs.firstWhere(
-      (p) => p.directoryPath == pack.directoryPath,
-      orElse: () => pack,
+      (p) => p.directoryPath == widget.pack.directoryPath,
+      orElse: () => widget.pack,
     );
+
     ref.listen<PackGalleryState>(packGalleryProvider, (previous, next) {
       if (next.lastMessage != null && context.mounted) {
         if (!(next.lastMessage?.contains('added') ?? false)) {
@@ -44,10 +47,11 @@ class PackGalleryView extends ConsumerWidget {
         ref.read(packGalleryProvider.notifier).clearMessage();
       }
     });
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: TitleBar(
-        title: pack.name,
+        title: widget.pack.name,
         actions: [
           if (currentPack.stickerPaths.isNotEmpty)
             Padding(
@@ -141,7 +145,15 @@ class PackGalleryView extends ConsumerWidget {
         children: [
           FloatingActionButton(
             elevation: 1,
-            onPressed: () => _addNewImage(context, ref),
+            onPressed: () async {
+              ref.read(packGalleryProvider.notifier).addNewImage;
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => GalleryView(pack: widget.pack),
+                ),
+              );
+            },
             heroTag: 'add_image',
             child: const Icon(Icons.add),
           ),
@@ -150,7 +162,7 @@ class PackGalleryView extends ConsumerWidget {
             onPressed: currentPack.stickerPaths.length >= 3
                 ? () => ref
                       .read(packGalleryProvider.notifier)
-                      .exportPackToWhatsApp(pack)
+                      .exportPackToWhatsApp(widget.pack)
                 : () => SimpleToast.showToast(
                     context: context,
                     message: 'Please add at least 3 images to the pack',

@@ -56,7 +56,9 @@ class HomeView extends ConsumerWidget {
                           ],
                         ),
                       ),
-                      NativeAdWidget(),
+                      !ref.watch(homeProvider).isDrawerOpen
+                          ? NativeAdWidget()
+                          : const SizedBox.shrink(),
                     ],
                   ),
                 ),

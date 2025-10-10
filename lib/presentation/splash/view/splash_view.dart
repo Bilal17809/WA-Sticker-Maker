@@ -113,23 +113,17 @@ class SplashView extends ConsumerWidget {
                                       color: AppColors.kWhite,
                                       shadows: kShadow,
                                     ),
-                                    // onSubmit: () async {
-                                    //   if (splashAdState.isAdReady) {
-                                    //     splashAdManager.showSplashAd();
-                                    //   }
-                                    //   Navigator.pushReplacement(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //       builder: (_) => const HomeView(),
-                                    //     ),
-                                    //   );
-                                    // },
-                                    onSubmit: () => Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => const HomeView(),
-                                      ),
-                                    ),
+                                    onSubmit: () async {
+                                      if (splashAdState.isAdReady) {
+                                        splashAdManager.showSplashAd();
+                                      }
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const HomeView(),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                               )
