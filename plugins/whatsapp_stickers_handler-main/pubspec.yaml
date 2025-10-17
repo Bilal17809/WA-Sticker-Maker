@@ -1,0 +1,29 @@
+name: whatsapp_stickers_handler
+description: 'This plugin provides functionality for dynamically adding and updating sticker packs to WhatsApp.'
+version: 0.5.0
+repository: https://github.com/DennisJacob128/whatsapp_stickers_handler
+
+environment:
+  sdk: ^3.7.0
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_image_compress: ^2.1.0
+  image: ^4.5.3
+  path: ^1.9.1
+  plugin_platform_interface: ^2.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lint: ^2.8.0
+
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: de.dennisjacob.whatsapp_stickers_handler
+        pluginClass: WhatsappStickersHandler
