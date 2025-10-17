@@ -63,7 +63,8 @@ class NativeAdManager extends Notifier<NativeAdState> {
   void loadNativeAd() {
     state = state.copyWith(isAdReady: false);
     final adUnitId = Platform.isAndroid
-        ? 'ca-app-pub-3940256099942544/2247696110'
+        // ? 'ca-app-pub-3940256099942544/2247696110'
+        ? 'ca-app-pub-8172082069591999/1376543924'
         : '';
     _nativeAd = NativeAd(
       adUnitId: adUnitId,
@@ -99,16 +100,6 @@ class NativeAdWidget extends ConsumerStatefulWidget {
 }
 
 class NativeAdWidgetState extends ConsumerState<NativeAdWidget> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     ref
-  //         .read(nativeAdManagerProvider(widget.templateType).notifier)
-  //         .loadNativeAd();
-  //   });
-  // }
-
   Widget shimmerSmallWidget(double width) {
     return Shimmer.fromColors(
       baseColor: AppColors.secondary(context),
@@ -280,8 +271,11 @@ class NativeAdWidgetState extends ConsumerState<NativeAdWidget> {
     final adHeight = widget.templateType == TemplateType.medium
         ? screenHeight * 0.48
         : screenHeight * 0.14;
+    final isDialogVisible = ref.watch(dialogVisibilityProvider);
 
-    if (removeAds.isSubscribed || appOpenAdState.isAdVisible) {
+    if (removeAds.isSubscribed ||
+        appOpenAdState.isAdVisible ||
+        isDialogVisible) {
       return const SizedBox();
     }
 

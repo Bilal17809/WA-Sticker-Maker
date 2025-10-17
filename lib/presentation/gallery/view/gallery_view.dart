@@ -12,30 +12,17 @@ import '/core/common_widgets/common_widgets.dart';
 import '/core/providers/providers.dart';
 import '/ad_manager/ad_manager.dart';
 
-class GalleryView extends ConsumerStatefulWidget {
+class GalleryView extends ConsumerWidget {
   final PacksState pack;
   const GalleryView({super.key, required this.pack});
-  @override
-  ConsumerState<GalleryView> createState() => _GalleryViewState();
-}
-
-class _GalleryViewState extends ConsumerState<GalleryView> {
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
-    });
-  }
 
   @override
-  Widget build(BuildContext context) {
-    final interstitialState = ref.watch(interstitialAdManagerProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
     final galleryState = ref.watch(galleryProvider);
     final galleryNotifier = ref.read(galleryProvider.notifier);
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: TitleBar(title: 'Edit Image - ${widget.pack.name}'),
+      appBar: TitleBar(title: 'Edit Image - ${pack.name}'),
       body: Container(
         decoration: AppDecorations.bgContainer(context),
         child: Center(
@@ -85,7 +72,7 @@ class _GalleryViewState extends ConsumerState<GalleryView> {
                                   : IconActionButton(
                                       onTap: () async {
                                         await galleryNotifier.saveAsWebPToPack(
-                                          widget.pack,
+                                          pack,
                                           'sticker_${DateTime.now().millisecondsSinceEpoch}',
                                         );
                                         if (!context.mounted) return;
@@ -110,9 +97,7 @@ class _GalleryViewState extends ConsumerState<GalleryView> {
                 ),
         ),
       ),
-      bottomNavigationBar: interstitialState.isShow
-          ? const SizedBox()
-          : const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 

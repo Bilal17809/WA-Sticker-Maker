@@ -60,11 +60,14 @@ class LibraryNotifier extends Notifier<LibraryState> {
         !(state.stickerResponse?.hasData ?? false)) {
       return;
     }
+
     final nextPage = state.stickerResponse!.currentPage + 1;
     final fetcher = (_query?.isNotEmpty ?? false)
         ? () => _stickerService.search(_query!, page: nextPage)
         : () => _stickerService.getTrending(page: nextPage);
+    state = state.copyWith(isLoadingMore: true);
     await _load(fetcher, append: true);
+    state = state.copyWith(isLoadingMore: false);
   }
 
   Future<void> _load(
@@ -72,12 +75,16 @@ class LibraryNotifier extends Notifier<LibraryState> {
     bool append = false,
     bool resetQuery = false,
   }) async {
+    state = state.copyWith(isLoading: true);
+    await Future.delayed(Duration(milliseconds: 50));
+
     state = await _fetchService.fetch(
       currentState: state,
       fetcher: fetcher,
       append: append,
     );
     if (resetQuery) _query = null;
+    state = state.copyWith(isLoading: false);
   }
 
   Future<StickerResponseModel> fetchTrending({int page = 1}) =>

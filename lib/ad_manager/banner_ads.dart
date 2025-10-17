@@ -69,7 +69,8 @@ class _BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
         );
     _bannerAd = BannerAd(
       adUnitId: Platform.isAndroid
-          ? 'ca-app-pub-3940256099942544/9214589741'
+          ? 'ca-app-pub-8172082069591999/1000945888'
+          // ? 'ca-app-pub-3940256099942544/9214589741'
           : '',
       size: adSize!,
       request: const AdRequest(extras: {'collapsible': 'bottom'}),
@@ -96,8 +97,12 @@ class _BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
   Widget build(BuildContext context) {
     final appOpenAdState = ref.watch(appOpenAdManagerProvider);
     final removeAds = ref.watch(removeAdsProvider);
+    final isDialogVisible = ref.watch(dialogVisibilityProvider);
 
-    if (!_isAdEnabled || removeAds.isSubscribed || appOpenAdState.isAdVisible) {
+    if (!_isAdEnabled ||
+        removeAds.isSubscribed ||
+        appOpenAdState.isAdVisible ||
+        isDialogVisible) {
       return const SizedBox();
     }
 

@@ -56,6 +56,7 @@ class HomeView extends ConsumerWidget {
                           ],
                         ),
                       ),
+                      const SizedBox(height: kBodyHp),
                       !ref.watch(homeProvider).isDrawerOpen
                           ? NativeAdWidget()
                           : const SizedBox.shrink(),
@@ -75,7 +76,7 @@ class HomeView extends ConsumerWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.only(
-                        top: kBodyHp * 2,
+                        top: kBodyHp,
                         bottom: kBodyHp,
                       ),
                       child: Column(
@@ -97,7 +98,7 @@ class HomeView extends ConsumerWidget {
                                 decoration: AppDecorations.gradientDecor(
                                   context,
                                 ),
-                                padding: const EdgeInsets.all(kBodyHp),
+                                padding: const EdgeInsets.all(kElementGap),
                                 child: Row(
                                   children: [
                                     Expanded(
@@ -107,12 +108,6 @@ class HomeView extends ConsumerWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            'Get Started',
-                                            style: bodyLargeStyle.copyWith(
-                                              color: AppColors.kWhite,
-                                            ),
-                                          ),
                                           Text(
                                             'AI Sticker Generator',
                                             style: titleMediumStyle.copyWith(

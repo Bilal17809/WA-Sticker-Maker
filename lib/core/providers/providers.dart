@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '/presentation/report/provider/report_notifier.dart';
+import '/presentation/report/provider/report_state.dart';
 import '/presentation/ai_pack_gallery/provider/ai_pack_gallery_notifier.dart';
 import '/presentation/ai_pack_gallery/provider/ai_pack_gallery_state.dart';
 import '/presentation/ai_pack/provider/ai_packs_notifier.dart';
@@ -25,6 +27,7 @@ import '/presentation/home/provider/home_notifier.dart';
 import '/presentation/home/provider/home_state.dart';
 import '/core/local_storage/local_storage.dart';
 import '/ad_manager/ad_manager.dart';
+import 'dialog_visibility_notifier.dart';
 
 /// Core
 final localStorageProvider = Provider<LocalStorage>((ref) => LocalStorage());
@@ -102,3 +105,12 @@ final nativeAdManagerProvider =
     NotifierProvider.family<NativeAdManager, NativeAdState, TemplateType>(
       NativeAdManager.new,
     );
+
+final dialogVisibilityProvider =
+    NotifierProvider<DialogVisibilityNotifier, bool>(
+      DialogVisibilityNotifier.new,
+    );
+
+final reportNotifierProvider = NotifierProvider<ReportNotifier, ReportState>(
+  () => ReportNotifier(),
+);

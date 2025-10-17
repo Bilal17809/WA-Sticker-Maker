@@ -4,8 +4,7 @@ import '/core/common/app_exceptions.dart';
 
 class DrawerActions {
   static Future<void> privacy() async {
-    const androidUrl =
-        'https://modernmobileschool.blogspot.com/2017/07/modern-school-privacy-policy.html';
+    const androidUrl = 'https://unisoftaps.blogspot.com/';
     const iosUrl = '';
     final url = Platform.isIOS ? iosUrl : androidUrl;
     if (await canLaunchUrl(Uri.parse(url))) {
@@ -17,7 +16,7 @@ class DrawerActions {
 
   static Future<void> rateUs() async {
     const androidUrl =
-        'https://play.google.com/store/apps/details?id=com.learnjapanese.japanesespeakingcourse';
+        'https://play.google.com/store/apps/details?id=com.wastickers.stickermaker';
     const iosUrl = '';
     final url = Platform.isIOS ? iosUrl : androidUrl;
 
@@ -30,7 +29,7 @@ class DrawerActions {
 
   static Future<void> moreApp() async {
     const androidUrl =
-        'https://play.google.com/store/apps/developer?id=Modern+School';
+        'https://play.google.com/store/apps/developer?id=Unisoft+Apps';
     const iosUrl = '';
 
     final url = Platform.isIOS ? iosUrl : androidUrl;

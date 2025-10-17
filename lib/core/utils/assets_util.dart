@@ -13,6 +13,7 @@ class Assets {
   static const String galleryLottie = 'assets/animations/gallery.json';
   static const String libraryLottie = 'assets/animations/library_pack.json';
   static const String aiLottie = 'assets/animations/ai.json';
+  static const String reportLottie = 'assets/animations/report.json';
 
   /// Toast Icons
   static const String whatsAppLogo = 'images/whatsapp_logo.png';

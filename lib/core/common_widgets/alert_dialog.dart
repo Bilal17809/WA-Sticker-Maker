@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/core/constants/constants.dart';
+import '/core/providers/providers.dart';
 
 class AppAlertDialog extends StatelessWidget {
   final String title;
@@ -26,17 +28,21 @@ class AppAlertDialog extends StatelessWidget {
     required List<Widget> actions,
     bool barrierDismissible = true,
   }) {
+    final container = ProviderScope.containerOf(context, listen: false);
+    final notifier = container.read(dialogVisibilityProvider.notifier);
+
+    notifier.show();
+
     return showDialog<T>(
       context: context,
       barrierDismissible: barrierDismissible,
-      builder:
-          (_) => AppAlertDialog(
-            title: title,
-            content: content,
-            actions: actions,
-            barrierDismissible: barrierDismissible,
-          ),
-    );
+      builder: (_) => AppAlertDialog(
+        title: title,
+        content: content,
+        actions: actions,
+        barrierDismissible: barrierDismissible,
+      ),
+    ).whenComplete(() => notifier.hide());
   }
 
   @override
