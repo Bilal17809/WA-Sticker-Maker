@@ -61,22 +61,22 @@ class _CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(kBodyHp),
-        decoration: AppDecorations.gradientDecor(context),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: Lottie.asset(lottiePath)),
-            const SizedBox(height: kGap),
-            Text(
-              title,
-              style: titleSmallStyle.copyWith(color: AppColors.kWhite),
-            ),
-          ],
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(kBodyHp),
+          decoration: AppDecorations.gradientDecor(context),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: Lottie.asset(lottiePath)),
+              const SizedBox(height: kGap),
+              Text(
+                title,
+                style: titleSmallStyle.copyWith(color: AppColors.kWhite),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
   }
 }

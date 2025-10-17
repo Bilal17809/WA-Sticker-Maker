@@ -1312,8 +1312,8 @@ packages:
   whatsapp_stickers_handler:
     dependency: "direct main"
     description:
-      path: "C:/flutter/packages/whatsapp_stickers_handler-main"
-      relative: false
+      path: "plugins/whatsapp_stickers_handler-main"
+      relative: true
     source: path
     version: "0.5.0"
   xdg_directories:

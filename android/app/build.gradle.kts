@@ -13,7 +13,7 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 android {
-    namespace = "com.example.wa_sticker_maker"
+    namespace = "com.wastickers.stickermaker"
     compileSdk = 36
     ndkVersion = "28.2.13676358"
 
@@ -27,7 +27,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.wa_sticker_maker"
+        applicationId = "com.wastickers.stickermaker"
         minSdk = 24
         targetSdk = 36
         versionCode = flutter.versionCode

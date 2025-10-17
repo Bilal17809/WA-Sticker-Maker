@@ -146,7 +146,8 @@ class _PackGalleryViewState extends ConsumerState<PackGalleryView> {
           FloatingActionButton(
             elevation: 1,
             onPressed: () async {
-              ref.read(packGalleryProvider.notifier).addNewImage;
+              await ref.read(packGalleryProvider.notifier).addNewImage();
+              if (!context.mounted) return;
               await Navigator.push(
                 context,
                 MaterialPageRoute(

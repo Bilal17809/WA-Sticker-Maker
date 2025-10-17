@@ -1,4 +1,4 @@
-package com.example.wa_sticker_maker
+package com.wastickers.stickermaker
 
 import io.flutter.embedding.android.FlutterActivity
 

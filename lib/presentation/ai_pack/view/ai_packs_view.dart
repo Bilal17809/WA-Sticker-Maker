@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wa_sticker_maker/presentation/report/view/report_view.dart';
 import '/presentation/ai_pack_gallery/view/ai_pack_gallery_view.dart';
 import '/core/providers/providers.dart';
 import '/core/constants/constants.dart';
@@ -30,7 +31,21 @@ class _AiPacksViewState extends ConsumerState<AiPacksView> {
     final interstitialState = ref.watch(interstitialAdManagerProvider);
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: TitleBar(title: 'Your Packs'),
+      appBar: TitleBar(
+        title: 'Your Packs',
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: kGap),
+            child: IconActionButton(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ReportView()),
+              ),
+              icon: Icons.report,
+            ),
+          ),
+        ],
+      ),
       body: Container(
         decoration: AppDecorations.bgContainer(context),
         child: packs.isEmpty

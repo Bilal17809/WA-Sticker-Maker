@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '/presentation/report/view/report_view.dart';
 import '/presentation/premium_screen/premium_screen.dart';
 import '/core/helper/helper.dart';
 import 'package:flutter/material.dart';
@@ -86,16 +87,19 @@ class AppDrawer extends ConsumerWidget {
                 color: AppColors.primaryColorLight.withValues(alpha: 0.1),
               ),
             ],
-            // if (Platform.isAndroid) ...[
-            //   _DrawerTile(
-            //     icon: Icons.report,
-            //     title: 'Report An Issue',
-            //     onTap: () => Get.to(() => ReportView()),
-            //   ),
-            //   Divider(
-            //     color: AppColors.primaryColorLight.withValues(alpha: 0.1),
-            //   ),
-            // ],
+            if (Platform.isAndroid) ...[
+              _DrawerTile(
+                icon: Icons.report,
+                title: 'Report An Issue',
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => ReportView()),
+                ),
+              ),
+              Divider(
+                color: AppColors.primaryColorLight.withValues(alpha: 0.1),
+              ),
+            ],
           ],
         ),
       ),

@@ -157,7 +157,7 @@ class _LibraryBody extends StatelessWidget {
           if (i == stickers.length) {
             return Center(
               child: CircularProgressIndicator(
-                strokeWidth: 2,
+                strokeWidth: 3,
                 color: AppColors.kWhite,
               ),
             );

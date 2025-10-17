@@ -6,13 +6,13 @@
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
 
     <application
-        android:label="wa_sticker_maker"
+        android:label="WA Sticker Maker"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true">
 
         <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+            android:value="ca-app-pub-8172082069591999~7822726291"/>
 
         <activity
             android:name=".MainActivity"
