@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -94,13 +95,18 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
     );
   }
 
-  bool _showAdInternal() {
-    if (_currentAd == null) return false;
-
+  Future<bool> _showAdInternal() {
+    final removeAds = ref.read(removeAdsProvider);
+    if (removeAds.isSubscribed) {
+      return Future.value(true);
+    }
+    if (_currentAd == null) {
+      return Future.value(false);
+    }
+    final completer = Completer<bool>();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     state = state.copyWith(isShow: true);
     final appOpenAdManager = ref.read(appOpenAdManagerProvider.notifier);
-
     _currentAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdDismissedFullScreenContent: (ad) {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -108,6 +114,7 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
         ad.dispose();
         state = state.copyWith(isShow: false);
         _resetAfterAd();
+        if (!completer.isCompleted) completer.complete(true);
       },
       onAdFailedToShowFullScreenContent: (ad, error) {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -116,29 +123,22 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
         ad.dispose();
         state = state.copyWith(isShow: false);
         _resetAfterAd();
+        if (!completer.isCompleted) completer.complete(false);
       },
     );
-
     _currentAd!.show();
     _currentAd = null;
     state = state.copyWith(isAdReady: false);
-    return true;
-  }
-
-  Future<bool> showAdNow() async {
-    if (!state.isAdReady) {
-      final removeAds = ref.read(removeAdsProvider);
-      if (removeAds.isSubscribed) return true;
-      return false;
-    }
-    return _showAdInternal();
+    return completer.future.timeout(
+      const Duration(seconds: 10),
+      onTimeout: () => false,
+    );
   }
 
   void checkAndDisplayAd() {
     final newCounter = state.visitCounter + 1;
     state = state.copyWith(visitCounter: newCounter);
     debugPrint("!!!!!!!!!!! Visit count: $newCounter");
-
     if (newCounter >= state.displayThreshold) {
       if (state.isAdReady) {
         _showAdInternal();
@@ -154,9 +154,19 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
     _loadAd();
   }
 
+  Future<bool> showAdNow() async {
+    if (!state.isAdReady) {
+      final removeAds = ref.read(removeAdsProvider);
+      if (removeAds.isSubscribed) return true;
+      return false;
+    }
+    return _showAdInternal();
+  }
+
   String get _adUnitId {
     if (Platform.isAndroid) {
       return 'ca-app-pub-8172082069591999/6410212904';
+      // return 'ca-app-pub-3940256099942544/1033173712';
     } else if (Platform.isIOS) {
       return '';
     } else {
