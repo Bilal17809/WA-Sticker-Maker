@@ -154,15 +154,6 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
     _loadAd();
   }
 
-  Future<bool> showAdNow() async {
-    if (!state.isAdReady) {
-      final removeAds = ref.read(removeAdsProvider);
-      if (removeAds.isSubscribed) return true;
-      return false;
-    }
-    return _showAdInternal();
-  }
-
   String get _adUnitId {
     if (Platform.isAndroid) {
       return 'ca-app-pub-8172082069591999/6410212904';

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
@@ -83,38 +84,51 @@ class SplashInterstitialManager extends Notifier<SplashInterstitialState> {
     );
   }
 
-  void showSplashAd() {
+  Future<bool> showSplashAd() async {
     final removeAds = ref.read(removeAdsProvider);
     if (!state.isAdReady || removeAds.isSubscribed) {
       debugPrint('!!!!!!!!!!Splash InterstitialAd not ready');
-      return;
+      return false;
     }
+
+    final completer = Completer<bool>();
+
     if (_splashAd != null) {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
       final appOpenAdManager = ref.read(appOpenAdManagerProvider.notifier);
+
       _splashAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdShowedFullScreenContent: (ad) {
+          debugPrint('!!!!!!!!! Splash InterstitialAd displayed successfully');
+        },
         onAdDismissedFullScreenContent: (ad) {
           SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
           appOpenAdManager.setInterstitialAdDismissed();
           ad.dispose();
           state = state.copyWith(isAdReady: false);
           loadAd();
+          completer.complete(true);
         },
         onAdFailedToShowFullScreenContent: (ad, error) {
           SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-          debugPrint("!!!!!!!!!!!!!!! Splash Interstitial failed: $error");
+          debugPrint("!!!!!!!!!!! Splash Interstitial failed: $error");
           appOpenAdManager.setInterstitialAdDismissed();
           ad.dispose();
           state = state.copyWith(isAdReady: false);
           loadAd();
+          completer.complete(false);
         },
       );
+
       _splashAd!.show();
       _splashAd = null;
       state = state.copyWith(isAdReady: false);
     } else {
       debugPrint('!!!!!!!!!!Splash InterstitialAd is null');
+      completer.complete(false);
     }
+
+    return completer.future;
   }
 
   String get _adUnitId {
