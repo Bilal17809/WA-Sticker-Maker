@@ -39,7 +39,6 @@ class _AiImageViewState extends ConsumerState<AiImageView> {
     final notifier = ref.read(freepikImageNotifierProvider.notifier);
     final promptController = ref.watch(_promptProvider);
     final interstitialState = ref.watch(interstitialAdManagerProvider);
-
     ref.listen<AsyncValue<bool>>(internetStatusStreamProvider, (
       previous,
       next,

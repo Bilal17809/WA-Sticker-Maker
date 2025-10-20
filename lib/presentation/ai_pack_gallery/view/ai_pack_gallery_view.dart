@@ -107,22 +107,6 @@ class _AiPackGalleryViewState extends ConsumerState<AiPackGalleryView> {
                         },
                       ),
                     ),
-                    currentPack.stickerPaths.length < 3
-                        ? Padding(
-                            padding: EdgeInsets.only(
-                              bottom: context.screenWidth * 0.11,
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Please add at least 3 images\nto the pack',
-                                style: titleSmallStyle.copyWith(
-                                  color: AppColors.kWhite,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          )
-                        : const SizedBox.shrink(),
                   ],
                 ),
               ),
@@ -131,42 +115,64 @@ class _AiPackGalleryViewState extends ConsumerState<AiPackGalleryView> {
         mainAxisSize: MainAxisSize.min,
         spacing: kElementGap,
         children: [
-          FloatingActionButton(
-            elevation: 1,
-            onPressed: () => Navigator.push<Set<String>>(
-              context,
-              MaterialPageRoute(builder: (_) => AiImageView(pack: widget.pack)),
-            ),
-            heroTag: 'add_from_Ai',
-            child: const Icon(Icons.add),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: kGap,
+            children: [
+              Text(
+                'Add Sticker',
+                style: titleSmallStyle.copyWith(color: AppColors.kWhite),
+              ),
+              FloatingActionButton(
+                elevation: 1,
+                onPressed: () => Navigator.push<Set<String>>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => AiImageView(pack: widget.pack),
+                  ),
+                ),
+                heroTag: 'add_image',
+                child: const Icon(Icons.add),
+              ),
+            ],
           ),
-          FloatingActionButton(
-            elevation: 1,
-            onPressed: currentPack.stickerPaths.length >= 3
-                ? () => ref
-                      .read(aiPackGalleryProvider.notifier)
-                      .exportPackToWhatsApp(widget.pack)
-                : () => SimpleToast.showToast(
-                    context: context,
-                    message: 'Please add at least 3 stickers to the pack',
-                  ),
-            heroTag: 'export_whatsapp',
-            backgroundColor: currentPack.stickerPaths.length >= 3
-                ? AppColors.secondaryIcon(context)
-                : AppColors.kGrey.withValues(alpha: 0.4),
-            child: galleryState.isExporting
-                ? const CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: AppColors.kWhite,
-                  )
-                : Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset(
-                      Assets.whatsAppCircularLogo,
-                      color: AppColors.kWhite,
-                      width: secondaryIcon(context),
-                    ),
-                  ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: kGap,
+            children: [
+              Text(
+                'Add To WhatsApp',
+                style: titleSmallStyle.copyWith(color: AppColors.kWhite),
+              ),
+              FloatingActionButton(
+                elevation: 1,
+                onPressed: currentPack.stickerPaths.length >= 3
+                    ? () => ref
+                          .read(aiPackGalleryProvider.notifier)
+                          .exportPackToWhatsApp(widget.pack)
+                    : () => SimpleToast.showToast(
+                        context: context,
+                        message: 'Please add at least 3 stickers to the pack',
+                      ),
+                heroTag: 'export_whatsapp',
+                backgroundColor: currentPack.stickerPaths.length >= 3
+                    ? AppColors.secondaryIcon(context)
+                    : AppColors.kGrey.withValues(alpha: 0.4),
+                child: galleryState.isExporting
+                    ? const CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.kWhite,
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          Assets.whatsAppCircularLogo,
+                          color: AppColors.kWhite,
+                          width: secondaryIcon(context),
+                        ),
+                      ),
+              ),
+            ],
           ),
         ],
       ),

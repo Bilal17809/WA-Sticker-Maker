@@ -94,15 +94,13 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
     );
   }
 
-  void _showAd() {
-    final removeAds = ref.read(removeAdsProvider);
-    if (removeAds.isSubscribed) {
-      return;
-    }
-    if (_currentAd == null) return;
+  bool _showAdInternal() {
+    if (_currentAd == null) return false;
+
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     state = state.copyWith(isShow: true);
     final appOpenAdManager = ref.read(appOpenAdManagerProvider.notifier);
+
     _currentAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdDismissedFullScreenContent: (ad) {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -120,18 +118,30 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
         _resetAfterAd();
       },
     );
+
     _currentAd!.show();
     _currentAd = null;
     state = state.copyWith(isAdReady: false);
+    return true;
+  }
+
+  Future<bool> showAdNow() async {
+    if (!state.isAdReady) {
+      final removeAds = ref.read(removeAdsProvider);
+      if (removeAds.isSubscribed) return true;
+      return false;
+    }
+    return _showAdInternal();
   }
 
   void checkAndDisplayAd() {
     final newCounter = state.visitCounter + 1;
     state = state.copyWith(visitCounter: newCounter);
     debugPrint("!!!!!!!!!!! Visit count: $newCounter");
+
     if (newCounter >= state.displayThreshold) {
       if (state.isAdReady) {
-        _showAd();
+        _showAdInternal();
       } else {
         debugPrint("Interstitial not ready yet.");
         state = state.copyWith(visitCounter: 0);
@@ -147,7 +157,6 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
   String get _adUnitId {
     if (Platform.isAndroid) {
       return 'ca-app-pub-8172082069591999/6410212904';
-      // return 'ca-app-pub-3940256099942544/1033173712';
     } else if (Platform.isIOS) {
       return '';
     } else {
