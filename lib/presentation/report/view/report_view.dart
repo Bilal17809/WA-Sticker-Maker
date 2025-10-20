@@ -21,6 +21,8 @@ class ReportView extends ConsumerWidget {
       resizeToAvoidBottomInset: false,
       appBar: TitleBar(title: 'Report an Issue'),
       body: Container(
+        height: double.infinity,
+        width: double.infinity,
         decoration: AppDecorations.bgContainer(context),
         child: SafeArea(
           child: Form(
