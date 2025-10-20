@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:whatsapp_stickers_handler/model/sticker_pack.dart';

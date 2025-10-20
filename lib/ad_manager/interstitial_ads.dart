@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -94,12 +95,15 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
     );
   }
 
-  void _showAd() {
+  Future<bool> _showAdInternal() {
     final removeAds = ref.read(removeAdsProvider);
     if (removeAds.isSubscribed) {
-      return;
+      return Future.value(true);
     }
-    if (_currentAd == null) return;
+    if (_currentAd == null) {
+      return Future.value(false);
+    }
+    final completer = Completer<bool>();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     state = state.copyWith(isShow: true);
     final appOpenAdManager = ref.read(appOpenAdManagerProvider.notifier);
@@ -110,6 +114,7 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
         ad.dispose();
         state = state.copyWith(isShow: false);
         _resetAfterAd();
+        if (!completer.isCompleted) completer.complete(true);
       },
       onAdFailedToShowFullScreenContent: (ad, error) {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -118,11 +123,16 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
         ad.dispose();
         state = state.copyWith(isShow: false);
         _resetAfterAd();
+        if (!completer.isCompleted) completer.complete(false);
       },
     );
     _currentAd!.show();
     _currentAd = null;
     state = state.copyWith(isAdReady: false);
+    return completer.future.timeout(
+      const Duration(seconds: 10),
+      onTimeout: () => false,
+    );
   }
 
   void checkAndDisplayAd() {
@@ -131,7 +141,7 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
     debugPrint("!!!!!!!!!!! Visit count: $newCounter");
     if (newCounter >= state.displayThreshold) {
       if (state.isAdReady) {
-        _showAd();
+        _showAdInternal();
       } else {
         debugPrint("Interstitial not ready yet.");
         state = state.copyWith(visitCounter: 0);

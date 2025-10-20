@@ -43,7 +43,12 @@ class ReportView extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text('Name ', style: titleMediumStyle),
+                      Text(
+                        'Name ',
+                        style: titleMediumStyle.copyWith(
+                          color: AppColors.kWhite,
+                        ),
+                      ),
                       Expanded(
                         child: Text(
                           '*',
@@ -71,7 +76,12 @@ class ReportView extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text('Error Type ', style: titleMediumStyle),
+                      Text(
+                        'Error Type ',
+                        style: titleMediumStyle.copyWith(
+                          color: AppColors.kWhite,
+                        ),
+                      ),
                       Expanded(
                         child: Text(
                           '*',
@@ -101,7 +111,12 @@ class ReportView extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text('Description ', style: titleMediumStyle),
+                      Text(
+                        'Description ',
+                        style: titleMediumStyle.copyWith(
+                          color: AppColors.kWhite,
+                        ),
+                      ),
                       Expanded(
                         child: Text(
                           '*',

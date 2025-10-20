@@ -34,7 +34,7 @@ class SplashView extends ConsumerWidget {
                   children: [
                     const SizedBox(height: kBodyHp * 2),
                     Text(
-                      'WhatsApp Sticker\nMaker',
+                      'WA Sticker',
                       textAlign: TextAlign.center,
                       style: headlineMediumStyle.copyWith(
                         color: AppColors.kWhite,
@@ -52,10 +52,7 @@ class SplashView extends ConsumerWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: kBodyHp,
-                        vertical: kElementGap,
-                      ),
+                      padding: const EdgeInsets.only(bottom: kBodyHp * 2),
                       child: RichText(
                         key: ValueKey(splashState.visibleLetters),
                         textAlign: TextAlign.center,

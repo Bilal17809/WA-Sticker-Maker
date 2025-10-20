@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:whatsapp_stickers_handler/model/sticker_pack.dart';
 import 'package:whatsapp_stickers_handler/whatsapp_stickers_handler_method_channel.dart';

@@ -46,6 +46,7 @@ class LibraryNotifier extends Notifier<LibraryState> {
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 200), () {
       final trimmed = query.trim();
+      _query = trimmed.isEmpty ? null : trimmed;
       _load(
         trimmed.isEmpty ? fetchTrending : () => _stickerService.search(trimmed),
         resetQuery: trimmed.isEmpty,

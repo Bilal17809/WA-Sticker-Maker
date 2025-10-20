@@ -45,7 +45,7 @@ class KlipyDataSource {
   }) async {
     try {
       final uri = _uri('/stickers/search', {
-        'query': query,
+        'q': query,
         'page': page.toString(),
         'per_page': perPage.toString(),
       });
