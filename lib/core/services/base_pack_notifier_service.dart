@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 import '/core/common_widgets/common_widgets.dart';
 import '/core/common/app_exceptions.dart';
 import '/core/utils/utils.dart';
@@ -64,26 +65,31 @@ abstract class BasePackNotifierService<T extends PackInfoInterface>
     }
   }
 
+  Future<String> _getBaseDirectory() async {
+    if (Platform.isAndroid) {
+      return '/storage/emulated/0/DCIM/WA Sticker Maker';
+    } else if (Platform.isIOS) {
+      final appDocDir = await getApplicationDocumentsDirectory();
+      return '${appDocDir.path}/WA Sticker Maker';
+    } else {
+      throw UnsupportedError(AppExceptions().unsupportedPlatform);
+    }
+  }
+
   Future<String?> _createPackDirectory(String packName) async {
     try {
-      final externalDir = Directory('/storage/emulated/0');
-      final galleryPackDir = Directory(
-        '${externalDir.path}/DCIM/WA Sticker Maker/Gallery Packs/$packName',
-      );
-      final libraryPackDir = Directory(
-        '${externalDir.path}/DCIM/WA Sticker Maker/Library Packs/$packName',
-      );
-      final aiPackDir = Directory(
-        '${externalDir.path}/DCIM/WA Sticker Maker/AI Packs/$packName',
-      );
+      final baseDir = await _getBaseDirectory();
+      final galleryPackDir = Directory('$baseDir/Gallery Packs/$packName');
+      final libraryPackDir = Directory('$baseDir/Library Packs/$packName');
+      final aiPackDir = Directory('$baseDir/AI Packs/$packName');
+
       if (await galleryPackDir.exists() ||
           await libraryPackDir.exists() ||
           await aiPackDir.exists()) {
         return null;
       }
-      final packDir = Directory(
-        '${externalDir.path}/DCIM/WA Sticker Maker/$packSubdirectory/$packName',
-      );
+
+      final packDir = Directory('$baseDir/$packSubdirectory/$packName');
       final parentDir = packDir.parent;
       if (!await parentDir.exists()) {
         await parentDir.create(recursive: true);

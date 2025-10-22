@@ -51,7 +51,7 @@ class SplashInterstitialManager extends Notifier<SplashInterstitialState> {
       if (Platform.isAndroid) {
         splashAdKey = 'SplashInterstitialAd';
       } else if (Platform.isIOS) {
-        splashAdKey = '';
+        splashAdKey = 'SplashInterstitialAd';
       } else {
         throw UnsupportedError(AppExceptions().unsupportedPlatform);
       }
@@ -136,7 +136,7 @@ class SplashInterstitialManager extends Notifier<SplashInterstitialState> {
       return 'ca-app-pub-8172082069591999/5320686037';
       // return 'ca-app-pub-3940256099942544/1033173712';
     } else if (Platform.isIOS) {
-      return '';
+      return 'ca-app-pub-5405847310750111/3641289775';
     } else {
       throw UnsupportedError("Platform not supported");
     }

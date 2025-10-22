@@ -46,7 +46,7 @@ class _BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
       if (Platform.isAndroid) {
         bannerAdKey = 'BannerAd';
       } else if (Platform.isIOS) {
-        bannerAdKey = '';
+        bannerAdKey = 'BannerAd';
       } else {
         throw UnsupportedError('Platform not supported');
       }
@@ -71,7 +71,7 @@ class _BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
       adUnitId: Platform.isAndroid
           ? 'ca-app-pub-8172082069591999/1000945888'
           // ? 'ca-app-pub-3940256099942544/9214589741'
-          : '',
+          : 'ca-app-pub-5405847310750111/4954371440',
       size: adSize!,
       request: const AdRequest(extras: {'collapsible': 'bottom'}),
       listener: BannerAdListener(

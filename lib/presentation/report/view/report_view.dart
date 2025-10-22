@@ -100,7 +100,7 @@ class ReportView extends ConsumerWidget {
                       contentPadding: const EdgeInsets.all(kGap),
                     ),
                     hint: const Text("Choose an error type"),
-                    initialValue: state.selectedError,
+                    // initialValue: state.selectedError,
                     items: state.errors
                         .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                         .toList(),

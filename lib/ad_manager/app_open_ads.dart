@@ -81,7 +81,7 @@ class AppOpenAdManager extends Notifier<AppOpenAdState>
       if (Platform.isAndroid) {
         appOpenKey = 'AppOpenAd';
       } else if (Platform.isIOS) {
-        appOpenKey = '';
+        appOpenKey = 'AppOpenAd';
       } else {
         throw UnsupportedError(AppExceptions().unsupportedPlatform);
       }
@@ -174,7 +174,7 @@ class AppOpenAdManager extends Notifier<AppOpenAdState>
       return 'ca-app-pub-8172082069591999/8687864213';
       // return 'ca-app-pub-3940256099942544/9257395921';
     } else if (Platform.isIOS) {
-      return '';
+      return 'ca-app-pub-5405847310750111/1519551130';
     } else {
       throw UnsupportedError('Platform not supported');
     }
