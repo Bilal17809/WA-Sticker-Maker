@@ -65,14 +65,23 @@ abstract class BasePackNotifierService<T extends PackInfoInterface>
     }
   }
 
+  Future<String> _getBaseDirectory() async {
+    if (Platform.isAndroid) {
+      return '/storage/emulated/0/DCIM/WA Sticker Maker';
+    } else if (Platform.isIOS) {
+      final appDocDir = await getApplicationDocumentsDirectory();
+      return '${appDocDir.path}/WA Sticker Maker';
+    } else {
+      throw UnsupportedError(AppExceptions().unsupportedPlatform);
+    }
+  }
+
   Future<String?> _createPackDirectory(String packName) async {
     try {
-      final baseDir = await getApplicationDocumentsDirectory();
-      final externalDir = Directory('${baseDir.path}/WA Sticker Maker/$packSubdirectory/$packName');
-
-      final galleryPackDir = Directory('${baseDir.path}/WA Sticker Maker/Gallery Packs/$packName');
-      final libraryPackDir = Directory('${baseDir.path}/WA Sticker Maker/Library Packs/$packName');
-      final aiPackDir = Directory('${baseDir.path}/WA Sticker Maker/AI Packs/$packName');
+      final baseDir = await _getBaseDirectory();
+      final galleryPackDir = Directory('$baseDir/Gallery Packs/$packName');
+      final libraryPackDir = Directory('$baseDir/Library Packs/$packName');
+      final aiPackDir = Directory('$baseDir/AI Packs/$packName');
 
       if (await galleryPackDir.exists() ||
           await libraryPackDir.exists() ||
@@ -80,50 +89,18 @@ abstract class BasePackNotifierService<T extends PackInfoInterface>
         return null;
       }
 
-      final parentDir = externalDir.parent;
+      final packDir = Directory('$baseDir/$packSubdirectory/$packName');
+      final parentDir = packDir.parent;
       if (!await parentDir.exists()) {
         await parentDir.create(recursive: true);
       }
-
-      await externalDir.create(recursive: true);
-      return externalDir.path;
+      await packDir.create(recursive: true);
+      return packDir.path;
     } catch (e) {
       debugPrint('${AppExceptions().errorCreatingDirectory}: $e');
       return null;
     }
   }
-
-  // Future<String?> _createPackDirectory(String packName) async {
-  //   try {
-  //     final externalDir = Directory('/storage/emulated/0');
-  //     final galleryPackDir = Directory(
-  //       '${externalDir.path}/DCIM/WA Sticker Maker/Gallery Packs/$packName',
-  //     );
-  //     final libraryPackDir = Directory(
-  //       '${externalDir.path}/DCIM/WA Sticker Maker/Library Packs/$packName',
-  //     );
-  //     final aiPackDir = Directory(
-  //       '${externalDir.path}/DCIM/WA Sticker Maker/AI Packs/$packName',
-  //     );
-  //     if (await galleryPackDir.exists() ||
-  //         await libraryPackDir.exists() ||
-  //         await aiPackDir.exists()) {
-  //       return null;
-  //     }
-  //     final packDir = Directory(
-  //       '${externalDir.path}/DCIM/WA Sticker Maker/$packSubdirectory/$packName',
-  //     );
-  //     final parentDir = packDir.parent;
-  //     if (!await parentDir.exists()) {
-  //       await parentDir.create(recursive: true);
-  //     }
-  //     await packDir.create(recursive: true);
-  //     return packDir.path;
-  //   } catch (e) {
-  //     debugPrint('${AppExceptions().errorCreatingDirectory}: $e');
-  //     return null;
-  //   }
-  // }
 
   Future<void> addNewPack(BuildContext context) async {
     final packName = await AddPackDialog.show(context);
