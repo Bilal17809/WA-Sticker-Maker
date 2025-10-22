@@ -47,7 +47,7 @@ class NativeAdManager extends Notifier<NativeAdState> {
         ),
       );
       await remoteConfig.fetchAndActivate();
-      final key = Platform.isAndroid ? 'NativeAdvAd' : '';
+      final key = Platform.isAndroid ? 'NativeAdvAd' :'NativeAdvAd';
       final showAd = remoteConfig.getBool(key);
       state = state.copyWith(showAd: showAd);
       if (showAd) {
@@ -65,7 +65,7 @@ class NativeAdManager extends Notifier<NativeAdState> {
     final adUnitId = Platform.isAndroid
         // ? 'ca-app-pub-3940256099942544/2247696110'
         ? 'ca-app-pub-8172082069591999/1376543924'
-        : '';
+        : 'ca-app-pub-5405847310750111/3208037322';
     _nativeAd = NativeAd(
       adUnitId: adUnitId,
       request: const AdRequest(),

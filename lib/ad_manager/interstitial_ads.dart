@@ -64,7 +64,7 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
       if (Platform.isAndroid) {
         interstitialKey = 'InterstitialAd';
       } else if (Platform.isIOS) {
-        interstitialKey = '';
+        interstitialKey = 'InterstitialAd';
       } else {
         throw UnsupportedError(AppExceptions().unsupportedPlatform);
       }
@@ -159,7 +159,7 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
       return 'ca-app-pub-8172082069591999/6410212904';
       // return 'ca-app-pub-3940256099942544/1033173712';
     } else if (Platform.isIOS) {
-      return '';
+      return 'ca-app-pub-5405847310750111/9843736042';
     } else {
       throw UnsupportedError("Platform not supported");
     }

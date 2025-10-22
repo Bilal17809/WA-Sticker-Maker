@@ -51,7 +51,7 @@ class PurchaseNotifier extends Notifier<PurchaseState> {
   final List<String> _kProductIds = const [
     'consumable',
     'upgrade',
-    'com.wa_sticker_maker.removeads',
+    'com.stickermaker.removeads',
   ];
 
   @override
