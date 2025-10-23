@@ -1,4 +1,4 @@
-package com.wastickers.stickermaker
+package com.unisoft.wastickers.stickermaker
 
 import io.flutter.embedding.android.FlutterActivity
 

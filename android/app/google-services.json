@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "329709842255",
-    "project_id": "wa-stickers-a98ea",
-    "storage_bucket": "wa-stickers-a98ea.firebasestorage.app"
+    "project_number": "124451620271",
+    "project_id": "wa-stickers-60714",
+    "storage_bucket": "wa-stickers-60714.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:329709842255:android:feade40d93288c47911f3a",
+        "mobilesdk_app_id": "1:124451620271:android:dd3b004f5b6d1c08e41b5a",
         "android_client_info": {
-          "package_name": "com.wastickers.stickermaker"
+          "package_name": "com.unisoft.wastickers.stickermaker"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCa7JRy5-klHCSuXEhRfN3f8nU-_XFfOqk"
+          "current_key": "AIzaSyDXhGHEoQ35EyjHL-sBG_PubviLz1BaHZU"
         }
       ],
       "services": {
