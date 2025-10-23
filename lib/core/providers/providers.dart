@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '/presentation/built_in_packs/provider/built_in_packs_notifier.dart';
+import '/presentation/built_in_packs/provider/built_in_packs_state.dart';
 import '/presentation/report/provider/report_notifier.dart';
 import '/presentation/report/provider/report_state.dart';
 import '/presentation/ai_pack_gallery/provider/ai_pack_gallery_notifier.dart';
@@ -114,3 +116,8 @@ final dialogVisibilityProvider =
 final reportNotifierProvider = NotifierProvider<ReportNotifier, ReportState>(
   () => ReportNotifier(),
 );
+
+final builtInPacksProvider =
+    NotifierProvider<BuiltInPacksNotifier, List<BuiltInPacksState>>(
+      BuiltInPacksNotifier.new,
+    );
