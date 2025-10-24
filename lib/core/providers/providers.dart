@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '/presentation/built_in_packs_detail/provider/built_in_packs_detail_notifier.dart';
+import '/presentation/built_in_packs_detail/provider/built_in_packs_detail_state.dart';
 import '/presentation/built_in_packs/provider/built_in_packs_notifier.dart';
 import '/presentation/built_in_packs/provider/built_in_packs_state.dart';
 import '/presentation/report/provider/report_notifier.dart';
@@ -36,6 +38,10 @@ final localStorageProvider = Provider<LocalStorage>((ref) => LocalStorage());
 
 final packExportServiceProvider = Provider<PackExportService>((ref) {
   return PackExportService();
+});
+
+final jsonLoaderProvider = Provider<JsonLoaderService>((ref) {
+  return JsonLoaderService();
 });
 
 /// Providers
@@ -120,4 +126,9 @@ final reportNotifierProvider = NotifierProvider<ReportNotifier, ReportState>(
 final builtInPacksProvider =
     NotifierProvider<BuiltInPacksNotifier, List<BuiltInPacksState>>(
       BuiltInPacksNotifier.new,
+    );
+
+final builtInPacksDetailProvider =
+    NotifierProvider<BuiltInPacksDetailNotifier, BuiltInPacksDetailState>(
+      BuiltInPacksDetailNotifier.new,
     );

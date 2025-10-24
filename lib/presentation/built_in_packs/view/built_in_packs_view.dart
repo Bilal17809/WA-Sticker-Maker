@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:lottie/lottie.dart';
 import 'package:wa_sticker_maker/core/constants/constants.dart';
 import 'package:wa_sticker_maker/core/utils/utils.dart';
 import '/core/theme/theme.dart';
 import '/core/common_widgets/common_widgets.dart';
 import '/core/providers/providers.dart';
-import '/presentation/built_in_packs/view/detail_view.dart';
+import '../../built_in_packs_detail/view/built_in_packs_detail_view.dart';
 
 final _searchController = Provider.autoDispose<TextEditingController>((ref) {
   final controller = TextEditingController();
@@ -41,11 +42,7 @@ class BuiltInPacksView extends ConsumerWidget {
                   hintText: 'Search for stickers',
                   controller: controller,
                   onChanged: (v) {
-                    if (v.isEmpty) {
-                      ref.read(builtInPacksProvider.notifier).resetSearch();
-                    } else {
-                      ref.read(builtInPacksProvider.notifier).search(v);
-                    }
+                    ref.read(builtInPacksProvider.notifier).search(v);
                   },
                 ),
                 Expanded(
@@ -70,15 +67,27 @@ class BuiltInPacksView extends ConsumerWidget {
                                     color: AppColors.kWhite,
                                   ),
                                 ),
-                                Container(
-                                  decoration: AppDecorations.simpleRounded(
+                                GestureDetector(
+                                  onTap: () => Navigator.push(
                                     context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          BuiltInPacksDetailView(pack: pack),
+                                    ),
                                   ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: kElementGap,
-                                    vertical: 6,
+                                  child: Container(
+                                    decoration: AppDecorations.simpleRounded(
+                                      context,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: kElementGap,
+                                      vertical: 6,
+                                    ),
+                                    child: Text(
+                                      'See All',
+                                      style: bodySmallStyle,
+                                    ),
                                   ),
-                                  child: Text('See All', style: bodySmallStyle),
                                 ),
                               ],
                             ),
@@ -96,23 +105,16 @@ class BuiltInPacksView extends ConsumerWidget {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (_) =>
-                                              DetailView(pack: pack),
+                                              BuiltInPacksDetailView(
+                                                pack: pack,
+                                              ),
                                         ),
                                       );
                                     },
                                     child: CachedNetworkImage(
                                       imageUrl: url,
-                                      placeholder: (c, u) => const Center(
-                                        child: SizedBox(
-                                          width: 24,
-                                          height: 24,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                          ),
-                                        ),
-                                      ),
                                       errorWidget: (c, u, e) =>
-                                          const Icon(Icons.broken_image),
+                                          Lottie.asset(Assets.imageLottie),
                                     ),
                                   );
                                 },

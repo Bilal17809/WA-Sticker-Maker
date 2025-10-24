@@ -77,7 +77,7 @@ class LibraryNotifier extends Notifier<LibraryState> {
     bool resetQuery = false,
   }) async {
     state = state.copyWith(isLoading: true);
-    await Future.delayed(Duration(milliseconds: 50));
+    await Future.delayed(Duration(milliseconds: 100));
 
     state = await _fetchService.fetch(
       currentState: state,

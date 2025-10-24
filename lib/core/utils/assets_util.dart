@@ -2,6 +2,9 @@ class Assets {
   /// App Icons
   static const String appIcon = "images/icon.png";
 
+  /// JSON
+  static const String stickerPackJson = "assets/sticker_packs.json";
+
   /// Splash Icons
   static const String splashHeroImg = "images/splash_hero.png";
   static const String splashIcon = "images/splash_icon.png";
