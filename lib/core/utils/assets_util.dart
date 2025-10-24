@@ -3,7 +3,7 @@ class Assets {
   static const String appIcon = "images/icon.png";
 
   /// JSON
-  static const String stickerPackJson = "assets/sticker_packs.json";
+  static const String stickerPackJson = "assets/sticker_png_packs.json";
 
   /// Splash Icons
   static const String splashHeroImg = "images/splash_hero.png";

@@ -102,7 +102,7 @@ class BuiltInPacksDetailView extends ConsumerWidget {
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          "Add To WhatsApp",
+                          "Add To WhatsApo",
                           style: titleMediumStyle.copyWith(
                             color: AppColors.kWhite,
                           ),

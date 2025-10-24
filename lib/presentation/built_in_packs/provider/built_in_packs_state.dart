@@ -1,8 +1,5 @@
-import '/core/interface/pack_info_interface.dart';
-
-class BuiltInPacksState implements PackInfoInterface {
+class BuiltInPacksState {
   final String id;
-  @override
   final String name;
   final String url;
   final String thumbnail;
@@ -29,13 +26,4 @@ class BuiltInPacksState implements PackInfoInterface {
           [],
     );
   }
-
-  @override
-  String get directoryPath => '';
-
-  @override
-  String? get trayImagePath => null;
-
-  @override
-  List<String> get stickerPaths => stickers;
 }
