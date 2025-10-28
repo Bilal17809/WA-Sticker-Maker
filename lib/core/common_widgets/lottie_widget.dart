@@ -18,10 +18,14 @@ class LottieWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      spacing: kGap,
       children: [
         Lottie.asset(assetPath, width: context.screenWidth * 0.2),
         isMessage!
-            ? Text(message ?? 'No results found.', style: bodyLargeStyle)
+            ? Text(
+                message ?? 'No results found.',
+                style: titleSmallStyle.copyWith(color: AppColors.kWhite),
+              )
             : const SizedBox.shrink(),
       ],
     );

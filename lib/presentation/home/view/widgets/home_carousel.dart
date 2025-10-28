@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:wa_sticker_maker/presentation/built_in_packs/view/built_in_packs_view.dart';
 import '/presentation/library_pack/view/library_pack_view.dart';
 import '/presentation/packs/view/packs_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,6 +40,13 @@ class HomeCarousel extends ConsumerWidget {
                   builder: (context) => const LibraryPacksView(),
                 ),
               );
+            } else if (index == 2) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const BuiltInPacksView(),
+                ),
+              );
             }
           },
         );
@@ -61,22 +69,22 @@ class _CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.all(kBodyHp),
-          decoration: AppDecorations.gradientDecor(context),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: Lottie.asset(lottiePath)),
-              const SizedBox(height: kGap),
-              Text(
-                title,
-                style: titleSmallStyle.copyWith(color: AppColors.kWhite),
-              ),
-            ],
-          ),
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(kBodyHp),
+        decoration: AppDecorations.gradientDecor(context),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: Lottie.asset(lottiePath)),
+            const SizedBox(height: kGap),
+            Text(
+              title,
+              style: titleSmallStyle.copyWith(color: AppColors.kWhite),
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 }
