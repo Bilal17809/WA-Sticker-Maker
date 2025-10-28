@@ -1,33 +1,39 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '/core/providers/providers.dart';
-import '/core/utils/utils.dart';
-import '/core/services/services.dart';
 import '/presentation/built_in_packs/provider/built_in_packs_state.dart';
+import '/core/services/services.dart';
+import '/core/helper/helper.dart';
 
 class BuiltInPacksNotifier extends Notifier<List<BuiltInPacksState>> {
-  late final JsonLoaderService _jsonLoaderService;
   String _searchQuery = '';
   List<BuiltInPacksState> _originalPacks = [];
+  final BuiltInPackLoaderService _loaderService = BuiltInPackLoaderService();
 
   @override
   List<BuiltInPacksState> build() {
-    _jsonLoaderService = ref.read(jsonLoaderProvider);
-    loadFromAsset();
+    loadFromAssets();
     return [];
   }
 
-  Future<void> loadFromAsset() async {
+  Future<void> loadFromAssets() async {
     try {
-      final parsed =
-          await _jsonLoaderService.loadJson(Assets.stickerPackJson)
-              as List<dynamic>;
-      _originalPacks = parsed
-          .map((e) => BuiltInPacksState.fromJson(e as Map<String, dynamic>))
-          .toList();
+      final packs = await _loaderService.loadFromAssets();
+      _originalPacks = packs;
       state = _originalPacks;
     } catch (_) {
       _originalPacks = [];
       state = [];
+    }
+  }
+
+  Future<String?> exportPack(BuiltInPacksState packState) async {
+    try {
+      final packInfo = await PackPreparerHelper.preparePackFromAssets(
+        packState,
+      );
+      final result = await PackExportService().exportPack(packInfo);
+      return result;
+    } catch (_) {
+      return 'Failed to export pack.';
     }
   }
 
@@ -37,7 +43,7 @@ class BuiltInPacksNotifier extends Notifier<List<BuiltInPacksState>> {
       state = _originalPacks;
     } else {
       state = _originalPacks
-          .where((p) => p.name.toLowerCase().contains(_searchQuery))
+          .where((p) => p.displayName.toLowerCase().contains(_searchQuery))
           .toList();
     }
   }

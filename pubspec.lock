@@ -1416,10 +1416,9 @@ packages:
   whatsapp_stickers_handler:
     dependency: "direct main"
     description:
-      name: whatsapp_stickers_handler
-      sha256: "8df3d69eac058164b008d02d08e3b8643236466f2be37201eb3909646871f6c8"
-      url: "https://pub.dev"
-    source: hosted
+      path: "plugins/whatsapp_stickers_handler-main"
+      relative: true
+    source: path
     version: "0.5.0"
   xdg_directories:
     dependency: transitive

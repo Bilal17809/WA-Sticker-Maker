@@ -10,4 +10,4 @@ export 'base_pack_notifier_service.dart';
 export 'ai_image_service.dart';
 export 'onesignal_service.dart';
 export 'purchase_notifier_service.dart';
-export 'json_loader_service.dart';
+export 'built_in_pack_loader_service.dart';

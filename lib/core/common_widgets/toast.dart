@@ -10,6 +10,7 @@ class SimpleToast {
     IconData? icon,
     String? imagePath,
     Color? iconColor,
+    double? verticalMargin,
     Duration duration = const Duration(seconds: 3),
   }) {
     final snackBar = SnackBar(
@@ -36,9 +37,9 @@ class SimpleToast {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: EdgeInsets.symmetric(
         horizontal: context.screenWidth * 0.165,
-        vertical: 0,
+        vertical: verticalMargin ?? 0,
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
     );
 
     ScaffoldMessenger.of(context)
