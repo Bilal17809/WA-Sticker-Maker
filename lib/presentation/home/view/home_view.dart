@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
+import '/presentation/built_in_packs/view/built_in_packs_view.dart';
 import '/ad_manager/ad_manager.dart';
 import '/presentation/ai_pack/view/ai_packs_view.dart';
 import '/core/constants/constants.dart';
@@ -87,48 +88,68 @@ class HomeView extends ConsumerWidget {
                             padding: const EdgeInsets.symmetric(
                               horizontal: kBodyHp,
                             ),
-                            child: GestureDetector(
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const AiPacksView(),
-                                ),
-                              ),
-                              child: Container(
-                                decoration: AppDecorations.gradientDecor(
-                                  context,
-                                ),
-                                padding: const EdgeInsets.all(kElementGap),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 2,
-                                      child: Column(
-                                        spacing: kGap,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'AI Sticker Generator',
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: kGap,
+                                    mainAxisSpacing: kGap,
+                                    childAspectRatio: 1,
+                                  ),
+                              itemCount: FeatureUtil.gridList.length,
+                              itemBuilder: (context, index) {
+                                final item = FeatureUtil.gridList[index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    switch (item['route']) {
+                                      case 'ai-generator':
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => const AiPacksView(),
+                                          ),
+                                        );
+                                        break;
+                                      case 'sticker-store':
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) =>
+                                                const BuiltInPacksView(),
+                                          ),
+                                        );
+                                        break;
+                                    }
+                                  },
+                                  child: Container(
+                                    decoration: AppDecorations.gradientDecor(
+                                      context,
+                                    ),
+                                    padding: const EdgeInsets.all(kElementGap),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      spacing: kGap,
+                                      children: [
+                                        Expanded(
+                                          child: Lottie.asset(item['lottie']),
+                                        ),
+                                        FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            item['title'],
                                             style: titleMediumStyle.copyWith(
                                               color: AppColors.kWhite,
                                             ),
                                           ),
-                                          Text(
-                                            'Generate high quality stickers with AI',
-                                            style: bodyLargeStyle.copyWith(
-                                              color: AppColors.kWhite,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                    Expanded(
-                                      child: Lottie.asset(Assets.aiLottie),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                           Padding(
