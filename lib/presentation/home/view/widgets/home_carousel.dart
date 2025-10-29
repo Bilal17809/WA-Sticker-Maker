@@ -20,7 +20,7 @@ class HomeCarousel extends ConsumerWidget {
         viewportFraction: 0.6,
         enlargeCenterPage: true,
       ),
-      items: CarouselUtil.items.asMap().entries.map((entry) {
+      items: FeatureUtil.carouselItems.asMap().entries.map((entry) {
         final index = entry.key;
         final item = entry.value;
         return _CategoryCard(
