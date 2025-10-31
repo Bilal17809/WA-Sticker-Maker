@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
-import '/presentation/built_in_packs/view/built_in_packs_view.dart';
+import '/presentation/built_in_packs_detail/view/built_in_packs_view.dart';
 import '/ad_manager/ad_manager.dart';
 import '/presentation/ai_pack/view/ai_packs_view.dart';
 import '/core/constants/constants.dart';
@@ -40,7 +40,7 @@ class HomeView extends ConsumerWidget {
             child: Stack(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(kBodyHp),
+                  padding: const EdgeInsets.symmetric(horizontal: kBodyHp),
                   child: Column(
                     children: [
                       Padding(
@@ -57,7 +57,6 @@ class HomeView extends ConsumerWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(height: kBodyHp),
                       !ref.watch(homeProvider).isDrawerOpen
                           ? NativeAdWidget()
                           : const SizedBox.shrink(),
@@ -103,6 +102,12 @@ class HomeView extends ConsumerWidget {
                                 final item = FeatureUtil.gridList[index];
                                 return GestureDetector(
                                   onTap: () {
+                                    ref
+                                        .read(
+                                          interstitialAdManagerProvider
+                                              .notifier,
+                                        )
+                                        .checkAndDisplayAd();
                                     switch (item['route']) {
                                       case 'ai-generator':
                                         Navigator.push(
@@ -116,8 +121,9 @@ class HomeView extends ConsumerWidget {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (_) =>
-                                                const BuiltInPacksView(),
+                                            builder: (_) {
+                                              return const BuiltInPacksView();
+                                            },
                                           ),
                                         );
                                         break;

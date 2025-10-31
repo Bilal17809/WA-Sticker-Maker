@@ -1,6 +1,5 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
-import '/core/common/app_exceptions.dart';
+import '/core/exceptions/app_exceptions.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class OnesignalService {
@@ -12,7 +11,7 @@ class OnesignalService {
       OneSignal.initialize('');
       await OneSignal.Notifications.requestPermission(true);
     } else {
-      debugPrint(AppExceptions().unsupportedPlatform);
+      throw Exception(AppExceptions.unsupportedPlatform);
     }
   }
 }

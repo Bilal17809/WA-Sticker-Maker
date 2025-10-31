@@ -11,32 +11,17 @@ import '/core/providers/providers.dart';
 import '/core/theme/theme.dart';
 import '/ad_manager/ad_manager.dart';
 
-class LibraryPackGalleryView extends ConsumerStatefulWidget {
+class LibraryPackGalleryView extends ConsumerWidget {
   final LibraryPacksState pack;
   const LibraryPackGalleryView({super.key, required this.pack});
-  @override
-  ConsumerState<LibraryPackGalleryView> createState() =>
-      _LibraryPackGalleryViewState();
-}
-
-class _LibraryPackGalleryViewState
-    extends ConsumerState<LibraryPackGalleryView> {
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
-    });
-  }
 
   @override
-  Widget build(BuildContext context) {
-    final interstitialState = ref.watch(interstitialAdManagerProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
     final packs = ref.watch(libraryPacksProvider);
     final galleryState = ref.watch(libraryPackGalleryProvider);
     final currentPack = packs.firstWhere(
-      (p) => p.directoryPath == widget.pack.directoryPath,
-      orElse: () => widget.pack,
+      (p) => p.directoryPath == pack.directoryPath,
+      orElse: () => pack,
     );
     ref.listen<LibraryPackGalleryState>(libraryPackGalleryProvider, (
       previous,
@@ -55,7 +40,7 @@ class _LibraryPackGalleryViewState
     });
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: TitleBar(title: widget.pack.name),
+      appBar: TitleBar(title: pack.name),
       body: Container(
         decoration: AppDecorations.bgContainer(context),
         child: currentPack.stickerPaths.isEmpty
@@ -130,12 +115,15 @@ class _LibraryPackGalleryViewState
               ),
               FloatingActionButton(
                 elevation: 1,
-                onPressed: () => Navigator.push<Set<String>>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => LibraryView(pack: widget.pack),
-                  ),
-                ),
+                onPressed: () {
+                  ref
+                      .read(interstitialAdManagerProvider.notifier)
+                      .checkAndDisplayAd();
+                  Navigator.push<Set<String>>(
+                    context,
+                    MaterialPageRoute(builder: (_) => LibraryView(pack: pack)),
+                  );
+                },
                 heroTag: 'add_image',
                 child: const Icon(Icons.add),
               ),
@@ -154,7 +142,7 @@ class _LibraryPackGalleryViewState
                 onPressed: currentPack.stickerPaths.length >= 3
                     ? () => ref
                           .read(libraryPackGalleryProvider.notifier)
-                          .exportPackToWhatsApp(widget.pack)
+                          .exportPackToWhatsApp(pack)
                     : () => SimpleToast.showToast(
                         context: context,
                         message: 'Please add at least 3 stickers to the pack',
@@ -181,9 +169,7 @@ class _LibraryPackGalleryViewState
           ),
         ],
       ),
-      bottomNavigationBar: interstitialState.isShow
-          ? const SizedBox()
-          : const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 }

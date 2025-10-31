@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:wa_sticker_maker/presentation/built_in_packs/view/built_in_packs_view.dart';
+import '/core/providers/providers.dart';
 import '/presentation/library_pack/view/library_pack_view.dart';
 import '/presentation/packs/view/packs_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,8 +16,8 @@ class HomeCarousel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return CarouselSlider(
       options: CarouselOptions(
-        height: MediaQuery.of(context).size.height * 0.3,
-        viewportFraction: 0.6,
+        // height: MediaQuery.of(context).size.height * 0.3,
+        viewportFraction: 0.5,
         enlargeCenterPage: true,
       ),
       items: FeatureUtil.carouselItems.asMap().entries.map((entry) {
@@ -27,6 +27,9 @@ class HomeCarousel extends ConsumerWidget {
           title: item['title'] as String,
           lottiePath: item['lottiePath'] as String,
           onTap: () async {
+            ref
+                .read(interstitialAdManagerProvider.notifier)
+                .checkAndDisplayAd();
             if (!context.mounted) return;
             if (index == 0) {
               Navigator.push(
@@ -38,13 +41,6 @@ class HomeCarousel extends ConsumerWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const LibraryPacksView(),
-                ),
-              );
-            } else if (index == 2) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const BuiltInPacksView(),
                 ),
               );
             }

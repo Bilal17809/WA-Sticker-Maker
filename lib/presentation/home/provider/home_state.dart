@@ -10,4 +10,5 @@ class HomeState {
       isDrawerOpen: isDrawerOpen ?? this.isDrawerOpen,
     );
   }
+
 }

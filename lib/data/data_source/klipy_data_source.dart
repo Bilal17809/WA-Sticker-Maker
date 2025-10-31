@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '/core/config/environment.dart';
-import '/core/common/app_exceptions.dart';
+import '/core/exceptions/app_exceptions.dart';
 import '/data/models/models.dart';
 
 class KlipyDataSource {
@@ -30,7 +30,7 @@ class KlipyDataSource {
         return StickerResponseModel.fromJson(jsonData);
       } else {
         throw Exception(
-          '${AppExceptions().failedApiCall}: ${response.statusCode}',
+          '${AppExceptions.failedApiCall}: ${response.statusCode}',
         );
       }
     } catch (e) {
@@ -58,7 +58,7 @@ class KlipyDataSource {
         return StickerResponseModel.fromJson(jsonData);
       } else {
         throw Exception(
-          '${AppExceptions().failedApiCall}: ${response.statusCode}',
+          '${AppExceptions.failedApiCall}: ${response.statusCode}',
         );
       }
     } catch (e) {

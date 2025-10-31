@@ -1,8 +1,7 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '/core/config/environment.dart';
-import '/core/common/app_exceptions.dart';
+import '/core/exceptions/app_exceptions.dart';
 import '/data/models/models.dart';
 
 class FreepikDataSource {
@@ -40,11 +39,10 @@ class FreepikDataSource {
         return FreepikModel.fromJson(jsonData);
       } else {
         throw Exception(
-          '${AppExceptions().failedApiCall}: ${response.statusCode} ${response.body}',
+          '${AppExceptions.failedApiCall}: ${response.statusCode} ${response.body}',
         );
       }
     } catch (e) {
-      debugPrint('Error generating image: $e');
       throw Exception('Error generating image');
     }
   }

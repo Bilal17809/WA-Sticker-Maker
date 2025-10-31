@@ -11,25 +11,12 @@ import '/core/theme/theme.dart';
 import '/presentation/library/provider/library_state.dart';
 import '/ad_manager/ad_manager.dart';
 
-class LibraryView extends ConsumerStatefulWidget {
+class LibraryView extends ConsumerWidget {
   final LibraryPacksState pack;
   const LibraryView({super.key, required this.pack});
-  @override
-  ConsumerState<LibraryView> createState() => _LibraryViewState();
-}
-
-class _LibraryViewState extends ConsumerState<LibraryView> {
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
-    });
-  }
 
   @override
-  Widget build(BuildContext context) {
-    final interstitialState = ref.watch(interstitialAdManagerProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
     final libraryState = ref.watch(libraryProvider);
     ref.listen<AsyncValue<bool>>(internetStatusStreamProvider, (
       previous,
@@ -52,14 +39,14 @@ class _LibraryViewState extends ConsumerState<LibraryView> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: TitleBar(
-        title: 'Pack - ${widget.pack.name}',
+        title: 'Pack - ${pack.name}',
         actions: [
           libraryState.selectedStickerIds.isNotEmpty
               ? IconActionButton(
                   onTap: () async {
                     final success = await ref
                         .read(libraryProvider.notifier)
-                        .downloadAndAddToPack(widget.pack);
+                        .downloadAndAddToPack(pack);
                     if (success && context.mounted) {
                       return Navigator.pop(context);
                     }
@@ -106,9 +93,7 @@ class _LibraryViewState extends ConsumerState<LibraryView> {
           ),
         ),
       ),
-      bottomNavigationBar: interstitialState.isShow
-          ? const SizedBox()
-          : const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 }

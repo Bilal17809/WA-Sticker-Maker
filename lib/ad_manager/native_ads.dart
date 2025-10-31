@@ -1,12 +1,13 @@
-import 'dart:io';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '/core/common/app_exceptions.dart';
+import '/core/constants/constants.dart';
+import '/core/utils/utils.dart';
 import '/core/theme/theme.dart';
 import 'package:shimmer/shimmer.dart';
 import '/core/providers/providers.dart';
+import '/core/global_keys/global_key.dart';
 
 class NativeAdState {
   final bool isAdReady;
@@ -47,27 +48,26 @@ class NativeAdManager extends Notifier<NativeAdState> {
         ),
       );
       await remoteConfig.fetchAndActivate();
-      final key = Platform.isAndroid ? 'NativeAdvAd' :'NativeAdvAd';
-      final showAd = remoteConfig.getBool(key);
+      final key = RemoteConfigKeyUtil(
+        androidKey: androidRCKeyNativeAd,
+        iosKey: iosRCKeyNativeAd,
+      ).remoteConfigKey;
+      // final showAd = remoteConfig.getBool(key);
+      final showAd = true;
       state = state.copyWith(showAd: showAd);
       if (showAd) {
         loadNativeAd();
-      } else {
-        debugPrint('!!!!!!!!!!!! Native ad disabled via Remote Config.');
       }
-    } catch (e) {
-      debugPrint('${AppExceptions().remoteConfigError}: $e');
-    }
+    } catch (_) {}
   }
 
   void loadNativeAd() {
     state = state.copyWith(isAdReady: false);
-    final adUnitId = Platform.isAndroid
-        // ? 'ca-app-pub-3940256099942544/2247696110'
-        ? 'ca-app-pub-8172082069591999/1376543924'
-        : 'ca-app-pub-5405847310750111/3208037322';
     _nativeAd = NativeAd(
-      adUnitId: adUnitId,
+      adUnitId: AdIdUtil(
+        androidIdVal: testNativeAdUnitIdVal,
+        iosIdVal: iosNativeAdUnitIdVal,
+      ).adUnitId,
       request: const AdRequest(),
       listener: NativeAdListener(
         onAdLoaded: (ad) {
@@ -75,7 +75,6 @@ class NativeAdManager extends Notifier<NativeAdState> {
           state = state.copyWith(isAdReady: true);
         },
         onAdFailedToLoad: (ad, error) {
-          debugPrint('!!!!!!!!!!!!!!!!!!!!Ad failed: $error');
           ad.dispose();
           state = state.copyWith(isAdReady: false);
         },

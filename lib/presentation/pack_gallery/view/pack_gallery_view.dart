@@ -11,31 +11,18 @@ import '/presentation/gallery/view/gallery_view.dart';
 import '/presentation/packs/provider/packs_state.dart';
 import '/ad_manager/ad_manager.dart';
 
-class PackGalleryView extends ConsumerStatefulWidget {
+class PackGalleryView extends ConsumerWidget {
   final PacksState pack;
   const PackGalleryView({super.key, required this.pack});
-  @override
-  ConsumerState<PackGalleryView> createState() => _PackGalleryViewState();
-}
-
-class _PackGalleryViewState extends ConsumerState<PackGalleryView> {
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
-    });
-  }
 
   @override
-  Widget build(BuildContext context) {
-    final interstitialState = ref.watch(interstitialAdManagerProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
     final packs = ref.watch(packsProvider);
     final galleryState = ref.watch(packGalleryProvider);
 
     final currentPack = packs.firstWhere(
-      (p) => p.directoryPath == widget.pack.directoryPath,
-      orElse: () => widget.pack,
+      (p) => p.directoryPath == pack.directoryPath,
+      orElse: () => pack,
     );
 
     ref.listen<PackGalleryState>(packGalleryProvider, (previous, next) {
@@ -51,7 +38,7 @@ class _PackGalleryViewState extends ConsumerState<PackGalleryView> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: TitleBar(
-        title: widget.pack.name,
+        title: pack.name,
         actions: [
           if (currentPack.stickerPaths.isNotEmpty)
             Padding(
@@ -142,9 +129,7 @@ class _PackGalleryViewState extends ConsumerState<PackGalleryView> {
                   if (!context.mounted) return;
                   await Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => GalleryView(pack: widget.pack),
-                    ),
+                    MaterialPageRoute(builder: (_) => GalleryView(pack: pack)),
                   );
                 },
                 heroTag: 'add_image',
@@ -165,7 +150,7 @@ class _PackGalleryViewState extends ConsumerState<PackGalleryView> {
                 onPressed: currentPack.stickerPaths.length >= 3
                     ? () => ref
                           .read(packGalleryProvider.notifier)
-                          .exportPackToWhatsApp(widget.pack)
+                          .exportPackToWhatsApp(pack)
                     : () => SimpleToast.showToast(
                         context: context,
                         message: 'Please add at least 3 images to the pack',
@@ -192,9 +177,7 @@ class _PackGalleryViewState extends ConsumerState<PackGalleryView> {
           ),
         ],
       ),
-      bottomNavigationBar: interstitialState.isShow
-          ? const SizedBox()
-          : const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 }

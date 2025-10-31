@@ -149,8 +149,7 @@ class PurchaseNotifier extends Notifier<PurchaseState> {
       } else {
         await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
       }
-    } catch (e) {
-      debugPrint('Failed to initiate purchase: $e');
+    } catch (_) {
       if (!context.mounted) return;
       if (Navigator.of(context).canPop()) Navigator.of(context).pop();
       ScaffoldMessenger.of(

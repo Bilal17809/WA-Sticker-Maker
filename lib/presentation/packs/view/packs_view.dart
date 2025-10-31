@@ -8,25 +8,12 @@ import '/core/theme/theme.dart';
 import '/core/common_widgets/common_widgets.dart';
 import '/presentation/pack_gallery/view/pack_gallery_view.dart';
 
-class PacksView extends ConsumerStatefulWidget {
+class PacksView extends ConsumerWidget {
   const PacksView({super.key});
-  @override
-  ConsumerState<PacksView> createState() => _PacksViewState();
-}
-
-class _PacksViewState extends ConsumerState<PacksView> {
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
-    });
-  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final packs = ref.watch(packsProvider);
-    final interstitialState = ref.watch(interstitialAdManagerProvider);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: TitleBar(title: 'Your Packs'),
@@ -59,6 +46,9 @@ class _PacksViewState extends ConsumerState<PacksView> {
                             .read(packsProvider.notifier)
                             .deletePack(context, pack),
                         onTap: () {
+                          ref
+                              .read(interstitialAdManagerProvider.notifier)
+                              .checkAndDisplayAd();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -111,9 +101,7 @@ class _PacksViewState extends ConsumerState<PacksView> {
         onPressed: () => ref.read(packsProvider.notifier).addNewPack(context),
         child: const Icon(Icons.add),
       ),
-      bottomNavigationBar: interstitialState.isShow
-          ? const SizedBox()
-          : const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 }

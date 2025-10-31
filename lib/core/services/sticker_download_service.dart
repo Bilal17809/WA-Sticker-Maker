@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
-import '/core/common/app_exceptions.dart';
 import 'services.dart';
 
 class StickerDownloadService {
@@ -38,11 +36,7 @@ class StickerDownloadService {
             if (_converter.removeOriginal) {
               try {
                 await file.delete();
-              } catch (_) {
-                debugPrint(
-                  '${AppExceptions().failedOriginalDelete}: ${file.path}',
-                );
-              }
+              } catch (_) {}
             }
             paths.add(converted);
           } else {
