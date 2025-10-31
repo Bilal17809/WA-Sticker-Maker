@@ -17,7 +17,6 @@ class AiPackGalleryView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final interstitialState = ref.watch(interstitialAdManagerProvider);
     final packs = ref.watch(aiPacksProvider);
     final galleryState = ref.watch(aiPackGalleryProvider);
     final currentPack = packs.firstWhere(
@@ -167,9 +166,7 @@ class AiPackGalleryView extends ConsumerWidget {
           ),
         ],
       ),
-      bottomNavigationBar: interstitialState.isShow
-          ? const SizedBox()
-          : const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 }

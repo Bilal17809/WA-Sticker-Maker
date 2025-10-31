@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
+import '/core/common_widgets/common_widgets.dart';
 import '/data/models/sticker_response_model.dart';
 
 @immutable
-class LibraryState {
+class LibraryState extends BaseState {
   final bool isConnected;
   final bool initialLoadDone;
+  @override
   final bool isLoading;
   final bool isLoadingMore;
   final bool isDownloading;

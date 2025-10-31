@@ -96,11 +96,13 @@ class _BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
     final appOpenAdState = ref.watch(appOpenAdManagerProvider);
     final removeAds = ref.watch(removeAdsProvider);
     final isDialogVisible = ref.watch(dialogVisibilityProvider);
+    final interstitialState = ref.watch(interstitialAdManagerProvider);
 
     if (!_isAdEnabled ||
         removeAds.isSubscribed ||
         appOpenAdState.isAdVisible ||
-        isDialogVisible) {
+        isDialogVisible ||
+        interstitialState.isShow) {
       return const SizedBox();
     }
 

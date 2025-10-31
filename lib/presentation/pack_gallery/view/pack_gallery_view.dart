@@ -17,7 +17,6 @@ class PackGalleryView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final interstitialState = ref.watch(interstitialAdManagerProvider);
     final packs = ref.watch(packsProvider);
     final galleryState = ref.watch(packGalleryProvider);
 
@@ -178,9 +177,7 @@ class PackGalleryView extends ConsumerWidget {
           ),
         ],
       ),
-      bottomNavigationBar: interstitialState.isShow
-          ? const SizedBox()
-          : const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 }

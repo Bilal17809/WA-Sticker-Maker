@@ -13,7 +13,6 @@ class LibraryPacksView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final interstitialState = ref.watch(interstitialAdManagerProvider);
     final packs = ref.watch(libraryPacksProvider);
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -104,9 +103,7 @@ class LibraryPacksView extends ConsumerWidget {
             ref.read(libraryPacksProvider.notifier).addNewPack(context),
         child: const Icon(Icons.add),
       ),
-      bottomNavigationBar: interstitialState.isShow
-          ? const SizedBox()
-          : const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 }

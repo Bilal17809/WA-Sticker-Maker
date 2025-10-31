@@ -21,7 +21,6 @@ class BuiltInPacksView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final packs = ref.watch(builtInPacksProvider);
     final controller = ref.watch(_searchController);
-    final interstitialState = ref.watch(interstitialAdManagerProvider);
     return GestureDetector(
       onTap: () async {
         await Future.delayed(const Duration(milliseconds: 120));
@@ -40,9 +39,7 @@ class BuiltInPacksView extends ConsumerWidget {
             ),
           ),
         ),
-        bottomNavigationBar: interstitialState.isShow
-            ? const SizedBox()
-            : const BannerAdWidget(),
+        bottomNavigationBar: const BannerAdWidget(),
       ),
     );
   }

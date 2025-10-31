@@ -46,3 +46,6 @@ const String testInterstitialAdUnitIdVal =
     'ca-app-pub-3940256099942544/1033173712';
 const String testAppOpenAdUnitIdVal = 'ca-app-pub-3940256099942544/9257395921';
 const String testNativeAdUnitIdVal = 'ca-app-pub-3940256099942544/2247696110';
+
+/// ========== App Specific Constants =========
+const androidBaseDirectory = '/storage/emulated/0/DCIM/WA Sticker Maker';

@@ -5,7 +5,6 @@ import '/presentation/ai_pack/provider/ai_packs_state.dart';
 import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
 import '/core/utils/utils.dart';
-import '/core/providers/providers.dart';
 import '/core/common_widgets/common_widgets.dart';
 import '/core/services/connectivity_service.dart';
 import 'widgets/widgets.dart';
@@ -16,8 +15,6 @@ class AiImageView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final interstitialState = ref.watch(interstitialAdManagerProvider);
-
     ref.listen<AsyncValue<bool>>(internetStatusStreamProvider, (
       previous,
       next,
@@ -56,9 +53,7 @@ class AiImageView extends ConsumerWidget {
           ),
         ),
       ),
-      bottomNavigationBar: interstitialState.isShow
-          ? const SizedBox()
-          : const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 }

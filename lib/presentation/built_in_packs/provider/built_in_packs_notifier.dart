@@ -47,4 +47,11 @@ class BuiltInPacksNotifier extends Notifier<List<BuiltInPacksState>> {
           .toList();
     }
   }
+
+  void toggleBanner(String packName, bool value) {
+    state = [
+      for (final pack in state)
+        if (pack.name == packName) pack.copyWith(showBanner: value) else pack,
+    ];
+  }
 }

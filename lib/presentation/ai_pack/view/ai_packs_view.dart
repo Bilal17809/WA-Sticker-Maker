@@ -15,7 +15,6 @@ class AiPacksView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final packs = ref.watch(aiPacksProvider);
-    final interstitialState = ref.watch(interstitialAdManagerProvider);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: TitleBar(
@@ -117,9 +116,7 @@ class AiPacksView extends ConsumerWidget {
         onPressed: () => ref.read(aiPacksProvider.notifier).addNewPack(context),
         child: const Icon(Icons.add),
       ),
-      bottomNavigationBar: interstitialState.isShow
-          ? const SizedBox()
-          : const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 }

@@ -17,7 +17,6 @@ class LibraryView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final interstitialState = ref.watch(interstitialAdManagerProvider);
     final libraryState = ref.watch(libraryProvider);
     ref.listen<AsyncValue<bool>>(internetStatusStreamProvider, (
       previous,
@@ -94,9 +93,7 @@ class LibraryView extends ConsumerWidget {
           ),
         ),
       ),
-      bottomNavigationBar: interstitialState.isShow
-          ? const SizedBox()
-          : const BannerAdWidget(),
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 }

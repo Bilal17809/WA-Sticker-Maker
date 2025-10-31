@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
+import '/core/constants/constants.dart';
 import '/core/common_widgets/common_widgets.dart';
 import '/core/exceptions/app_exceptions.dart';
 import '/core/utils/utils.dart';
@@ -67,7 +68,7 @@ abstract class BasePackNotifierService<T extends PackInfoInterface>
 
   Future<String> _getBaseDirectory() async {
     if (Platform.isAndroid) {
-      return '/storage/emulated/0/DCIM/WA Sticker Maker';
+      return androidBaseDirectory;
     } else if (Platform.isIOS) {
       final appDocDir = await getApplicationDocumentsDirectory();
       return '${appDocDir.path}/WA Sticker Maker';
