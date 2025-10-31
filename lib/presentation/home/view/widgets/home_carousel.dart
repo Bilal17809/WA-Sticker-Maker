@@ -16,8 +16,8 @@ class HomeCarousel extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return CarouselSlider(
       options: CarouselOptions(
-        height: MediaQuery.of(context).size.height * 0.3,
-        viewportFraction: 0.6,
+        // height: MediaQuery.of(context).size.height * 0.3,
+        viewportFraction: 0.5,
         enlargeCenterPage: true,
       ),
       items: FeatureUtil.carouselItems.asMap().entries.map((entry) {
