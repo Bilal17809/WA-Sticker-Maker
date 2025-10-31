@@ -118,7 +118,7 @@ class LibraryNotifier extends Notifier<LibraryState> {
       return paths.isNotEmpty;
     } catch (e) {
       state = state.copyWith(
-        errorMessage: '${AppExceptions().errorDownloadingPack}: $e',
+        errorMessage: '${AppExceptions.errorDownloadingPack}: $e',
       );
       return false;
     } finally {

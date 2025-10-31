@@ -13,7 +13,7 @@ class RemoteConfigKeyUtil {
     } else if (Platform.isIOS) {
       return iosKey;
     } else {
-      throw UnsupportedError(AppExceptions().unsupportedPlatform);
+      throw UnsupportedError(AppExceptions.unsupportedPlatform);
     }
   }
 }

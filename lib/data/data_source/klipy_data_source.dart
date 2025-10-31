@@ -30,7 +30,7 @@ class KlipyDataSource {
         return StickerResponseModel.fromJson(jsonData);
       } else {
         throw Exception(
-          '${AppExceptions().failedApiCall}: ${response.statusCode}',
+          '${AppExceptions.failedApiCall}: ${response.statusCode}',
         );
       }
     } catch (e) {
@@ -58,7 +58,7 @@ class KlipyDataSource {
         return StickerResponseModel.fromJson(jsonData);
       } else {
         throw Exception(
-          '${AppExceptions().failedApiCall}: ${response.statusCode}',
+          '${AppExceptions.failedApiCall}: ${response.statusCode}',
         );
       }
     } catch (e) {

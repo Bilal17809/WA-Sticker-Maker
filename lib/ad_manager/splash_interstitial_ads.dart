@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/core/global_keys/global_key.dart';
 import '/core/constants/constants.dart';
-import '/core/exceptions/app_exceptions.dart';
 import '/core/providers/providers.dart';
 import '/core/utils/utils.dart';
 
@@ -58,8 +56,7 @@ class SplashInterstitialManager extends Notifier<SplashInterstitialState> {
       final displaySplashAd = remoteConfig.getBool(splashAdKey);
       state = state.copyWith(displaySplashAd: displaySplashAd);
       loadAd();
-    } catch (e) {
-      debugPrint('${AppExceptions().remoteConfigError}: $e');
+    } catch (_) {
       state = state.copyWith(displaySplashAd: false);
     }
   }
@@ -78,9 +75,6 @@ class SplashInterstitialManager extends Notifier<SplashInterstitialState> {
         },
         onAdFailedToLoad: (error) {
           state = state.copyWith(isAdReady: false);
-          debugPrint(
-            '!!!!!!!!!!!!Splash InterstitialAd failed to load: $error',
-          );
         },
       ),
     );
@@ -89,7 +83,6 @@ class SplashInterstitialManager extends Notifier<SplashInterstitialState> {
   Future<bool> showSplashAd() async {
     final removeAds = ref.read(removeAdsProvider);
     if (!state.isAdReady || removeAds.isSubscribed) {
-      debugPrint('!!!!!!!!!!Splash InterstitialAd not ready');
       return false;
     }
 
@@ -100,9 +93,7 @@ class SplashInterstitialManager extends Notifier<SplashInterstitialState> {
       final appOpenAdManager = ref.read(appOpenAdManagerProvider.notifier);
 
       _splashAd!.fullScreenContentCallback = FullScreenContentCallback(
-        onAdShowedFullScreenContent: (ad) {
-          debugPrint('!!!!!!!!! Splash InterstitialAd displayed successfully');
-        },
+        onAdShowedFullScreenContent: (ad) {},
         onAdDismissedFullScreenContent: (ad) {
           SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
           appOpenAdManager.setInterstitialAdDismissed();
@@ -113,7 +104,6 @@ class SplashInterstitialManager extends Notifier<SplashInterstitialState> {
         },
         onAdFailedToShowFullScreenContent: (ad, error) {
           SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-          debugPrint("!!!!!!!!!!! Splash Interstitial failed: $error");
           appOpenAdManager.setInterstitialAdDismissed();
           ad.dispose();
           state = state.copyWith(isAdReady: false);
@@ -126,7 +116,6 @@ class SplashInterstitialManager extends Notifier<SplashInterstitialState> {
       _splashAd = null;
       state = state.copyWith(isAdReady: false);
     } else {
-      debugPrint('!!!!!!!!!!Splash InterstitialAd is null');
       completer.complete(false);
     }
 

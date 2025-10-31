@@ -42,9 +42,7 @@ abstract class BasePackNotifierService<T extends PackInfoInterface>
             .toList();
         state = packs;
       }
-    } catch (e) {
-      debugPrint('${AppExceptions().errorLoadingPacks} $e');
-    }
+    } catch (_) {}
   }
 
   Future<void> _savePacks() async {
@@ -61,9 +59,7 @@ abstract class BasePackNotifierService<T extends PackInfoInterface>
           )
           .toList();
       await localStorage.setStringList(storageKey, packsJson);
-    } catch (e) {
-      debugPrint('${AppExceptions().errorSavingPack}: $e');
-    }
+    } catch (_) {}
   }
 
   Future<String> _getBaseDirectory() async {
@@ -73,7 +69,7 @@ abstract class BasePackNotifierService<T extends PackInfoInterface>
       final appDocDir = await getApplicationDocumentsDirectory();
       return '${appDocDir.path}/WA Sticker Maker';
     } else {
-      throw UnsupportedError(AppExceptions().unsupportedPlatform);
+      throw UnsupportedError(AppExceptions.unsupportedPlatform);
     }
   }
 
@@ -97,8 +93,7 @@ abstract class BasePackNotifierService<T extends PackInfoInterface>
       }
       await packDir.create(recursive: true);
       return packDir.path;
-    } catch (e) {
-      debugPrint('${AppExceptions().errorCreatingDirectory}: $e');
+    } catch (_) {
       return null;
     }
   }
@@ -134,9 +129,7 @@ abstract class BasePackNotifierService<T extends PackInfoInterface>
       }
       state = state.where((p) => p != pack).toList();
       await _savePacks();
-    } catch (e) {
-      debugPrint('${AppExceptions().errorDeletingPack}: $e');
-    }
+    } catch (_) {}
   }
 
   Future<void> removeStickerFromPack(T pack, String stickerPath) async {
@@ -156,9 +149,7 @@ abstract class BasePackNotifierService<T extends PackInfoInterface>
       if (await file.exists()) {
         await file.delete();
       }
-    } catch (e) {
-      debugPrint('${AppExceptions().errorDeletingPack}: $e');
-    }
+    } catch (_) {}
   }
 
   void updatePack(int index, T updatedPack) {

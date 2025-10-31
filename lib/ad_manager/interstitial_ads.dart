@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '/core/exceptions/app_exceptions.dart';
 import '/core/providers/providers.dart';
 import '/core/utils/utils.dart';
 import '/core/constants/constants.dart';
@@ -71,9 +69,7 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
       if (newThreshold > 0) {
         state = state.copyWith(displayThreshold: newThreshold);
       }
-    } catch (e) {
-      debugPrint('${AppExceptions().remoteConfigError}: $e');
-    }
+    } catch (_) {}
   }
 
   void _loadAd() {
@@ -90,7 +86,6 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
         },
         onAdFailedToLoad: (error) {
           state = state.copyWith(isAdReady: false);
-          debugPrint("!!!!!!!!!!!!!!!!!!! Interstitial load error: $error");
         },
       ),
     );
@@ -119,7 +114,6 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
       },
       onAdFailedToShowFullScreenContent: (ad, error) {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-        debugPrint("!!!!!!!!!!!! Interstitial failed: $error");
         appOpenAdManager.setInterstitialAdDismissed();
         ad.dispose();
         state = state.copyWith(isShow: false);
@@ -139,12 +133,10 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
   void checkAndDisplayAd() {
     final newCounter = state.visitCounter + 1;
     state = state.copyWith(visitCounter: newCounter);
-    debugPrint("!!!!!!!!!!! Visit count: $newCounter");
     if (newCounter >= state.displayThreshold) {
       if (state.isAdReady) {
         _showAdInternal();
       } else {
-        debugPrint("Interstitial not ready yet.");
         state = state.copyWith(visitCounter: 0);
       }
     }

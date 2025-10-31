@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/core/providers/providers.dart';
-import '/core/exceptions/app_exceptions.dart';
 import '/core/utils/utils.dart';
 import '/core/constants/constants.dart';
 import '/core/global_keys/global_key.dart';
@@ -63,8 +62,6 @@ class AppOpenAdManager extends Notifier<AppOpenAdState>
       Future.delayed(const Duration(milliseconds: 100), () {
         if (_openAppAdEligible && !_interstitialAdDismissed) {
           showAdIfAvailable();
-        } else {
-          debugPrint("!!!!!!!!!!!!Skipping Open App Ad");
         }
         _openAppAdEligible = false;
         _interstitialAdDismissed = false;
@@ -88,9 +85,7 @@ class AppOpenAdManager extends Notifier<AppOpenAdState>
       if (showAd) {
         loadAd();
       }
-    } catch (e) {
-      debugPrint('${AppExceptions().remoteConfigError}: $e');
-    }
+    } catch (_) {}
   }
 
   void showAdIfAvailable() {

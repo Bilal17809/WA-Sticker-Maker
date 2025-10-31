@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import '/presentation/built_in_packs/provider/built_in_packs_state.dart';
 
@@ -32,8 +31,7 @@ class BuiltInPackLoaderService {
         );
       }).toList();
       return packs;
-    } catch (e) {
-      debugPrint('Error loading sticker packs: $e');
+    } catch (_) {
       return [];
     }
   }

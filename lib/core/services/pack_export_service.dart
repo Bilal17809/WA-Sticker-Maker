@@ -74,9 +74,9 @@ class PackExportService {
       )..stickers = pack.stickerPaths;
       return await _addOrUpdatePack(stickerPack, pack.name);
     } on StickerPackException catch (_) {
-      return AppExceptions().validationError;
+      return AppExceptions.validationError;
     } catch (_) {
-      return AppExceptions().exportError;
+      return AppExceptions.exportError;
     }
   }
 }

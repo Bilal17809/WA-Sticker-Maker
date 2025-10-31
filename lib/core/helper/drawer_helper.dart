@@ -10,7 +10,7 @@ class DrawerActions {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
-      throw '${AppExceptions().failUrl}: $url';
+      throw '${AppExceptions.failUrl}: $url';
     }
   }
 
@@ -23,7 +23,7 @@ class DrawerActions {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
-      throw '${AppExceptions().failUrl}: $url';
+      throw '${AppExceptions.failUrl}: $url';
     }
   }
 
@@ -37,7 +37,7 @@ class DrawerActions {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
-      throw '${AppExceptions().failUrl}: $url';
+      throw '${AppExceptions.failUrl}: $url';
     }
   }
 }

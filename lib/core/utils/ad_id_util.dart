@@ -13,7 +13,7 @@ class AdIdUtil {
     } else if (Platform.isIOS) {
       return iosIdVal;
     } else {
-      throw UnsupportedError(AppExceptions().unsupportedPlatform);
+      throw UnsupportedError(AppExceptions.unsupportedPlatform);
     }
   }
 }

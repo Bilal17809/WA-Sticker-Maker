@@ -55,9 +55,7 @@ class _BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
       if (showBanner) {
         loadBannerAd();
       }
-    } catch (e) {
-      debugPrint('Error initializing remote config: $e');
-    }
+    } catch (_) {}
   }
 
   void loadBannerAd() async {
@@ -74,11 +72,9 @@ class _BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
       request: const AdRequest(extras: {'collapsible': 'bottom'}),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
-          debugPrint("!!!!!!!!!!! BannerAd loaded: ${ad.adUnitId}");
           setState(() => _isAdLoaded = true);
         },
         onAdFailedToLoad: (ad, error) {
-          debugPrint('!!!!!!!!!!!!!!!!!! Banner Ad failed: ${error.message}');
           ad.dispose();
         },
       ),

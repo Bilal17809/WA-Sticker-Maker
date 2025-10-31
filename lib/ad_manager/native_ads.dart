@@ -4,7 +4,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/core/constants/constants.dart';
 import '/core/utils/utils.dart';
-import '/core/exceptions/app_exceptions.dart';
 import '/core/theme/theme.dart';
 import 'package:shimmer/shimmer.dart';
 import '/core/providers/providers.dart';
@@ -58,12 +57,8 @@ class NativeAdManager extends Notifier<NativeAdState> {
       state = state.copyWith(showAd: showAd);
       if (showAd) {
         loadNativeAd();
-      } else {
-        debugPrint('!!!!!!!!!!!! Native ad disabled via Remote Config.');
       }
-    } catch (e) {
-      debugPrint('${AppExceptions().remoteConfigError}: $e');
-    }
+    } catch (_) {}
   }
 
   void loadNativeAd() {
@@ -80,7 +75,6 @@ class NativeAdManager extends Notifier<NativeAdState> {
           state = state.copyWith(isAdReady: true);
         },
         onAdFailedToLoad: (ad, error) {
-          debugPrint('!!!!!!!!!!!!!!!!!!!!Ad failed: $error');
           ad.dispose();
           state = state.copyWith(isAdReady: false);
         },
