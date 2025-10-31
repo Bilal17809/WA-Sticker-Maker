@@ -52,9 +52,9 @@ class _StickerGrid extends ConsumerWidget {
               PageRouteBuilder(
                 opaque: false,
                 barrierColor: AppColors.kBlack.withValues(alpha: 0.75),
-                pageBuilder: (_, __, ___) =>
+                pageBuilder: (_, _, _) =>
                     BuiltInPacksGalleryView(images: stickers),
-                transitionsBuilder: (_, animation, __, child) =>
+                transitionsBuilder: (_, animation, _, child) =>
                     FadeTransition(opacity: animation, child: child),
               ),
             );

@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import '/presentation/packs/provider/packs_state.dart';
-import '/core/config/editor_config.dart';
+import '/core/services/services.dart';
 import '/core/theme/theme.dart';
 import '/core/constants/constants.dart';
 import '/core/common_widgets/common_widgets.dart';
@@ -115,7 +115,7 @@ class GalleryView extends ConsumerWidget {
               Navigator.pop(context, bytes);
             },
           ),
-          configs: EditorConfig.config,
+          configs: ProImageEditorService.config,
         ),
       ),
     );

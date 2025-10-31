@@ -40,7 +40,7 @@ class HomeView extends ConsumerWidget {
             child: Stack(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(kBodyHp),
+                  padding: const EdgeInsets.symmetric(horizontal: kBodyHp),
                   child: Column(
                     children: [
                       Padding(
@@ -57,7 +57,6 @@ class HomeView extends ConsumerWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(height: kBodyHp),
                       !ref.watch(homeProvider).isDrawerOpen
                           ? NativeAdWidget()
                           : const SizedBox.shrink(),

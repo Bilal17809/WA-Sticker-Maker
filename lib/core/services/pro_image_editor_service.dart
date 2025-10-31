@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 import '/core/common_widgets/common_widgets.dart';
 
-class EditorConfig {
+class ProImageEditorService {
   static final config = ProImageEditorConfigs(
     designMode: ImageEditorDesignMode.material,
     mainEditor: MainEditorConfigs(

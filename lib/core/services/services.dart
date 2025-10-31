@@ -11,3 +11,4 @@ export 'ai_image_service.dart';
 export 'onesignal_service.dart';
 export 'purchase_notifier_service.dart';
 export 'built_in_pack_loader_service.dart';
+export 'pro_image_editor_service.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '/ad_manager/ad_manager.dart';
 import 'package:wa_sticker_maker/core/utils/utils.dart';
 import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
@@ -13,12 +14,26 @@ final _searchController = Provider.autoDispose<TextEditingController>((ref) {
   return controller;
 });
 
-class BuiltInPacksView extends ConsumerWidget {
+class BuiltInPacksView extends ConsumerStatefulWidget {
   const BuiltInPacksView({super.key});
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<BuiltInPacksView> createState() => _BuiltInPacksViewState();
+}
+
+class _BuiltInPacksViewState extends ConsumerState<BuiltInPacksView> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final packs = ref.watch(builtInPacksProvider);
     final controller = ref.watch(_searchController);
+    final interstitialState = ref.watch(interstitialAdManagerProvider);
     return GestureDetector(
       onTap: () async {
         await Future.delayed(const Duration(milliseconds: 120));
@@ -37,6 +52,9 @@ class BuiltInPacksView extends ConsumerWidget {
             ),
           ),
         ),
+        bottomNavigationBar: interstitialState.isShow
+            ? const SizedBox()
+            : const BannerAdWidget(),
       ),
     );
   }
@@ -84,7 +102,7 @@ class _PacksList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       itemCount: packs.length,
-      separatorBuilder: (_, __) => const SizedBox(height: kGap),
+      separatorBuilder: (_, _) => const SizedBox(height: kGap),
       itemBuilder: (context, index) {
         final pack = packs[index];
         final stickers = pack.stickers.take(5).toList();
@@ -122,7 +140,7 @@ class _PacksList extends StatelessWidget {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: stickers.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 4),
+                separatorBuilder: (_, _) => const SizedBox(width: 4),
                 itemBuilder: (_, i) {
                   final assetPath = stickers[i];
                   return GestureDetector(
