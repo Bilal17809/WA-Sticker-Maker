@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -6,6 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 import '/core/providers/providers.dart';
 import '/core/theme/theme.dart';
+import '/core/utils/utils.dart';
+import '/core/constants/constants.dart';
+import '/core/global_keys/global_key.dart';
 
 class BannerAdWidget extends ConsumerStatefulWidget {
   const BannerAdWidget({super.key});
@@ -42,14 +44,10 @@ class _BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
           minimumFetchInterval: const Duration(minutes: 1),
         ),
       );
-      String bannerAdKey;
-      if (Platform.isAndroid) {
-        bannerAdKey = 'BannerAd';
-      } else if (Platform.isIOS) {
-        bannerAdKey = 'BannerAd';
-      } else {
-        throw UnsupportedError('Platform not supported');
-      }
+      final bannerAdKey = RemoteConfigKeyUtil(
+        androidKey: androidRCKeyBannerAd,
+        iosKey: iosRCKeyBannerAd,
+      ).remoteConfigKey;
       await remoteConfig.fetchAndActivate();
       final showBanner = remoteConfig.getBool(bannerAdKey);
       if (!mounted) return;
@@ -68,10 +66,10 @@ class _BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
           MediaQuery.sizeOf(context).width.truncate(),
         );
     _bannerAd = BannerAd(
-      adUnitId: Platform.isAndroid
-          ? 'ca-app-pub-8172082069591999/1000945888'
-          // ? 'ca-app-pub-3940256099942544/9214589741'
-          : 'ca-app-pub-5405847310750111/4954371440',
+      adUnitId: AdIdUtil(
+        androidIdVal: testBannerAdUnitIdVal,
+        iosIdVal: iosBannerAdUnitIdVal,
+      ).adUnitId,
       size: adSize!,
       request: const AdRequest(extras: {'collapsible': 'bottom'}),
       listener: BannerAdListener(

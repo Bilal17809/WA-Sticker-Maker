@@ -6,7 +6,7 @@ import '/core/constants/constants.dart';
 import '/core/theme/theme.dart';
 import '/core/common_widgets/common_widgets.dart';
 import '/core/providers/providers.dart';
-import 'widgets/built_in_packs_detail_view.dart';
+import '/presentation/built_in_packs/view/widgets/built_in_packs_detail_view.dart';
 
 final _searchController = Provider.autoDispose<TextEditingController>((ref) {
   final controller = TextEditingController();
@@ -14,23 +14,11 @@ final _searchController = Provider.autoDispose<TextEditingController>((ref) {
   return controller;
 });
 
-class BuiltInPacksView extends ConsumerStatefulWidget {
+class BuiltInPacksView extends ConsumerWidget {
   const BuiltInPacksView({super.key});
-  @override
-  ConsumerState<BuiltInPacksView> createState() => _BuiltInPacksViewState();
-}
-
-class _BuiltInPacksViewState extends ConsumerState<BuiltInPacksView> {
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
-    });
-  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final packs = ref.watch(builtInPacksProvider);
     final controller = ref.watch(_searchController);
     final interstitialState = ref.watch(interstitialAdManagerProvider);
@@ -95,11 +83,11 @@ class _PacksContent extends ConsumerWidget {
   }
 }
 
-class _PacksList extends StatelessWidget {
+class _PacksList extends ConsumerWidget {
   final List<dynamic> packs;
   const _PacksList({required this.packs});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ListView.separated(
       itemCount: packs.length,
       separatorBuilder: (_, _) => const SizedBox(height: kGap),
@@ -118,12 +106,17 @@ class _PacksList extends StatelessWidget {
                   style: titleMediumStyle.copyWith(color: AppColors.kWhite),
                 ),
                 GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BuiltInPacksDetailView(pack: pack),
-                    ),
-                  ),
+                  onTap: () {
+                    ref
+                        .read(interstitialAdManagerProvider.notifier)
+                        .checkAndDisplayAd();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BuiltInPacksDetailView(pack: pack),
+                      ),
+                    );
+                  },
                   child: Container(
                     decoration: AppDecorations.simpleRounded(context),
                     padding: const EdgeInsets.symmetric(
@@ -144,11 +137,16 @@ class _PacksList extends StatelessWidget {
                 itemBuilder: (_, i) {
                   final assetPath = stickers[i];
                   return GestureDetector(
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => BuiltInPacksDetailView(pack: pack),
-                      ),
-                    ),
+                    onTap: () {
+                      ref
+                          .read(interstitialAdManagerProvider.notifier)
+                          .checkAndDisplayAd();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => BuiltInPacksDetailView(pack: pack),
+                        ),
+                      );
+                    },
                     child: Image.asset(assetPath),
                   );
                 },

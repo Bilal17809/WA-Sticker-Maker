@@ -1,10 +1,12 @@
-import 'dart:io';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/core/providers/providers.dart';
-import '/core/common/app_exceptions.dart';
+import '/core/exceptions/app_exceptions.dart';
+import '/core/utils/utils.dart';
+import '/core/constants/constants.dart';
+import '/core/global_keys/global_key.dart';
 
 class AppOpenAdState {
   final bool isAdVisible;
@@ -77,14 +79,10 @@ class AppOpenAdManager extends Notifier<AppOpenAdState>
         fetchTimeout: const Duration(seconds: 10),
         minimumFetchInterval: const Duration(minutes: 1),
       );
-      String appOpenKey;
-      if (Platform.isAndroid) {
-        appOpenKey = 'AppOpenAd';
-      } else if (Platform.isIOS) {
-        appOpenKey = 'AppOpenAd';
-      } else {
-        throw UnsupportedError(AppExceptions().unsupportedPlatform);
-      }
+      final appOpenKey = RemoteConfigKeyUtil(
+        androidKey: androidRCKeyAppOpenAd,
+        iosKey: iosRCKeyAppOpenAd,
+      ).remoteConfigKey;
       await remoteConfig.fetchAndActivate();
       final showAd = remoteConfig.getBool(appOpenKey);
       if (showAd) {
@@ -141,7 +139,10 @@ class AppOpenAdManager extends Notifier<AppOpenAdState>
     }
     if (!state.shouldShowAppOpenAd) return;
     AppOpenAd.load(
-      adUnitId: _getAdUnitId(),
+      adUnitId: AdIdUtil(
+        androidIdVal: testAppOpenAdUnitIdVal,
+        iosIdVal: iosAppOpenAdUnitIdVal,
+      ).adUnitId,
       request: const AdRequest(),
       adLoadCallback: AppOpenAdLoadCallback(
         onAdLoaded: (ad) {
@@ -166,17 +167,6 @@ class AppOpenAdManager extends Notifier<AppOpenAdState>
   void maybeShowAppOpenAd() {
     if (_isSplashInterstitialShown) {
       return;
-    }
-  }
-
-  String _getAdUnitId() {
-    if (Platform.isAndroid) {
-      return 'ca-app-pub-8172082069591999/8687864213';
-      // return 'ca-app-pub-3940256099942544/9257395921';
-    } else if (Platform.isIOS) {
-      return 'ca-app-pub-5405847310750111/1519551130';
-    } else {
-      throw UnsupportedError('Platform not supported');
     }
   }
 }

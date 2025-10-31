@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import '/core/common_widgets/common_widgets.dart';
-import '/core/common/app_exceptions.dart';
+import '/core/exceptions/app_exceptions.dart';
 import '/core/utils/utils.dart';
 import '/core/providers/providers.dart';
 import '/core/interface/pack_info_interface.dart';

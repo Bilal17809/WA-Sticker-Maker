@@ -1,12 +1,14 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '/core/common/app_exceptions.dart';
+import '/core/global_keys/global_key.dart';
+import '/core/constants/constants.dart';
+import '/core/exceptions/app_exceptions.dart';
 import '/core/providers/providers.dart';
+import '/core/utils/utils.dart';
 
 class SplashInterstitialState {
   final bool isAdReady;
@@ -47,14 +49,11 @@ class SplashInterstitialManager extends Notifier<SplashInterstitialState> {
           minimumFetchInterval: const Duration(seconds: 1),
         ),
       );
-      String splashAdKey;
-      if (Platform.isAndroid) {
-        splashAdKey = 'SplashInterstitialAd';
-      } else if (Platform.isIOS) {
-        splashAdKey = 'SplashInterstitialAd';
-      } else {
-        throw UnsupportedError(AppExceptions().unsupportedPlatform);
-      }
+      final splashAdKey = RemoteConfigKeyUtil(
+        androidKey: androidRCKeySplashAd,
+        iosKey: iosRCKeySplashAd,
+      ).remoteConfigKey;
+
       await remoteConfig.fetchAndActivate();
       final displaySplashAd = remoteConfig.getBool(splashAdKey);
       state = state.copyWith(displaySplashAd: displaySplashAd);
@@ -67,7 +66,10 @@ class SplashInterstitialManager extends Notifier<SplashInterstitialState> {
 
   void loadAd() {
     InterstitialAd.load(
-      adUnitId: _adUnitId,
+      adUnitId: AdIdUtil(
+        androidIdVal: testInterstitialAdUnitIdVal,
+        iosIdVal: iosSplashAdUnitIdVal,
+      ).adUnitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -129,16 +131,5 @@ class SplashInterstitialManager extends Notifier<SplashInterstitialState> {
     }
 
     return completer.future;
-  }
-
-  String get _adUnitId {
-    if (Platform.isAndroid) {
-      return 'ca-app-pub-8172082069591999/5320686037';
-      // return 'ca-app-pub-3940256099942544/1033173712';
-    } else if (Platform.isIOS) {
-      return 'ca-app-pub-5405847310750111/3641289775';
-    } else {
-      throw UnsupportedError("Platform not supported");
-    }
   }
 }

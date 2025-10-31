@@ -1,12 +1,14 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '/core/common/app_exceptions.dart';
+import '/core/exceptions/app_exceptions.dart';
 import '/core/providers/providers.dart';
+import '/core/utils/utils.dart';
+import '/core/constants/constants.dart';
+import '/core/global_keys/global_key.dart';
 
 class InterstitialAdState {
   final bool isAdReady;
@@ -60,14 +62,10 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
           minimumFetchInterval: const Duration(minutes: 1),
         ),
       );
-      String interstitialKey;
-      if (Platform.isAndroid) {
-        interstitialKey = 'InterstitialAd';
-      } else if (Platform.isIOS) {
-        interstitialKey = 'InterstitialAd';
-      } else {
-        throw UnsupportedError(AppExceptions().unsupportedPlatform);
-      }
+      final interstitialKey = RemoteConfigKeyUtil(
+        androidKey: androidRCKeyInterstitialAd,
+        iosKey: iosRCKeyInterstitialAd,
+      ).remoteConfigKey;
       await remoteConfig.fetchAndActivate();
       final newThreshold = remoteConfig.getInt(interstitialKey);
       if (newThreshold > 0) {
@@ -80,7 +78,10 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
 
   void _loadAd() {
     InterstitialAd.load(
-      adUnitId: _adUnitId,
+      adUnitId: AdIdUtil(
+        androidIdVal: testInterstitialAdUnitIdVal,
+        iosIdVal: iosInterstitialAdUnitIdVal,
+      ).adUnitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -152,16 +153,5 @@ class InterstitialAdManager extends Notifier<InterstitialAdState> {
   void _resetAfterAd() {
     state = state.copyWith(visitCounter: 0, isAdReady: false);
     _loadAd();
-  }
-
-  String get _adUnitId {
-    if (Platform.isAndroid) {
-      return 'ca-app-pub-8172082069591999/6410212904';
-      // return 'ca-app-pub-3940256099942544/1033173712';
-    } else if (Platform.isIOS) {
-      return 'ca-app-pub-5405847310750111/9843736042';
-    } else {
-      throw UnsupportedError("Platform not supported");
-    }
   }
 }

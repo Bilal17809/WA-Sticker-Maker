@@ -86,13 +86,18 @@ class _AddToWhatsAppButton extends ConsumerWidget {
         height: 60,
         child: ElevatedButton(
           onPressed: () async {
-            showGeneralDialog(
-              context: context,
-              barrierDismissible: false,
-              pageBuilder: (_, _, _) => Center(
-                child: CircularProgressIndicator(color: AppColors.kWhite),
-              ),
-            );
+            await ref
+                .read(splashInterstitialManagerProvider.notifier)
+                .showSplashAd();
+            if (context.mounted) {
+              showGeneralDialog(
+                context: context,
+                barrierDismissible: false,
+                pageBuilder: (_, _, _) => Center(
+                  child: CircularProgressIndicator(color: AppColors.kWhite),
+                ),
+              );
+            }
             final result = await ref
                 .read(builtInPacksProvider.notifier)
                 .exportPack(pack);

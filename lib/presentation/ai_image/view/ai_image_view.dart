@@ -10,25 +10,12 @@ import '/core/common_widgets/common_widgets.dart';
 import '/core/services/connectivity_service.dart';
 import 'widgets/widgets.dart';
 
-class AiImageView extends ConsumerStatefulWidget {
+class AiImageView extends ConsumerWidget {
   final AiPacksState pack;
   const AiImageView({super.key, required this.pack});
 
   @override
-  ConsumerState<AiImageView> createState() => _AiImageViewState();
-}
-
-class _AiImageViewState extends ConsumerState<AiImageView> {
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final interstitialState = ref.watch(interstitialAdManagerProvider);
 
     ref.listen<AsyncValue<bool>>(internetStatusStreamProvider, (
@@ -52,7 +39,7 @@ class _AiImageViewState extends ConsumerState<AiImageView> {
       extendBodyBehindAppBar: true,
       appBar: TitleBar(
         title: 'AI Sticker Generator',
-        actions: [DownloadOrAddButton(pack: widget.pack)],
+        actions: [DownloadOrAddButton(pack: pack)],
       ),
       body: Container(
         decoration: AppDecorations.bgContainer(context),

@@ -11,30 +11,18 @@ import '/core/providers/providers.dart';
 import '/core/theme/theme.dart';
 import '/ad_manager/ad_manager.dart';
 
-class AiPackGalleryView extends ConsumerStatefulWidget {
+class AiPackGalleryView extends ConsumerWidget {
   final AiPacksState pack;
   const AiPackGalleryView({super.key, required this.pack});
-  @override
-  ConsumerState<AiPackGalleryView> createState() => _AiPackGalleryViewState();
-}
-
-class _AiPackGalleryViewState extends ConsumerState<AiPackGalleryView> {
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
-    });
-  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final interstitialState = ref.watch(interstitialAdManagerProvider);
     final packs = ref.watch(aiPacksProvider);
     final galleryState = ref.watch(aiPackGalleryProvider);
     final currentPack = packs.firstWhere(
-      (p) => p.directoryPath == widget.pack.directoryPath,
-      orElse: () => widget.pack,
+      (p) => p.directoryPath == pack.directoryPath,
+      orElse: () => pack,
     );
     ref.listen<AiPackGalleryState>(aiPackGalleryProvider, (previous, next) {
       if (context.mounted && next.lastMessage != null) {
@@ -50,7 +38,7 @@ class _AiPackGalleryViewState extends ConsumerState<AiPackGalleryView> {
     });
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: TitleBar(title: widget.pack.name),
+      appBar: TitleBar(title: pack.name),
       body: Container(
         decoration: AppDecorations.bgContainer(context),
         child: currentPack.stickerPaths.isEmpty
@@ -125,12 +113,15 @@ class _AiPackGalleryViewState extends ConsumerState<AiPackGalleryView> {
               ),
               FloatingActionButton(
                 elevation: 1,
-                onPressed: () => Navigator.push<Set<String>>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => AiImageView(pack: widget.pack),
-                  ),
-                ),
+                onPressed: () {
+                  ref
+                      .read(interstitialAdManagerProvider.notifier)
+                      .checkAndDisplayAd();
+                  Navigator.push<Set<String>>(
+                    context,
+                    MaterialPageRoute(builder: (_) => AiImageView(pack: pack)),
+                  );
+                },
                 heroTag: 'add_image',
                 child: const Icon(Icons.add),
               ),
@@ -149,7 +140,7 @@ class _AiPackGalleryViewState extends ConsumerState<AiPackGalleryView> {
                 onPressed: currentPack.stickerPaths.length >= 3
                     ? () => ref
                           .read(aiPackGalleryProvider.notifier)
-                          .exportPackToWhatsApp(widget.pack)
+                          .exportPackToWhatsApp(pack)
                     : () => SimpleToast.showToast(
                         context: context,
                         message: 'Please add at least 3 stickers to the pack',

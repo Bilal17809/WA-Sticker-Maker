@@ -9,24 +9,11 @@ import '/core/theme/theme.dart';
 import '/core/common_widgets/common_widgets.dart';
 import '/ad_manager/ad_manager.dart';
 
-class AiPacksView extends ConsumerStatefulWidget {
+class AiPacksView extends ConsumerWidget {
   const AiPacksView({super.key});
 
   @override
-  ConsumerState<AiPacksView> createState() => _AiPacksViewState();
-}
-
-class _AiPacksViewState extends ConsumerState<AiPacksView> {
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      ref.read(interstitialAdManagerProvider.notifier).checkAndDisplayAd();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final packs = ref.watch(aiPacksProvider);
     final interstitialState = ref.watch(interstitialAdManagerProvider);
     return Scaffold(
@@ -75,6 +62,9 @@ class _AiPacksViewState extends ConsumerState<AiPacksView> {
                             .read(aiPacksProvider.notifier)
                             .deletePack(context, pack),
                         onTap: () {
+                          ref
+                              .read(interstitialAdManagerProvider.notifier)
+                              .checkAndDisplayAd();
                           Navigator.push(
                             context,
                             MaterialPageRoute(

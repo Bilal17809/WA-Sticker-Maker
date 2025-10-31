@@ -3,7 +3,7 @@ import '/core/interface/pack_info_interface.dart';
 import 'package:whatsapp_stickers_handler/model/sticker_pack.dart';
 import 'package:whatsapp_stickers_handler/model/sticker_pack_exception.dart';
 import 'package:whatsapp_stickers_handler/service/sticker_pack_util.dart';
-import '/core/common/app_exceptions.dart';
+import '/core/exceptions/app_exceptions.dart';
 import '/core/services/whatsapp_service.dart';
 
 class PackExportService {
